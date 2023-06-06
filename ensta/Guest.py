@@ -3,7 +3,7 @@ import base64
 import random
 import requests
 import requests.cookies
-from ensta.lib import commons
+from lib import commons
 
 
 class Guest:

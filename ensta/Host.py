@@ -1,11 +1,11 @@
 import requests
 import requests.cookies
-from ensta.lib import exceptions
+from lib import exceptions
 from json import JSONDecodeError
 import random
 import string
 from Guest import Guest
-from ensta.lib import commons
+from lib import commons
 
 
 class Host:

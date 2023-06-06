@@ -1,11 +1,16 @@
 from distutils.core import setup
+from pathlib import Path
+
+long_description = (Path(__file__).parent / "README.md").read_text()
 
 setup(
     name="ensta",
     packages=["ensta"],
-    version="0.1",
+    version="0.4",
     license="MIT",
     description="Simple & Up-to-date Instagram API",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author="Deepak Soni",
     author_email="lonelycube@proton.me",
     url="https://github.com/diezo/ensta",
