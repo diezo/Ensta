@@ -3,7 +3,7 @@ import base64
 import random
 import requests
 import requests.cookies
-from .lib import commons
+import commons
 
 
 class Guest:

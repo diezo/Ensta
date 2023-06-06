@@ -4,7 +4,7 @@ import requests.cookies
 import random
 from ensta.Guest import Guest
 from ensta.Host import Host
-from ensta.lib import exceptions
+from ensta import exceptions
 
 
 def update_app_id(self: Guest | Host):

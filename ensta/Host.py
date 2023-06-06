@@ -1,11 +1,11 @@
 import requests
 import requests.cookies
-from .lib import exceptions
 from json import JSONDecodeError
 import random
 import string
 from Guest import Guest
-from .lib import commons
+import commons
+import exceptions
 
 
 class Host:
