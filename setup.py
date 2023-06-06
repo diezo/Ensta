@@ -9,7 +9,7 @@ setup(
     author="Deepak Soni",
     author_email="lonelycube@proton.me",
     url="https://github.com/diezo/ensta",
-    download_url="",
+    download_url="https://github.com/diezo/ensta/archive/refs/tags/v0.1.tar.gz",
     keywords=["instagram", "web", "private", "api", "scraper", "easy", "download", "upload"],
     install_requires=["requests"],
     classifiers=[
