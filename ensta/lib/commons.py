@@ -2,12 +2,10 @@ import string
 import requests
 import requests.cookies
 import random
-from ensta.Guest import Guest
-from ensta.Host import Host
-from ensta import exceptions
+from .exceptions import *
 
 
-def update_app_id(self: Guest | Host):
+def update_app_id(self):
     app_id_occurrence_string = "\"APP_ID\":\""
     app_id_first_occurrence = self.homepage_source.index(app_id_occurrence_string)
     app_id_raw_text = self.homepage_source[
@@ -31,4 +29,4 @@ def update_homepage_source(self):
     if temp_homepage_source != "":
         self.homepage_source = temp_homepage_source
     else:
-        raise exceptions.NetworkError("Couldn't load instagram homepage.")
+        raise NetworkError("Couldn't load instagram homepage.")

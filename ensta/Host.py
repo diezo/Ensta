@@ -3,9 +3,9 @@ import requests.cookies
 from json import JSONDecodeError
 import random
 import string
-from Guest import Guest
-import commons
-import exceptions
+from .Guest import Guest
+from .lib import update_session, update_homepage_source, update_app_id, refresh_csrf_token
+from .lib import AuthenticationError, NetworkError
 
 
 class Host:
@@ -19,15 +19,15 @@ class Host:
 
     def __init__(self, session_id: str):
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
-        commons.update_session(self)
-        commons.update_homepage_source(self)
-        commons.update_app_id(self)
+        update_session(self)
+        update_homepage_source(self)
+        update_app_id(self)
         self.guest = Guest()
 
         self.request_session.cookies.set("sessionid", session_id)
 
         if not self.is_authenticated():
-            raise exceptions.AuthenticationError("Either User ID or Session ID is not valid.")
+            raise AuthenticationError("Either User ID or Session ID is not valid.")
 
     def update_homepage_source(self):
         temp_homepage_source = requests.get("https://www.instagram.com/").text.strip()
@@ -35,10 +35,10 @@ class Host:
         if temp_homepage_source != "":
             self.homepage_source = temp_homepage_source
         else:
-            raise exceptions.NetworkError("Couldn't load instagram homepage.")
+            raise NetworkError("Couldn't load instagram homepage.")
 
     def is_authenticated(self):
-        commons.refresh_csrf_token(self)
+        refresh_csrf_token(self)
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -70,7 +70,7 @@ class Host:
 
     def follow_user_id(self, user_id: str | int):
         user_id = str(user_id).strip()
-        commons.refresh_csrf_token(self)
+        refresh_csrf_token(self)
         random_referer_username = "".join(random.choices(string.ascii_lowercase, k=6))
         body_json = {
             "container_module": "profile",

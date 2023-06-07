@@ -3,7 +3,7 @@ import base64
 import random
 import requests
 import requests.cookies
-import commons
+from .lib import update_session, update_homepage_source, update_app_id, refresh_csrf_token
 
 
 class Guest:
@@ -13,13 +13,13 @@ class Guest:
     csrf_token: str = None
 
     def __init__(self):
-        commons.update_session(self)
-        commons.update_homepage_source(self)
-        commons.update_app_id(self)
+        update_session(self)
+        update_homepage_source(self)
+        update_app_id(self)
 
     def username_availability(self, username: str):
         username = username.strip().lower().replace(" ", "")
-        commons.refresh_csrf_token(self)
+        refresh_csrf_token(self)
         preferred_color_scheme = random.choice(["light", "dark"])
         body_json = {
             "email": f"{username}@{self.csrf_token}.com",
@@ -72,7 +72,7 @@ class Guest:
 
     def profile_info(self, username: str):
         username = username.strip().lower().replace(" ", "")
-        commons.refresh_csrf_token(self)
+        refresh_csrf_token(self)
         preferred_color_scheme = random.choice(["light", "dark"])
         request_headers = {
             "accept": "*/*",
