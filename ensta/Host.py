@@ -4,8 +4,16 @@ from json import JSONDecodeError
 import random
 import string
 from .Guest import Guest
-from .lib import update_session, update_homepage_source, update_app_id, refresh_csrf_token
-from .lib import AuthenticationError, NetworkError
+from .lib.Commons import (
+    refresh_csrf_token,
+    update_app_id,
+    update_homepage_source,
+    update_session
+)
+from .lib import (
+    AuthenticationError,
+    NetworkError
+)
 
 
 class Host:

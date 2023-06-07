@@ -2,7 +2,7 @@ import string
 import requests
 import requests.cookies
 import random
-from .exceptions import *
+from .Exceptions import NetworkError
 
 
 def update_app_id(self):

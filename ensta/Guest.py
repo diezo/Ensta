@@ -3,7 +3,12 @@ import base64
 import random
 import requests
 import requests.cookies
-from .lib import update_session, update_homepage_source, update_app_id, refresh_csrf_token
+from .lib.Commons import (
+    update_session,
+    update_homepage_source,
+    update_app_id,
+    refresh_csrf_token
+)
 
 
 class Guest:

@@ -5,8 +5,8 @@ long_description = (Path(__file__).parent / "README.md").read_text()
 
 setup(
     name="ensta",
-    packages=["ensta"],
-    version="0.7",
+    packages=["ensta", "ensta.lib"],
+    version="0.91",
     license="MIT",
     description="Simple & Up-to-date Instagram API",
     long_description=long_description,
