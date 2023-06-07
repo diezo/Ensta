@@ -29,10 +29,73 @@ It requires login and can be used to manage your account or fetch information no
 ```python
 from ensta import Host
 
-sessionid = "12345678:abcdefgh"
+sessionid = "12345678:abcdefgh"  # Copy SessionId from cookies
 
 host = Host(sessionid)
 result = host.follow_username("username")
 
 print(result)
+```
+
+## Session ID
+To get your instagram session id, follow these steps:
+- Open [instagram.com](https://instagram.com) in your browser
+- Open DevTools (Right Click > Inspect)
+- Go to **Application** tab
+- Expand **Cookies** tab, and click on the first item
+- Here you will find your Instagram User's current sessionid.
+- Copy it and pass it as an argument whenever you are using the [**Host Class**](https://github.com/diezo/ensta#host-mode).
+
+## Examples
+
+### 1. Check if username is available
+
+```python
+from ensta import Guest
+
+guest = Guest()
+availability = guest.username_availability("cristiano89724")
+
+print(availability)
+```
+
+Result:
+```json
+{"success": true, "available": true, "suggestions": ["cristiano89724", "cristiano897241", "cristiano8972441", "cristiano89724367", "cristiano897242760", "cristiano897244", "cristiano8972491", "cristiano89724386", "cristiano897244070", "cristiano8972438", "cristiano89724834"]}
+```
+
+<br></br>
+
+### 2. Get Biography
+
+```python
+from ensta import Guest
+
+guest = Guest()
+biography = guest.get_biography("cristiano")
+
+print(biography)
+```
+
+Result:
+```json
+{"success": true, "biography": "Join my NFT journey on @Binance. Click the link below to get started."}
+```
+
+<br></br>
+
+### 3. Is Account Verified?
+
+```python
+from ensta import Guest
+
+guest = Guest()
+verified = guest.is_account_verified("cristiano")
+
+print(verified)
+```
+
+Result:
+```json
+{"success": true, "verified": true}
 ```
