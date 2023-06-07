@@ -6,7 +6,7 @@ long_description = (Path(__file__).parent / "README.md").read_text()
 setup(
     name="ensta",
     packages=["ensta", "ensta.lib"],
-    version="0.91",
+    version="1.0",
     license="MIT",
     description="Simple & Up-to-date Instagram API",
     long_description=long_description,
@@ -14,7 +14,7 @@ setup(
     author="Deepak Soni",
     author_email="lonelycube@proton.me",
     url="https://github.com/diezo/ensta",
-    download_url="https://github.com/diezo/ensta/archive/refs/tags/v0.1.tar.gz",
+    download_url="https://github.com/diezo/ensta/archive/refs/tags/v0.2.tar.gz",
     keywords=["instagram", "web", "private", "api", "scraper", "easy", "download", "upload"],
     install_requires=["requests"],
     classifiers=[
