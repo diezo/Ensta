@@ -38,9 +38,11 @@ print(result)
 ```
 
 ## Session ID
-To get your instagram session id, follow these steps:
+To get your instagram SessionId, run the [**fetch-sessionid.py**](https://github.com/diezo/ensta/blob/master/fetch-sessionid.py) script.
+
+Alternatively, you can follow these steps if the above method didn't work for you:
 - Open [instagram.com](https://instagram.com) in your browser
-- Open DevTools (Right Click > Inspect)
+- Open DevTools (Ctrl + Shift + I)
 - Go to **Application** tab
 - Expand **Cookies** tab, and click on the first item
 - Here you will find your Instagram User's current sessionid.
