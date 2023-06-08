@@ -12,8 +12,11 @@ from .lib.Commons import (
 )
 from .lib import (
     AuthenticationError,
-    NetworkError
+    NetworkError,
+    IdentifierTypeError
 )
+from .data_classes import FollowerInternal
+from ensta.identifier import IDENTIFIER_USERNAME, IDENTIFIER_USERID
 
 
 class Host:
@@ -205,8 +208,24 @@ class Host:
         else:
             return failure_response
 
-    def follower_list_by_userid(self, user_id: str | int, count: int):
-        user_id = str(user_id).strip()
+    def follower_list(self, identifier_type: int, identifier: str | int, count: int):
+
+        # Identifier Conversion
+        if identifier_type == IDENTIFIER_USERNAME:
+            username = identifier.lower().strip().replace(" ", "")
+            user_id_response = self.guest.get_userid(username)
+            failure_response = {"success": False, "follower_list": None}
+
+            if user_id_response["success"]:
+                user_id = user_id_response["user_id"]
+            else:
+                return failure_response
+        elif identifier_type == IDENTIFIER_USERID:
+            user_id = str(identifier).strip()
+        else:
+            raise IdentifierTypeError(f"{str(identifier_type)} is not a valid identifier type. Please choose a valid identifier type from ensta.identifier package.")
+
+        # Actual Request
         refresh_csrf_token(self)
         random_referer_username = "".join(random.choices(string.ascii_lowercase, k=6))
         request_headers = {
@@ -231,7 +250,7 @@ class Host:
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        failure_response = {"success": False, "follower_list": None, "list_size": None}
+        failure_response = {"success": False, "follower_list": None}
         max_id = ""
         required_list = []
 
@@ -254,160 +273,36 @@ class Host:
 
                 for each_item in response_json["users"]:
                     if len(required_list) < count or count == 0:
-                        required_list.append(each_item)
+                        follower_obj = FollowerInternal()
+
+                        if "has_anonymous_profile_picture" in each_item:
+                            follower_obj.has_anonymous_profile_picture = each_item["has_anonymous_profile_picture"]
+
+                        if "pk" in each_item:
+                            follower_obj.user_id = each_item["pk"]
+
+                        if "username" in each_item:
+                            follower_obj.username = each_item["username"]
+
+                        if "full_name" in each_item:
+                            follower_obj.full_name = each_item["full_name"]
+
+                        if "is_private" in each_item:
+                            follower_obj.is_private = each_item["is_private"]
+
+                        if "is_verified" in each_item:
+                            follower_obj.is_verified = each_item["is_verified"]
+
+                        if "profile_pic_url" in each_item:
+                            follower_obj.profile_picture_url = each_item["profile_pic_url"]
+
+                        if "is_possible_scammer" in each_item:
+                            follower_obj.is_possible_scammer = each_item["is_possible_scammer"]
+
+                        required_list.append(follower_obj)
 
                 if (len(required_list) < count or count == 0) and "next_max_id" in response_json:
                     max_id = response_json["next_max_id"]
                 else:
                     return {"success": True, "follower_list": required_list, "list_size": len(required_list)}
             except JSONDecodeError: return failure_response
-
-    def follower_list_by_username(self, username: str, count: int):
-        username = username.lower().strip().replace(" ", "")
-        user_id_response = self.guest.get_userid(username)
-        failure_response = {"success": False, "follower_list": None, "list_size": None}
-
-        if user_id_response["success"]:
-            return self.follower_list_by_userid(user_id_response["user_id"], count)
-        else:
-            return failure_response
-
-    def username_of_followers_by_userid(self, user_id: str | int, count: int):
-        user_id = str(user_id).strip()
-        refresh_csrf_token(self)
-        random_referer_username = "".join(random.choices(string.ascii_lowercase, k=6))
-        request_headers = {
-            "accept": "*/*",
-            "accept-language": "en-US,en;q=0.9",
-            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-ch-ua-platform-version": "\"15.0.0\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
-            "viewport-width": "1475",
-            "x-asbd-id": "198387",
-            "x-csrftoken": self.csrf_token,
-            "x-ig-app-id": self.insta_app_id,
-            "x-ig-www-claim": self.x_ig_www_claim,
-            "x-requested-with": "XMLHttpRequest",
-            "Referer": f"https://www.instagram.com/{random_referer_username}/followers/",
-            "Referrer-Policy": "strict-origin-when-cross-origin"
-        }
-
-        failure_response = {"success": False, "follower_usernames": None, "list_size": None}
-        max_id = ""
-        required_list = []
-
-        while True:
-            if max_id != "":
-                max_id_text = f"&max_id={max_id}"
-            else:
-                max_id_text = ""
-
-            http_response = self.request_session.get(f"https://www.instagram.com/api/v1/friendships/{user_id}/followers/?count={30}{max_id_text}&search_surface=follow_list_page", headers=request_headers)
-
-            try:
-                response_json = http_response.json()
-
-                if "status" not in response_json or "users" not in response_json:
-                    return failure_response
-
-                if response_json["status"] != "ok":
-                    return failure_response
-
-                for each_item in response_json["users"]:
-                    if len(required_list) < count or count == 0:
-                        if "username" in each_item:
-                            required_list.append(each_item["username"])
-                        else:
-                            return failure_response
-
-                if (len(required_list) < count or count == 0) and "next_max_id" in response_json:
-                    max_id = response_json["next_max_id"]
-                else:
-                    return {"success": True, "follower_usernames": required_list, "list_size": len(required_list)}
-            except JSONDecodeError: return failure_response
-
-    def username_of_followers_by_username(self, username: str, count: int):
-        username = username.lower().strip().replace(" ", "")
-        user_id_response = self.guest.get_userid(username)
-        failure_response = {"success": False, "follower_usernames": None, "list_size": None}
-
-        if user_id_response["success"]:
-            return self.username_of_followers_by_userid(user_id_response["user_id"], count)
-        else:
-            return failure_response
-
-    def userid_of_followers_by_userid(self, user_id: str | int, count: int):
-        user_id = str(user_id).strip()
-        refresh_csrf_token(self)
-        random_referer_username = "".join(random.choices(string.ascii_lowercase, k=6))
-        request_headers = {
-            "accept": "*/*",
-            "accept-language": "en-US,en;q=0.9",
-            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-ch-ua-platform-version": "\"15.0.0\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
-            "viewport-width": "1475",
-            "x-asbd-id": "198387",
-            "x-csrftoken": self.csrf_token,
-            "x-ig-app-id": self.insta_app_id,
-            "x-ig-www-claim": self.x_ig_www_claim,
-            "x-requested-with": "XMLHttpRequest",
-            "Referer": f"https://www.instagram.com/{random_referer_username}/followers/",
-            "Referrer-Policy": "strict-origin-when-cross-origin"
-        }
-
-        failure_response = {"success": False, "follower_user_ids": None, "list_size": None}
-        max_id = ""
-        required_list = []
-
-        while True:
-            if max_id != "":
-                max_id_text = f"&max_id={max_id}"
-            else:
-                max_id_text = ""
-
-            http_response = self.request_session.get(f"https://www.instagram.com/api/v1/friendships/{user_id}/followers/?count={30}{max_id_text}&search_surface=follow_list_page", headers=request_headers)
-
-            try:
-                response_json = http_response.json()
-
-                if "status" not in response_json or "users" not in response_json:
-                    return failure_response
-
-                if response_json["status"] != "ok":
-                    return failure_response
-
-                for each_item in response_json["users"]:
-                    if len(required_list) < count or count == 0:
-                        if "pk" in each_item:
-                            required_list.append(each_item["pk"])
-                        else:
-                            return failure_response
-
-                if (len(required_list) < count or count == 0) and "next_max_id" in response_json:
-                    max_id = response_json["next_max_id"]
-                else:
-                    return {"success": True, "follower_user_ids": required_list, "list_size": len(required_list)}
-            except JSONDecodeError: return failure_response
-
-    def userid_of_followers_by_username(self, username: str, count: int):
-        username = username.lower().strip().replace(" ", "")
-        user_id_response = self.guest.get_userid(username)
-        failure_response = {"success": False, "follower_user_ids": None, "list_size": None}
-
-        if user_id_response["success"]:
-            return self.userid_of_followers_by_userid(user_id_response["user_id"], count)
-        else:
-            return failure_response

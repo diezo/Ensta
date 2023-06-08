@@ -7,5 +7,6 @@ from .Commons import (
 
 from .Exceptions import (
     NetworkError,
-    AuthenticationError
+    AuthenticationError,
+    IdentifierTypeError
 )
