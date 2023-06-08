@@ -1,14 +1,16 @@
 from json import JSONDecodeError
-import base64
 import random
+import string
 import requests
-import requests.cookies
 from .lib.Commons import (
     update_session,
     update_homepage_source,
     update_app_id,
     refresh_csrf_token
 )
+from .lib import IdentifierError
+from .responses.ProfileResponse import ProfileResponse
+from .containers.Profile import Profile
 
 
 class Guest:
@@ -75,8 +77,11 @@ class Guest:
         except JSONDecodeError:
             return {"success": False, "available": None, "suggestions": []}
 
-    def profile_info(self, username: str):
-        username = username.strip().lower().replace(" ", "")
+    def profile(self, identifier: str | int):
+        conversion_success, identifier = self.identifier_conversion(identifier, 1)
+        failure_response = ProfileResponse()
+        if not conversion_success: return failure_response
+
         refresh_csrf_token(self)
         preferred_color_scheme = random.choice(["light", "dark"])
         request_headers = {
@@ -97,26 +102,75 @@ class Guest:
             "x-ig-app-id": self.insta_app_id,
             "x-ig-www-claim": "0",
             "x-requested-with": "XMLHttpRequest",
-            "Referer": f"https://www.instagram.com/{username}/",
+            "Referer": f"https://www.instagram.com/{identifier}/",
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
         try:
-            http_response = self.request_session.get(f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}", headers=request_headers)
+            http_response = self.request_session.get(f"https://www.instagram.com/api/v1/users/web_profile_info/?username={identifier}", headers=request_headers)
             response_json = http_response.json()
 
             if "status" in response_json:
                 if response_json["status"] == "ok" and "data" in response_json:
                     if "user" in response_json["data"]:
-                        return {"success": True, "data": response_json["data"]["user"]}
-                    else:
-                        return {"success": False, "data": None}
-                else:
-                    return {"success": False, "data": None}
-            else:
-                return {"success": False, "data": None}
-        except JSONDecodeError:
-            return {"success": False, "data": None}
+                        profile_object = Profile()
+
+                        if "biography" in response_json["data"]["user"]:
+                            profile_object.biography = response_json["data"]["user"]["biography"]
+
+                        if "country_block" in response_json["data"]["user"]:
+                            profile_object.country_block = response_json["data"]["user"]["country_block"]
+
+                        if "full_name" in response_json["data"]["user"]:
+                            profile_object.full_name = response_json["data"]["user"]["full_name"]
+
+                        if "edge_follow" in response_json["data"]["user"]:
+                            if "count" in response_json["data"]["user"]:
+                                profile_object.following_count = response_json["data"]["user"]["edge_follow"]["count"]
+
+                        if "edge_followed_by" in response_json["data"]["user"]:
+                            if "count" in response_json["data"]["user"]:
+                                profile_object.follower_count = response_json["data"]["user"]["edge_followed_by"]["count"]
+
+                        if "id" in response_json["data"]["user"]:
+                            profile_object.user_id = response_json["data"]["user"]["id"]
+
+                        if "is_business_account" in response_json["data"]["user"]:
+                            profile_object.is_business_account = response_json["data"]["user"]["is_business_account"]
+
+                        if "is_professional_account" in response_json["data"]["user"]:
+                            profile_object.is_professional_account = response_json["data"]["user"]["is_professional_account"]
+
+                        if "is_supervision_enabled" in response_json["data"]["user"]:
+                            profile_object.is_supervision_enabled = response_json["data"]["user"]["is_supervision_enabled"]
+
+                        if "is_joined_recently" in response_json["data"]["user"]:
+                            profile_object.is_joined_recently = response_json["data"]["user"]["is_joined_recently"]
+
+                        if "is_private" in response_json["data"]["user"]:
+                            profile_object.is_private = response_json["data"]["user"]["is_private"]
+
+                        if "is_verified" in response_json["data"]["user"]:
+                            profile_object.is_verified = response_json["data"]["user"]["is_verified"]
+
+                        if "profile_pic_url" in response_json["data"]["user"]:
+                            profile_object.profile_picture_url = response_json["data"]["user"]["profile_pic_url"]
+
+                        if "profile_pic_url_hd" in response_json["data"]["user"]:
+                            profile_object.profile_picture_url_hd = response_json["data"]["user"]["profile_pic_url_hd"]
+
+                        if "pronouns" in response_json["data"]["user"]:
+                            user_pronouns = []
+                            for pronoun in response_json["data"]["user"]["pronouns"]:
+                                user_pronouns.append(pronoun)
+
+                            profile_object.pronouns = user_pronouns
+
+                        return ProfileResponse(success=True, user=profile_object)
+                    else: return failure_response
+                else: return failure_response
+            else: return failure_response
+        except JSONDecodeError: return failure_response
 
     def get_userid(self, username: str, profile_snapshot: dict | None = None):
         username = username.strip().lower().replace(" ", "")
@@ -124,11 +178,11 @@ class Guest:
         if profile_snapshot is not None:
             response = profile_snapshot
         else:
-            response = self.profile_info(username)
+            response = self.profile(username)
 
-        if response["success"]:
-            if "id" in response["data"]:
-                return {"success": True, "user_id": str(response["data"]["id"]).strip()}
+        if response.success:
+            if response.user.user_id is not None:
+                return {"success": True, "user_id": str(response.user.user_id).strip()}
             else:
                 return {"success": False, "user_id": ""}
         else:
@@ -158,206 +212,36 @@ class Guest:
         except JSONDecodeError:
             return {"success": False, "username": ""}
 
-    def get_follower_count(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
+    def identifier_conversion(self, identifier: str | int, required: str | int):
+        identifier = str(identifier).lower().replace(" ", "")
+        if len(identifier) < 1: raise IdentifierError(
+            "No identifier was given. Please pass either UserId or Username as an argument.")
 
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
+        # Detect if identifier is Username or UserId
+        is_username = False
+        for letter in identifier:
+            if letter not in string.digits:
+                is_username = True
+                break
 
-        if response["success"]:
-            if "edge_followed_by" in response["data"]:
-                if "count" in response["data"]["edge_followed_by"]:
-                    return {"success": True, "follower_count": response["data"]["edge_followed_by"]["count"]}
+        # Generate UserId if identifier is Username
+        if is_username:
+            if required == 0:
+                return identifier
+            else:
+                user_id_response = self.get_userid(identifier)
+
+                if user_id_response["success"]:
+                    return True, user_id_response["user_id"]
                 else:
-                    return {"success": False, "follower_count": ""}
-            else:
-                return {"success": False, "follower_count": ""}
+                    return False, None
         else:
-            return {"success": False, "follower_count": ""}
+            if required == 0:
+                username_response = self.get_username(identifier)
 
-    def get_following_count(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
-
-        if response["success"]:
-            if "edge_follow" in response["data"]:
-                if "count" in response["data"]["edge_follow"]:
-                    return {"success": True, "following_count": response["data"]["edge_follow"]["count"]}
+                if username_response["success"]:
+                    return True, username_response["username"]
                 else:
-                    return {"success": False, "following_count": ""}
+                    return False, None
             else:
-                return {"success": False, "following_count": ""}
-        else:
-            return {"success": False, "following_count": ""}
-
-    def get_biography(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
-
-        if response["success"]:
-            if "biography" in response["data"]:
-                return {"success": True, "biography": response["data"]["biography"]}
-            else:
-                return {"success": False, "biography": ""}
-        else:
-            return {"success": False, "biography": ""}
-
-    def get_display_name(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
-
-        if response["success"]:
-            if "full_name" in response["data"]:
-                return {"success": True, "display_name": response["data"]["full_name"]}
-            else:
-                return {"success": False, "display_name": ""}
-        else:
-            return {"success": False, "display_name": ""}
-
-    def get_profile_picture_url(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
-
-        if response["success"]:
-            if "profile_pic_url" in response["data"]:
-                return {"success": True, "profile_picture_url": str(response["data"]["profile_pic_url"]).strip()}
-            else:
-                return {"success": False, "profile_picture_url": ""}
-        else:
-            return {"success": False, "profile_picture_url": ""}
-
-    def get_profile_picture_url_hd(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
-
-        if response["success"]:
-            if "profile_pic_url_hd" in response["data"]:
-                return {"success": True, "profile_picture_url_hd": str(response["data"]["profile_pic_url_hd"]).strip()}
-            else:
-                return {"success": False, "profile_picture_url_hd": ""}
-        else:
-            return {"success": False, "profile_picture_url_hd": ""}
-
-    def get_profile_picture_base64(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = self.get_profile_picture_url(username, profile_snapshot)
-        else:
-            response = self.get_profile_picture_url(username)
-
-        if response["success"]:
-            profile_picture_url = response["profile_picture_url"]
-
-            if profile_picture_url == "":
-                return {"success": False, "profile_picture_base64": ""}
-
-            base64_image = base64.b64encode(requests.get(profile_picture_url).content).decode("utf-8")
-            return {"success": True, "profile_picture_base64": f"data:image/jpg;base64,{base64_image}"}
-        else:
-            return {"success": False, "profile_picture_base64": ""}
-
-    def get_profile_picture_base64_hd(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = self.get_profile_picture_url_hd(username, profile_snapshot)
-        else:
-            response = self.get_profile_picture_url_hd(username)
-
-        if response["success"]:
-            profile_picture_url_hd = response["profile_picture_url_hd"]
-
-            if profile_picture_url_hd == "":
-                return {"success": False, "profile_picture_base64_hd": ""}
-
-            base64_image = base64.b64encode(requests.get(profile_picture_url_hd).content).decode("utf-8")
-            return {"success": True, "profile_picture_base64_hd": f"data:image/jpg;base64,{base64_image}"}
-        else:
-            return {"success": False, "profile_picture_base64_hd": ""}
-
-    def is_account_private(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
-
-        if response["success"]:
-            if "is_private" in response["data"]:
-                return {"success": True, "private": response["data"]["is_private"]}
-            else:
-                return {"success": False, "private": None}
-        else:
-            return {"success": False, "private": None}
-
-    def is_account_verified(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
-
-        if response["success"]:
-            if "is_verified" in response["data"]:
-                return {"success": True, "verified": response["data"]["is_verified"]}
-            else:
-                return {"success": False, "verified": None}
-        else:
-            return {"success": False, "verified": None}
-
-    def is_business_account(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
-
-        if response["success"]:
-            if "is_business_account" in response["data"]:
-                return {"success": True, "business_account": response["data"]["is_business_account"]}
-            else:
-                return {"success": False, "business_account": None}
-        else:
-            return {"success": False, "business_account": None}
-
-    def is_professional_account(self, username: str, profile_snapshot: dict | None = None):
-        username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile_info(username)
-
-        if response["success"]:
-            if "is_professional_account" in response["data"]:
-                return {"success": True, "professional_account": response["data"]["is_professional_account"]}
-            else:
-                return {"success": False, "professional_account": None}
-        else:
-            return {"success": False, "professional_account": None}
+                return identifier

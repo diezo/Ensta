@@ -10,7 +10,7 @@ class NetworkError(Exception):
         super().__init__(message)
 
 
-class IdentifierTypeError(Exception):
+class IdentifierError(Exception):
 
     def __init__(self, message):
         super().__init__(message)

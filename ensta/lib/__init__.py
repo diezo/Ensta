@@ -8,5 +8,5 @@ from .Commons import (
 from .Exceptions import (
     NetworkError,
     AuthenticationError,
-    IdentifierTypeError
+    IdentifierError
 )
