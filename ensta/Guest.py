@@ -9,7 +9,6 @@ from .lib.Commons import (
     refresh_csrf_token
 )
 from .lib import IdentifierError
-from .responses.ProfileResponse import ProfileResponse
 from .containers.Profile import Profile
 
 
@@ -59,7 +58,9 @@ class Guest:
         }
 
         try:
-            http_response = self.request_session.post("https://www.instagram.com/api/v1/web/accounts/web_create_ajax/attempt/", headers=request_headers, data=body_json)
+            http_response = self.request_session.post(
+                "https://www.instagram.com/api/v1/web/accounts/web_create_ajax/attempt/", headers=request_headers,
+                data=body_json)
             response_json = http_response.json()
 
             if "errors" in response_json:
@@ -77,10 +78,11 @@ class Guest:
         except JSONDecodeError:
             return {"success": False, "available": None, "suggestions": []}
 
-    def profile(self, identifier: str | int):
-        conversion_success, identifier = self.identifier_conversion(identifier, 1)
-        failure_response = ProfileResponse()
-        if not conversion_success: return failure_response
+    def profile(self, identifier: str | int, iu: bool = False):
+        failure_response = Profile()
+        if not iu:
+            conversion_success, identifier = self.identifier_conversion(identifier, 0)
+            if not conversion_success: return failure_response
 
         refresh_csrf_token(self)
         preferred_color_scheme = random.choice(["light", "dark"])
@@ -107,82 +109,115 @@ class Guest:
         }
 
         try:
-            http_response = self.request_session.get(f"https://www.instagram.com/api/v1/users/web_profile_info/?username={identifier}", headers=request_headers)
+            http_response = self.request_session.get(
+                f"https://www.instagram.com/api/v1/users/web_profile_info/?username={identifier}",
+                headers=request_headers)
             response_json = http_response.json()
 
             if "status" in response_json:
                 if response_json["status"] == "ok" and "data" in response_json:
                     if "user" in response_json["data"]:
-                        profile_object = Profile()
+
+                        profile_object_biography = None
+                        profile_object_country_block = None
+                        profile_object_full_name = None
+                        profile_object_following_count = None
+                        profile_object_follower_count = None
+                        profile_object_user_id = None
+                        profile_object_is_business_account = None
+                        profile_object_is_professional_account = None
+                        profile_object_is_supervision_enabled = None
+                        profile_object_is_joined_recently = None
+                        profile_object_is_private = None
+                        profile_object_is_verified = None
+                        profile_object_profile_picture_url = None
+                        profile_object_profile_picture_url_hd = None
+                        profile_object_pronouns = None
 
                         if "biography" in response_json["data"]["user"]:
-                            profile_object.biography = response_json["data"]["user"]["biography"]
+                            profile_object_biography = response_json["data"]["user"]["biography"]
 
                         if "country_block" in response_json["data"]["user"]:
-                            profile_object.country_block = response_json["data"]["user"]["country_block"]
+                            profile_object_country_block = response_json["data"]["user"]["country_block"]
 
                         if "full_name" in response_json["data"]["user"]:
-                            profile_object.full_name = response_json["data"]["user"]["full_name"]
+                            profile_object_full_name = response_json["data"]["user"]["full_name"]
 
                         if "edge_follow" in response_json["data"]["user"]:
-                            if "count" in response_json["data"]["user"]:
-                                profile_object.following_count = response_json["data"]["user"]["edge_follow"]["count"]
+                            if "count" in response_json["data"]["user"]["edge_follow"]:
+                                profile_object_following_count = response_json["data"]["user"]["edge_follow"]["count"]
 
                         if "edge_followed_by" in response_json["data"]["user"]:
-                            if "count" in response_json["data"]["user"]:
-                                profile_object.follower_count = response_json["data"]["user"]["edge_followed_by"]["count"]
+                            if "count" in response_json["data"]["user"]["edge_followed_by"]:
+                                profile_object_follower_count = response_json["data"]["user"]["edge_followed_by"]["count"]
 
                         if "id" in response_json["data"]["user"]:
-                            profile_object.user_id = response_json["data"]["user"]["id"]
+                            profile_object_user_id = response_json["data"]["user"]["id"]
 
                         if "is_business_account" in response_json["data"]["user"]:
-                            profile_object.is_business_account = response_json["data"]["user"]["is_business_account"]
+                            profile_object_is_business_account = response_json["data"]["user"]["is_business_account"]
 
                         if "is_professional_account" in response_json["data"]["user"]:
-                            profile_object.is_professional_account = response_json["data"]["user"]["is_professional_account"]
+                            profile_object_is_professional_account = response_json["data"]["user"]["is_professional_account"]
 
                         if "is_supervision_enabled" in response_json["data"]["user"]:
-                            profile_object.is_supervision_enabled = response_json["data"]["user"]["is_supervision_enabled"]
+                            profile_object_is_supervision_enabled = response_json["data"]["user"][
+                                "is_supervision_enabled"]
 
                         if "is_joined_recently" in response_json["data"]["user"]:
-                            profile_object.is_joined_recently = response_json["data"]["user"]["is_joined_recently"]
+                            profile_object_is_joined_recently = response_json["data"]["user"]["is_joined_recently"]
 
                         if "is_private" in response_json["data"]["user"]:
-                            profile_object.is_private = response_json["data"]["user"]["is_private"]
+                            profile_object_is_private = response_json["data"]["user"]["is_private"]
 
                         if "is_verified" in response_json["data"]["user"]:
-                            profile_object.is_verified = response_json["data"]["user"]["is_verified"]
+                            profile_object_is_verified = response_json["data"]["user"]["is_verified"]
 
                         if "profile_pic_url" in response_json["data"]["user"]:
-                            profile_object.profile_picture_url = response_json["data"]["user"]["profile_pic_url"]
+                            profile_object_profile_picture_url = response_json["data"]["user"]["profile_pic_url"]
 
                         if "profile_pic_url_hd" in response_json["data"]["user"]:
-                            profile_object.profile_picture_url_hd = response_json["data"]["user"]["profile_pic_url_hd"]
+                            profile_object_profile_picture_url_hd = response_json["data"]["user"]["profile_pic_url_hd"]
 
                         if "pronouns" in response_json["data"]["user"]:
                             user_pronouns = []
                             for pronoun in response_json["data"]["user"]["pronouns"]:
                                 user_pronouns.append(pronoun)
+                            profile_object_pronouns = user_pronouns
 
-                            profile_object.pronouns = user_pronouns
+                        return Profile(success=True,
+                                       biography=profile_object_biography,
+                                       country_block=profile_object_country_block,
+                                       full_name=profile_object_full_name,
+                                       follower_count=profile_object_follower_count,
+                                       following_count=profile_object_following_count,
+                                       user_id=profile_object_user_id,
+                                       is_business_account=profile_object_is_business_account,
+                                       is_professional_account=profile_object_is_professional_account,
+                                       is_supervision_enabled=profile_object_is_supervision_enabled,
+                                       is_joined_recently=profile_object_is_joined_recently,
+                                       is_private=profile_object_is_private,
+                                       is_verified=profile_object_is_verified,
+                                       profile_picture_url=profile_object_profile_picture_url,
+                                       profile_picture_url_hd=profile_object_profile_picture_url_hd,
+                                       pronouns=profile_object_pronouns)
 
-                        return ProfileResponse(success=True, user=profile_object)
-                    else: return failure_response
-                else: return failure_response
-            else: return failure_response
-        except JSONDecodeError: return failure_response
+                    else:
+                        return failure_response
+                else:
+                    return failure_response
+            else:
+                return failure_response
+        except JSONDecodeError:
+            return failure_response
 
-    def get_userid(self, username: str, profile_snapshot: dict | None = None):
+    def get_userid(self, username: str):
         username = username.strip().lower().replace(" ", "")
-
-        if profile_snapshot is not None:
-            response = profile_snapshot
-        else:
-            response = self.profile(username)
+        response = self.profile(username, iu=True)
 
         if response.success:
-            if response.user.user_id is not None:
-                return {"success": True, "user_id": str(response.user.user_id).strip()}
+            if response.user_id is not None:
+                return {"success": True, "user_id": str(response.user_id).strip()}
             else:
                 return {"success": False, "user_id": ""}
         else:
@@ -195,7 +230,8 @@ class Guest:
         }
 
         try:
-            http_response = self.request_session.get(f"https://i.instagram.com/api/v1/users/{user_id}/info/", headers=request_headers)
+            http_response = self.request_session.get(f"https://i.instagram.com/api/v1/users/{user_id}/info/",
+                                                     headers=request_headers)
             response_json = http_response.json()
 
             if "status" in response_json:
@@ -227,7 +263,7 @@ class Guest:
         # Generate UserId if identifier is Username
         if is_username:
             if required == 0:
-                return identifier
+                return True, identifier
             else:
                 user_id_response = self.get_userid(identifier)
 
@@ -244,4 +280,4 @@ class Guest:
                 else:
                     return False, None
             else:
-                return identifier
+                return True, identifier

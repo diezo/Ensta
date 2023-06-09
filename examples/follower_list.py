@@ -7,22 +7,24 @@
 
 # Import Required Libraries
 from ensta import Host
-from ensta import Follower
-from ensta.identifier import IDENTIFIER_USERNAME
 
 # Collect Data
 sessionId = input("SessionId: ")
 target_username = input("Target username: ")
-print()
+print("")
 
 # Initialize Host Class (Requires Login With SessionId)
 host = Host(sessionId)
 
-# Required Arguments - IDENTIFIER_TYPE, IDENTIFIER (Username or UserId), Number Of Items To Get
-followers = host.follower_list(IDENTIFIER_USERNAME, target_username, 10)
+# Required Arguments - IDENTIFIER (Either Username or UserId), Count (Number Of Followers To Fetch)
+followers = host.follower_list(target_username, 10)
 
 # Iterate Through List
-for follower_data in followers["follower_list"]:
-    follower = Follower(follower_data)  # Pass Follower Data To This Class
-
-    print(f"Username: {follower.username}")
+# todo work here and other file in this dir
+if followers.success:
+    for follower in followers.users:
+        print(follower)
+# for follower_data in followers["follower_list"]:
+#     follower = Follower(follower_data)  # Pass Follower Data To This Class
+#
+#     print(f"Username: {follower.username}")
