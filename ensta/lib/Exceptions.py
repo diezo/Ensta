@@ -19,4 +19,4 @@ class IdentifierError(Exception):
 class CodeError(Exception):
 
     def __init__(self, location: str = "Unknown"):
-        super().__init__(f"There was some problem when executing this method. This was caused due to a bug in the code. Please contact the developer of submit this as an issue.\nFound in: {location}")
+        super().__init__(f"There was an error while executing this function, maybe caused due to a bug in the code. Please submit this as an issue on GitHub.\nFound in: {location}")
