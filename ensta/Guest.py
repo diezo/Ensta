@@ -73,9 +73,8 @@ class Guest:
         except JSONDecodeError:
             return None
 
-    def profile(self, username: str) -> Profile:
+    def profile(self, username: str) -> Profile | None:
         username = format_username(username)
-        failure_response = Profile()
 
         refresh_csrf_token(self)
         request_headers = {
@@ -178,30 +177,25 @@ class Guest:
                                 user_pronouns.append(pronoun)
                             profile_object_pronouns = user_pronouns
 
-                        return Profile(biography=profile_object_biography,
-                                       country_block=profile_object_country_block,
-                                       full_name=profile_object_full_name,
-                                       follower_count=profile_object_follower_count,
-                                       following_count=profile_object_following_count,
-                                       user_id=profile_object_user_id,
-                                       is_business_account=profile_object_is_business_account,
-                                       is_professional_account=profile_object_is_professional_account,
-                                       is_supervision_enabled=profile_object_is_supervision_enabled,
-                                       is_joined_recently=profile_object_is_joined_recently,
-                                       is_private=profile_object_is_private,
-                                       is_verified=profile_object_is_verified,
-                                       profile_picture_url=profile_object_profile_picture_url,
-                                       profile_picture_url_hd=profile_object_profile_picture_url_hd,
-                                       pronouns=profile_object_pronouns)
-
-                    else:
-                        return failure_response
-                else:
-                    return failure_response
-            else:
-                return failure_response
+                        return Profile(
+                            biography=profile_object_biography,
+                            country_block=profile_object_country_block,
+                            full_name=profile_object_full_name,
+                            follower_count=profile_object_follower_count,
+                            following_count=profile_object_following_count,
+                            user_id=profile_object_user_id,
+                            is_business_account=profile_object_is_business_account,
+                            is_professional_account=profile_object_is_professional_account,
+                            is_supervision_enabled=profile_object_is_supervision_enabled,
+                            is_joined_recently=profile_object_is_joined_recently,
+                            is_private=profile_object_is_private,
+                            is_verified=profile_object_is_verified,
+                            profile_picture_url=profile_object_profile_picture_url,
+                            profile_picture_url_hd=profile_object_profile_picture_url_hd,
+                            pronouns=profile_object_pronouns
+                        )
         except JSONDecodeError:
-            return failure_response
+            return None
 
     def get_uid(self, username: str) -> str | None:
         username = username.strip().lower().replace(" ", "")
