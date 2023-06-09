@@ -30,3 +30,15 @@ def update_homepage_source(self):
         self.homepage_source = temp_homepage_source
     else:
         raise NetworkError("Couldn't load instagram homepage.")
+
+
+def format_username(username: str):
+    return username.replace(" ", "").lower()
+
+
+def format_uid(uid: str):
+    return uid.replace(" ", "")
+
+
+def format_identifier(identifier: str | int):
+    return str(identifier).lower().replace(" ", "")

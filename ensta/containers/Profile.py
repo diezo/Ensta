@@ -4,7 +4,6 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class Profile:
 
-    success: bool = False
     biography: str = None
     country_block: bool = None
     full_name: str = None

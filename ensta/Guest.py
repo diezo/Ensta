@@ -1,14 +1,14 @@
 from json import JSONDecodeError
 import random
-import string
 import requests
 from .lib.Commons import (
     update_session,
     update_homepage_source,
     update_app_id,
-    refresh_csrf_token
+    refresh_csrf_token,
+    format_username,
+    format_uid
 )
-from .lib import IdentifierError
 from .containers.Profile import Profile
 
 
@@ -18,15 +18,22 @@ class Guest:
     insta_app_id: str = None
     csrf_token: str = None
 
-    def __init__(self):
+    def __init__(self, homepage_source: str = None, insta_app_id: str = None) -> None:
         update_session(self)
-        update_homepage_source(self)
-        update_app_id(self)
 
-    def username_availability(self, username: str):
-        username = username.strip().lower().replace(" ", "")
+        if homepage_source is not None:
+            self.homepage_source = homepage_source
+        else:
+            update_homepage_source(self)
+
+        if insta_app_id is not None:
+            self.insta_app_id = insta_app_id
+        else:
+            update_app_id(self)
+
+    def username_availability(self, username: str) -> bool | None:
+        username = format_username(username)
         refresh_csrf_token(self)
-        preferred_color_scheme = random.choice(["light", "dark"])
         body_json = {
             "email": f"{username}@{self.csrf_token}.com",
             "username": username,
@@ -37,7 +44,7 @@ class Guest:
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "content-type": "application/x-www-form-urlencoded",
-            "sec-ch-prefers-color-scheme": preferred_color_scheme,
+            "sec-ch-prefers-color-scheme": random.choice(["light", "dark"]),
             "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
             "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
             "sec-ch-ua-mobile": "?0",
@@ -58,38 +65,23 @@ class Guest:
         }
 
         try:
-            http_response = self.request_session.post(
-                "https://www.instagram.com/api/v1/web/accounts/web_create_ajax/attempt/", headers=request_headers,
-                data=body_json)
+            http_response = self.request_session.post("https://www.instagram.com/api/v1/web/accounts/web_create_ajax/attempt/", headers=request_headers, data=body_json)
             response_json = http_response.json()
 
             if "errors" in response_json:
-
-                username_suggestions = []
-                if "username_suggestions" in response_json:
-                    username_suggestions = response_json["username_suggestions"]
-
-                if "username" in response_json["errors"]:
-                    return {"success": True, "available": False, "suggestions": username_suggestions}
-                else:
-                    return {"success": True, "available": True, "suggestions": username_suggestions}
-            else:
-                return {"success": False, "available": None, "suggestions": []}
+                return "username" not in response_json["errors"]
         except JSONDecodeError:
-            return {"success": False, "available": None, "suggestions": []}
+            return None
 
-    def profile(self, identifier: str | int, iu: bool = False):
+    def profile(self, username: str) -> Profile:
+        username = format_username(username)
         failure_response = Profile()
-        if not iu:
-            conversion_success, identifier = self.identifier_conversion(identifier, 0)
-            if not conversion_success: return failure_response
 
         refresh_csrf_token(self)
-        preferred_color_scheme = random.choice(["light", "dark"])
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
-            "sec-ch-prefers-color-scheme": preferred_color_scheme,
+            "sec-ch-prefers-color-scheme": random.choice(["light", "dark"]),
             "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
             "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
             "sec-ch-ua-mobile": "?0",
@@ -104,14 +96,15 @@ class Guest:
             "x-ig-app-id": self.insta_app_id,
             "x-ig-www-claim": "0",
             "x-requested-with": "XMLHttpRequest",
-            "Referer": f"https://www.instagram.com/{identifier}/",
+            "Referer": f"https://www.instagram.com/{username}/",
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
         try:
             http_response = self.request_session.get(
-                f"https://www.instagram.com/api/v1/users/web_profile_info/?username={identifier}",
-                headers=request_headers)
+                f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
+                headers=request_headers
+            )
             response_json = http_response.json()
 
             if "status" in response_json:
@@ -185,8 +178,7 @@ class Guest:
                                 user_pronouns.append(pronoun)
                             profile_object_pronouns = user_pronouns
 
-                        return Profile(success=True,
-                                       biography=profile_object_biography,
+                        return Profile(biography=profile_object_biography,
                                        country_block=profile_object_country_block,
                                        full_name=profile_object_full_name,
                                        follower_count=profile_object_follower_count,
@@ -211,73 +203,26 @@ class Guest:
         except JSONDecodeError:
             return failure_response
 
-    def get_userid(self, username: str):
+    def get_uid(self, username: str) -> str | None:
         username = username.strip().lower().replace(" ", "")
-        response = self.profile(username, iu=True)
+        response = self.profile(username)
 
-        if response.success:
-            if response.user_id is not None:
-                return {"success": True, "user_id": str(response.user_id).strip()}
-            else:
-                return {"success": False, "user_id": ""}
-        else:
-            return {"success": False, "user_id": ""}
+        if response.user_id is not None:
+            return format_uid(response.user_id)
 
-    def get_username(self, user_id: str | int):
-        user_id = str(user_id).strip()
+    def get_username(self, uid: str | int) -> str | None:
+        uid = format_uid(uid)
+        refresh_csrf_token(self)
         request_headers = {
             "User-Agent": "Instagram 76.0.0.15.395 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G930F; herolte; samsungexynos8890; en_US; 138226743)"
         }
 
         try:
-            http_response = self.request_session.get(f"https://i.instagram.com/api/v1/users/{user_id}/info/",
-                                                     headers=request_headers)
+            http_response = self.request_session.get(f"https://i.instagram.com/api/v1/users/{uid}/info/", headers=request_headers)
             response_json = http_response.json()
 
-            if "status" in response_json:
-                if response_json["status"] == "ok" and "user" in response_json:
-                    if "username" in response_json["user"]:
-                        return {"success": True, "username": response_json["user"]["username"]}
-                    else:
-                        return {"success": False, "username": ""}
-                else:
-                    return {"success": False, "username": ""}
-            else:
-                return {"success": False, "username": ""}
+            if "status" in response_json and response_json["status"] == "ok" and "user" in response_json and "username" in response_json["user"]:
+                return format_username(response_json["user"]["username"])
 
         except JSONDecodeError:
-            return {"success": False, "username": ""}
-
-    def identifier_conversion(self, identifier: str | int, required: str | int):
-        identifier = str(identifier).lower().replace(" ", "")
-        if len(identifier) < 1: raise IdentifierError(
-            "No identifier was given. Please pass either UserId or Username as an argument.")
-
-        # Detect if identifier is Username or UserId
-        is_username = False
-        for letter in identifier:
-            if letter not in string.digits:
-                is_username = True
-                break
-
-        # Generate UserId if identifier is Username
-        if is_username:
-            if required == 0:
-                return True, identifier
-            else:
-                user_id_response = self.get_userid(identifier)
-
-                if user_id_response["success"]:
-                    return True, user_id_response["user_id"]
-                else:
-                    return False, None
-        else:
-            if required == 0:
-                username_response = self.get_username(identifier)
-
-                if username_response["success"]:
-                    return True, username_response["username"]
-                else:
-                    return False, None
-            else:
-                return True, identifier
+            return None
