@@ -31,9 +31,14 @@ Here's an example where an instance of *Guest* is created to fetch [Cristiano Ro
 from ensta import Guest
 
 guest = Guest()
-profile = guest.profile("ronaldo")  # Fetch profile
+profile = guest.profile("ronaldo")
 
-print(profile.biography)  # Print biography
+if profile is None:
+    print("Something went wrong.")
+else:
+    print(profile.biography)
+    print(profile.follower_count)
+    print(profile.following_count)
 ```
 
 ## Host Mode
@@ -52,12 +57,19 @@ Here's an example where an instance of *Host* is created to follow [Cristiano Ro
 ```python
 from ensta import Host
 
-sessionid = "22222:bbbbb"  # Assume this is your session id
+sessionid = "621966:rickastley"  # REPLACE WITH YOUR SESSION ID
 
 host = Host(sessionid)
-status = host.follow("cristiano")  # Follow this person
+status = host.follow("cristiano")
 
-print(status.following, status.follow_requested)  # 'None' if not successful
+if status is None:
+    print("Something went wrong.")
+else:
+    if status.following:
+        print("Following!")
+    
+    elif status.follow_requested:
+        print("Requested to follow!")
 ```
 
 ## Session ID
