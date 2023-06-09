@@ -440,3 +440,57 @@ class Host:
 
         else:
             raise CodeError("Identifier Conversion (Else Block)")
+
+    def _set_account_privacy(self, privacy: str) -> bool:
+        is_private = (privacy == "private")
+
+        if privacy != "private" and privacy != "public":
+            raise CodeError("_set_account_privacy")
+
+        refresh_csrf_token(self)
+        body_json = {
+            "is_private": is_private
+        }
+        request_headers = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "content-type": "application/x-www-form-urlencoded",
+            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "198387",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-instagram-ajax": "1007616494",
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": "https://www.instagram.com/accounts/who_can_see_your_content/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        try:
+            http_response = self.request_session.post("https://www.instagram.com/api/v1/web/accounts/set_private/", headers=request_headers, data=body_json)
+            response_json = http_response.json()
+
+            if "status" not in response_json:
+                return False
+
+            if response_json["status"] != "ok":
+                return False
+
+            return True
+        except JSONDecodeError:
+            return False
+
+    def switch_to_private_account(self) -> bool:
+        return self._set_account_privacy("private")
+
+    def switch_to_public_account(self) -> bool:
+        return self._set_account_privacy("public")
