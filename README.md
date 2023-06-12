@@ -1,7 +1,7 @@
 # Ensta - Instagram Automation 🤖
 This package lets you use Instagram's Internal Web API through simple functions and classes, that can help developers like you build your dream projects with very few and reliable lines of code.
 
-It supports two type of classes - "Guest" and "Host".
+It supports three types of classes - *Guest*, *Host*, *Stream*.
 
 [!["Buy me a coffee"](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://buymeacoffee.com/diezo)
 
@@ -57,7 +57,7 @@ Here's an example where an instance of *Host* is created to follow [Cristiano Ro
 ```python
 from ensta import Host
 
-sessionid = "621966:rickastley"  # REPLACE WITH YOUR SESSION ID
+sessionid = "123456:abcdefg"  # Place your SessionId here
 
 host = Host(sessionid)
 status = host.follow("cristiano")
@@ -70,6 +70,32 @@ else:
     
     elif status.follow_requested:
         print("Requested to follow!")
+```
+
+## Stream Mode
+This mode is able to fetch large (or even small) amounts of data and return simultaneously. It uses [Python's Generator Class](https://wiki.python.org/moin/Generators) to generate data at realtime and return it for further processing. Just like the Host Class, it also requires the user to log in using [SessionID](https://github.com/diezo/ensta#session-id).
+
+These are the methods supported till now:
+- Fetch someone's follower list
+- Fetch someone's following list
+
+Here's an example where an instance of *Stream* is created to fetch [Cristiano Ronaldo's](https://www.instagram.com/cristiano/) first 100 followers:
+
+```python
+from ensta import Stream
+
+sessionid = "123456:abcdefg"  # Place your SessionId here
+
+stream = Stream(sessionid)
+followers = stream.followers("cristiano")
+
+for user in followers:
+    if user is None:
+        print("Something went wrong.")
+        break
+
+    print(user.username)
+    print(user.full_name)
 ```
 
 ## Session ID
