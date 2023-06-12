@@ -73,7 +73,9 @@ else:
 ```
 
 ## Stream Mode
-This mode is able to fetch large (or even small) amounts of data and return simultaneously. It uses [Python's Generator Class](https://wiki.python.org/moin/Generators) to generate data at realtime and return it for further processing. Just like the Host Class, it also requires the user to log in using [SessionID](https://github.com/diezo/ensta#session-id).
+This mode pulls data at realtime, so the program can process it simultaneously. It requires login through [SessionID](https://github.com/diezo/ensta#session-id).
+
+In a situation where you might need to fetch someone's entire follower list, this mode comes handy.
 
 These are the methods supported till now:
 - Fetch someone's follower list
