@@ -17,6 +17,7 @@ from .lib import (
     CodeError
 )
 from .containers import (FollowedStatus, UnfollowedStatus)
+from .containers.Profile import Profile
 
 USERNAME = 0
 UID = 1
@@ -281,3 +282,6 @@ class Host:
 
     def switch_to_public_account(self) -> bool:
         return self._set_account_privacy("public")
+
+    def profile(self, username: str) -> Profile | None:
+        return self.guest.profile(username, self.request_session)

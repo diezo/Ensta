@@ -73,9 +73,8 @@ class Guest:
         except JSONDecodeError:
             return None
 
-    def profile(self, username: str) -> Profile | None:
+    def profile(self, username: str, __session__: requests.Session = None) -> Profile | None:
         username = format_username(username)
-
         refresh_csrf_token(self)
         request_headers = {
             "accept": "*/*",
@@ -100,7 +99,10 @@ class Guest:
         }
 
         try:
-            http_response = self.request_session.get(
+            session = __session__
+            if __session__ is None: session = self.request_session
+
+            http_response = session.get(
                 f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
                 headers=request_headers
             )
