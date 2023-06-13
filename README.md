@@ -16,7 +16,7 @@ To upgrade to the latest version, run:
 pip install ensta --upgrade
 ```
 
-## 😶 Guest Mode
+## 🧔🏻‍♂️ Guest Mode
 This mode doesn't require login and can be used to fetch publicly available data from Instagram's Servers. Following methods are supported till now:
 - Check if username is available for registration
 - Fetch someone's profile data
