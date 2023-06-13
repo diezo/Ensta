@@ -31,7 +31,7 @@ Here's an example where an instance of *Guest* is created to fetch [Cristiano Ro
 from ensta import Guest
 
 guest = Guest()
-profile = guest.profile("ronaldo")
+profile = guest.profile("cristiano")
 
 if profile is None:
     print("Something went wrong.")
