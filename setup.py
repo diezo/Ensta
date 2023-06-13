@@ -8,7 +8,7 @@ setup(
     packages=["ensta", "ensta.lib", "ensta.containers"],
     version="1.5",
     license="MIT",
-    description="Simple & Up-to-date Instagram API",
+    description="🔥 Fastest & Simplest Python Package For Instagram Automation",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Deepak Soni",
