@@ -1,4 +1,4 @@
-# Ensta - Instagram Automation 🤖
+# 🤖 Ensta - Simple Instagram API
 This package lets you use Instagram's Internal Web API through simple functions and classes, that can help developers like you build your dream projects with very few and reliable lines of code.
 
 It supports three types of classes - *Guest*, *Host*, *Stream*.
@@ -99,6 +99,15 @@ for user in followers:
     print(user.username)
     print(user.full_name)
 ```
+
+## Considerations
+Here are some key points to consider when using this library in production:
+- You can use *Guest*, *Host* & *Stream* classes simultaneously, and create multiple instances of the same class when required.
+- Functions should return *None* on failure. So, add clauses for the same.
+
+- Some functions take Identifier as an argument while others take Username. These are the key differences between the two:
+  - The argument **Identifier** means you can pass either Username or UserID.
+  - The argument **Username** means you must pass the Username only, and not the UserID.
 
 ## Session ID
 When you log in to *instagram.com* in your browser, your browser store your credentials in the form of [Cookies](https://en.wikipedia.org/wiki/HTTP_cookie). The type of cookie that instagram uses to remember your session is 'SessionID'.
