@@ -4,7 +4,7 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/ensta)](https://pypi.org/project/ensta)
 [![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
 
-[//]: # (![Banner]&#40;&#41;)
+![Banner](https://raw.githubusercontent.com/diezo/Ensta/master/assets/banner.png)
 
 This library lets you use Instagram's Internal Web API through simple functions and classes, that can help developers like you build projects with a few and reliable lines of code.
 
