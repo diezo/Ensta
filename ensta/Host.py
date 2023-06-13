@@ -32,15 +32,11 @@ class Host:
     csrf_token: str = None
     guest: Guest = None
 
-    def __init__(self, session_id: str, app_id: str | int = None) -> None:
+    def __init__(self, session_id: str) -> None:
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
         update_session(self)
         update_homepage_source(self)
-
-        if app_id is not None:
-            self.insta_app_id = str(app_id)
-        else:
-            update_app_id(self)
+        update_app_id(self)
 
         self.guest = Guest(
             homepage_source=self.homepage_source,

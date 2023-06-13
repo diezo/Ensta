@@ -39,7 +39,7 @@ class Stream:
         update_app_id(self)
         self.guest = Guest(
             homepage_source=self.homepage_source,
-            insta_app_id=self.insta_app_id
+            app_id=self.insta_app_id
         )
 
         self.request_session.cookies.set("sessionid", session_id)
