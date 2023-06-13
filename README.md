@@ -1,5 +1,10 @@
 # 🤖 Ensta - Simple Instagram API
-This library  lets you use Instagram's Internal Web API through simple functions and classes, that can help developers like you build projects with a few and reliable lines of code.
+![PyPI](https://img.shields.io/pypi/v/ensta)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/ensta)
+![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
+
+This library lets you use Instagram's Internal Web API through simple functions and classes, that can help developers like you build projects with a few and reliable lines of code.
 
 It supports three two of classes - *Guest* & *Host*.
 
