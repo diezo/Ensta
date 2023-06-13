@@ -314,7 +314,7 @@ class Stream:
                 yield None
                 return None
 
-    def _identifier(self, identifier: str | int, required: str | int):
+    def _identifier(self, identifier: str | int, required: str | int) -> tuple[bool, str | None]:
         identifier = format_identifier(identifier)
 
         if len(identifier) <= 0:
