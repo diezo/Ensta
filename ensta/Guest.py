@@ -18,7 +18,7 @@ class Guest:
     insta_app_id: str = None
     csrf_token: str = None
 
-    def __init__(self, homepage_source: str = None, insta_app_id: str = None) -> None:
+    def __init__(self, homepage_source: str = None, app_id: str | int = None) -> None:
         update_session(self)
 
         if homepage_source is not None:
@@ -26,8 +26,8 @@ class Guest:
         else:
             update_homepage_source(self)
 
-        if insta_app_id is not None:
-            self.insta_app_id = insta_app_id
+        if app_id is not None:
+            self.insta_app_id = str(app_id)
         else:
             update_app_id(self)
 
