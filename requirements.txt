@@ -1,2 +1,3 @@
 requests
+selenium
 browser-cookie3

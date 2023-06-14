@@ -10,7 +10,9 @@ from .Commons import (
 
 from .Exceptions import (
     NetworkError,
-    AuthenticationError,
+    SessionError,
     IdentifierError,
-    CodeError
+    DevelopmentError,
+    AuthenticationError,
+    ChallengeError
 )

@@ -12,10 +12,10 @@ from .lib.Commons import (
     format_identifier
 )
 from .lib import (
-    AuthenticationError,
+    SessionError,
     NetworkError,
     IdentifierError,
-    CodeError
+    DevelopmentError
 )
 from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
 from .containers.Profile import Profile
@@ -47,7 +47,7 @@ class Host:
         self.request_session.cookies.set("sessionid", session_id)
 
         if not self.authenticated():
-            raise AuthenticationError("Either User ID or Session ID is not valid.")
+            raise SessionError("SessionID is incorrect or expired.")
 
     def update_homepage_source(self) -> None:
         temp_homepage_source = requests.get("https://www.instagram.com/").text.strip()
@@ -457,13 +457,13 @@ class Host:
             return True, identifier
 
         else:
-            raise CodeError("Identifier Conversion (Else Block)")
+            raise DevelopmentError("Identifier Conversion (Else Block)")
 
     def _set_account_privacy(self, privacy: str) -> bool:
         is_private = (privacy == "private")
 
         if privacy != "private" and privacy != "public":
-            raise CodeError("_set_account_privacy")
+            raise DevelopmentError("_set_account_privacy")
 
         refresh_csrf_token(self)
         body_json = {

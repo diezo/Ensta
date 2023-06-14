@@ -1,26 +1,29 @@
 # 🤖 Ensta - Simple Instagram API
 [![PyPI](https://img.shields.io/pypi/v/ensta)](https://pypi.org/project/ensta)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/ensta)](https://pypi.org/project/ensta)
-[![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
+[![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
+[![Twitter Share](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
 
-![Banner](https://raw.githubusercontent.com/diezo/Ensta/master/assets/banner.png)
+![Banner](https://i.ibb.co/n1fSyJ7/banner.png)
 
-This library lets you use Instagram's Internal Web API through simple functions and classes, that can help developers like you build projects with a few and reliable lines of code.
+This package lets you use Instagram's Internal Web API through simple functions and classes. Ensta uses Instagram's Original Web API to scrape data which makes it a reliable choice over other third-party scrapers. This library mainly focuses on Simplicity & Reliability.
 
-It supports three two of classes - *Guest* & *Host*.
+Two type of classes are supported - ***Guest & Host***.
 
-[!["Buy me a coffee"](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://buymeacoffee.com/diezo)
+[<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
+
+## 📢 Announcement
+Users can now log in through their **Username** and **Password** to generate SessionId!
 
 ## Installation
-To install this library using [Python's PIP](https://pypi.org/project/pip/), run this command in a command-line interface:
+To install this package using [Python's PIP](https://pypi.org/project/pip/), run this command in a terminal window:
 ```shell
-pip install ensta
+$ pip install ensta
 ```
 
-To upgrade to the latest version, run:
+To update the existing package, run:
 ```shell
-pip install ensta --upgrade
+$ pip install ensta --upgrade
 ```
 
 ## 🧔🏻‍♂️ Guest Mode
@@ -30,7 +33,7 @@ This mode doesn't require login and can be used to fetch publicly available data
 - Convert username to userid
 - Convert userid to username
 
-Here's an example where an instance of *Guest* Class is created to fetch [Cristiano Ronaldo's](https://www.instagram.com/cristiano/) profile information:
+Here's an example where an instance of *Guest Class* is created to fetch [Cristiano Ronaldo's](https://www.instagram.com/cristiano/) profile information:
 
 ```python
 from ensta import Guest
@@ -47,21 +50,21 @@ else:
 ```
 
 ## 🧔🏻‍♂️ Host Mode
-This mode requires login through [SessionID](https://github.com/diezo/ensta#session-id). The SessionID should be passed as an argument while initializing this class. It can be used to fetch data that requires login. Additionally, users can perform several actions on their profile.
+Host mode requires login through SessionID, which should be passed as an argument during initialization.
+It can be used to take actions that require login. Additionally, users can manage their own profile through this class.
 
 These are the methods supported till now:
 - Check authentication status of the user
-- Send follow request to an account
-- Follow/unfollow accounts
+- Follow/unfollow users
 - Fetch someone's follower/following list
-- Toggle account privacy - 'Public' or 'Private'
+- Switch account type - 'Public' or 'Private'
 
-Here's an example where an instance of *Host* Class is created to follow [Cristiano Ronaldo's](https://www.instagram.com/cristiano/) account:
+Here's an example where an instance of *Host Class* is created to follow [Cristiano Ronaldo's](https://www.instagram.com/cristiano/) account:
 
 ```python
-from ensta import Host
+from ensta import Host, NewSessionID
 
-sessionid = "123456:abcdefg"  # Place your SessionId here
+sessionid = NewSessionID("username", "password")
 
 host = Host(sessionid)
 status = host.follow("cristiano")
@@ -76,37 +79,29 @@ else:
         print("Requested to follow!")
 ```
 
-## Important
-Every function should return **None** on failure. So, it's recommended to an add if statement before using the actual data to avoid TypeError. Here's an example:
+> ### **Note:**
+> When you create a new sessionid through *NewSessionID()*, it's recommended to save it somewhere, and use the same sessionid (instead of creating a new one each time you need) until it expires or becomes invalid.
+>
+> This should be done to avoid unnecessary prolonged wait time while generating a new sessionid and also to prevent getting your account from getting flagged because of repetitive logins.
+
+## Remember
+Every function should return **None** on failure. So, it's recommended to add an *if statement* before using the actual data to avoid TypeErrors. Here's an example:
 ```python
 from ensta import Guest
 
 guest = Guest()
 available = guest.username_availability("cristiano")
 
-if available is None:  # Operation failed
+if available is None:  # 'None' indicates failure
     print("Something went wrong.")
 else:
     print(available)
 ```
 
-## Session ID
-When you log in to *instagram.com* in your browser, your browser store your credentials in the form of [Cookies](https://en.wikipedia.org/wiki/HTTP_cookie). The type of cookie that instagram uses to remember your session is 'SessionID'.
-
-In order to use the [Host Class](https://github.com/diezo/ensta#host-mode), you need to pass this cookie as an argument so that Ensta can use it to log into your account. Follow these steps to get your SessionID:
-- Visit [Instagram.com](https://instagram.com) and log into your account.
-- Once you're logged in, open DevTools (Ctrl + Shift + I).
-- Switch to **Application** tab.
-- Under *Storage* options, expand the **Cookies** tab, and tap the first item.
-- Once done, you will see the list of all cookies.
-- Copy value of cookie named 'sessionid' and pass it as an argument whenever you use the **Host Class**.
-
-An alternative way to automatically fetch SessionID is to run the [fetch-sessionid.py](https://github.com/diezo/ensta/blob/master/fetch-sessionid.py) script. Currently, this script can only fetch cookies from Google Chrome, and not any other browser.
-
 ## Donate ❤️
-If this library has added value to your projects, you may consider supporting me in the development of this library by donating here:
+If you wish to help me in the development of Ensta, consider donating:
 
-[!["Buy me a coffee"](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://buymeacoffee.com/diezo)
+[<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
 ## Disclaimer
-This is a third-party library, not an official library from Instagram. The use of the library does not promote creation of bot accounts or spamming Instagram Users. You are liable for all the actions you take through this library. Use of such libraries maybe against [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/).
+This is a third-party package, and not approved by Instagram. It doesn't promote illegal activities or activities that violate [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/) such as spamming users, creating bot accounts, misusing data etc. You are solely responsible for all the actions you take using this package.
