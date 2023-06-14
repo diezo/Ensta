@@ -4,7 +4,7 @@
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 [![Twitter Share](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
 
-![Banner](https://imgtr.ee/images/2023/06/14/Twfd4.png)
+<img style="border-radius: 10px" src="https://imgtr.ee/images/2023/06/14/Twfd4.png"/>
 
 This package lets you use Instagram's Internal Web API through simple functions and classes. Ensta uses Instagram's Original Web API to scrape data which makes it a reliable choice over other third-party scrapers. This library mainly focuses on Simplicity & Reliability.
 
@@ -84,7 +84,7 @@ else:
 >
 > This should be done to avoid unnecessary prolonged wait time while generating a new sessionid and also to prevent getting your account from getting flagged because of repetitive logins.
 
-## Remember
+## 📋 Remember
 Every function should return **None** on failure. So, it's recommended to add an *if statement* before using the actual data to avoid TypeErrors. Here's an example:
 ```python
 from ensta import Guest
@@ -98,7 +98,7 @@ else:
     print(available)
 ```
 
-## Donate ❤️
+## ❤️ Donate
 If you wish to help me in the development of Ensta, consider donating:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
