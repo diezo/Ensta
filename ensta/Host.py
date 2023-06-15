@@ -19,7 +19,7 @@ from .lib import (
     APIError
 )
 from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
-from .containers.Profile import Profile
+from .containers.ProfileHost import ProfileHost
 
 USERNAME = 0
 UID = 1
@@ -458,5 +458,8 @@ class Host:
     def switch_to_public_account(self) -> bool:
         return self._set_account_privacy("public")
 
-    def profile(self, username: str) -> Profile | None:
-        return self.guest.profile(username, self.request_session)
+    def profile(self, username: str) -> ProfileHost | None:
+        return self.guest.profile(username, __session__=self.request_session)
+
+    def get_username(self, uid: str | int) -> str | None:
+        return self.guest.get_username(uid, __session__=self.request_session)

@@ -11,6 +11,8 @@ from .lib.Commons import (
 )
 from .lib.Exceptions import APIError
 from .containers.Profile import Profile
+from .containers.ProfileHost import ProfileHost
+import dataclasses
 
 
 class Guest:
@@ -74,7 +76,7 @@ class Guest:
         except JSONDecodeError:
             return None
 
-    def profile(self, username: str, __session__: requests.Session = None) -> Profile | None:
+    def profile(self, username: str, __session__: requests.Session | None = None) -> Profile | ProfileHost | None:
         username: str = format_username(username)
         refresh_csrf_token(self)
         request_headers: dict = {
@@ -115,7 +117,10 @@ class Guest:
                         try:
                             data: dict = response_json["data"]["user"]
 
-                            return Profile(
+                            if data is None:
+                                return None
+
+                            profile = Profile(
                                 biography=data["biography"],
                                 biography_links=data["bio_links"],
                                 country_block=data["country_block"],
@@ -145,6 +150,26 @@ class Guest:
                                 show_account_transparency_details=data["show_account_transparency_details"],
                                 total_post_count=data["edge_owner_to_timeline_media"]["count"]
                             )
+
+                            if __session__ is not None:
+                                profile_host = ProfileHost()
+
+                                for key, value in dataclasses.asdict(profile).items():
+                                    setattr(profile_host, key, value)
+
+                                profile_host.blocked_by_viewer = data["blocked_by_viewer"]
+                                profile_host.followed_by_viewer = data["followed_by_viewer"]
+                                profile_host.follows_viewer = data["follows_viewer"]
+                                profile_host.has_blocked_viewer = data["has_blocked_viewer"]
+                                profile_host.has_requested_viewer = data["has_requested_viewer"]
+                                profile_host.is_guardian_of_viewer = data["is_guardian_of_viewer"]
+                                profile_host.is_supervised_by_viewer = data["is_supervised_by_viewer"]
+                                profile_host.requested_by_viewer = data["requested_by_viewer"]
+                                profile_host.mutual_follower_count = data["edge_mutual_followed_by"]["count"]
+
+                                return profile_host
+
+                            return profile
                         except KeyError:
                             raise APIError()
         except JSONDecodeError:
@@ -157,7 +182,7 @@ class Guest:
         if response.user_id is not None:
             return format_uid(response.user_id)
 
-    def get_username(self, uid: str | int) -> str | None:
+    def get_username(self, uid: str | int, __session__: requests.Session | None = None) -> str | None:
         uid = format_uid(uid)
         refresh_csrf_token(self)
         request_headers = {
@@ -165,7 +190,10 @@ class Guest:
         }
 
         try:
-            http_response = self.request_session.get(f"https://i.instagram.com/api/v1/users/{uid}/info/", headers=request_headers)
+            session: requests.Session = __session__
+            if __session__ is None: session: requests.Session = self.request_session
+
+            http_response = session.get(f"https://i.instagram.com/api/v1/users/{uid}/info/", headers=request_headers)
             response_json = http_response.json()
 
             if "status" in response_json and response_json["status"] == "ok" and "user" in response_json and "username" in response_json["user"]:
