@@ -15,7 +15,8 @@ from .lib import (
     SessionError,
     NetworkError,
     IdentifierError,
-    DevelopmentError
+    DevelopmentError,
+    APIError
 )
 from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
 from .containers.Profile import Profile
@@ -201,7 +202,7 @@ class Host:
 
         # Actual Request
         refresh_csrf_token(self)
-        request_headers = {
+        request_headers: dict = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
@@ -223,14 +224,14 @@ class Host:
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        current_max_id = ""
-        generated_count = 0
+        current_max_id: str = ""
+        generated_count: int = 0
 
         while True:
-            current_max_id_text = ""
+            current_max_id_text: str = ""
 
             if current_max_id != "":
-                current_max_id_text = f"&max_id={current_max_id}"
+                current_max_id_text: str = f"&max_id={current_max_id}"
 
             try:
                 count_text = 35
@@ -252,49 +253,22 @@ class Host:
                 for each_item in response_json["users"]:
                     if generated_count < count or count == 0:
 
-                        prop_has_anonymous_profile_picture = None
-                        prop_user_id = None
-                        prop_username = None
-                        prop_full_name = None
-                        prop_is_private = None
-                        prop_is_verified = None
-                        prop_profile_picture_url = None
-                        prop_is_possible_scammer = None
+                        try:
+                            yield FollowPerson(
+                                has_anonymous_profile_picture=each_item["has_anonymous_profile_picture"],
+                                user_id=each_item["pk"],
+                                username=each_item["username"],
+                                full_name=each_item["full_name"],
+                                is_private=each_item["is_private"],
+                                is_verified=each_item["is_verified"],
+                                profile_picture_url=each_item["profile_pic_url"],
+                                badges=each_item["account_badges"],
+                                third_party_downloads_enabled=each_item["third_party_downloads_enabled"],
+                                is_possible_scammer=each_item["is_possible_scammer"]
+                            )
 
-                        if "has_anonymous_profile_picture" in each_item:
-                            prop_has_anonymous_profile_picture = each_item["has_anonymous_profile_picture"]
-
-                        if "pk" in each_item:
-                            prop_user_id = each_item["pk"]
-
-                        if "username" in each_item:
-                            prop_username = each_item["username"]
-
-                        if "full_name" in each_item:
-                            prop_full_name = each_item["full_name"]
-
-                        if "is_private" in each_item:
-                            prop_is_private = each_item["is_private"]
-
-                        if "is_verified" in each_item:
-                            prop_is_verified = each_item["is_verified"]
-
-                        if "profile_pic_url" in each_item:
-                            prop_profile_picture_url = each_item["profile_pic_url"]
-
-                        if "is_possible_scammer" in each_item:
-                            prop_is_possible_scammer = each_item["is_possible_scammer"]
-
-                        yield FollowPerson(
-                            has_anonymous_profile_picture=prop_has_anonymous_profile_picture,
-                            user_id=prop_user_id,
-                            username=prop_username,
-                            full_name=prop_full_name,
-                            is_private=prop_is_private,
-                            is_verified=prop_is_verified,
-                            profile_picture_url=prop_profile_picture_url,
-                            is_possible_scammer=prop_is_possible_scammer
-                        )
+                        except KeyError:
+                            raise APIError()
 
                         generated_count += 1
 
@@ -367,49 +341,20 @@ class Host:
                 for each_item in response_json["users"]:
                     if generated_count < count or count == 0:
 
-                        prop_has_anonymous_profile_picture = None
-                        prop_user_id = None
-                        prop_username = None
-                        prop_full_name = None
-                        prop_is_private = None
-                        prop_is_verified = None
-                        prop_profile_picture_url = None
-                        prop_is_possible_scammer = None
+                        try:
+                            yield FollowPerson(
+                                has_anonymous_profile_picture=each_item["has_anonymous_profile_picture"],
+                                user_id=each_item["pk"],
+                                username=each_item["username"],
+                                full_name=each_item["full_name"],
+                                is_private=each_item["is_private"],
+                                is_verified=each_item["is_verified"],
+                                profile_picture_url=each_item["profile_pic_url"],
+                                is_possible_scammer=each_item["is_possible_scammer"]
+                            )
 
-                        if "has_anonymous_profile_picture" in each_item:
-                            prop_has_anonymous_profile_picture = each_item["has_anonymous_profile_picture"]
-
-                        if "pk" in each_item:
-                            prop_user_id = each_item["pk"]
-
-                        if "username" in each_item:
-                            prop_username = each_item["username"]
-
-                        if "full_name" in each_item:
-                            prop_full_name = each_item["full_name"]
-
-                        if "is_private" in each_item:
-                            prop_is_private = each_item["is_private"]
-
-                        if "is_verified" in each_item:
-                            prop_is_verified = each_item["is_verified"]
-
-                        if "profile_pic_url" in each_item:
-                            prop_profile_picture_url = each_item["profile_pic_url"]
-
-                        if "is_possible_scammer" in each_item:
-                            prop_is_possible_scammer = each_item["is_possible_scammer"]
-
-                        yield FollowPerson(
-                            has_anonymous_profile_picture=prop_has_anonymous_profile_picture,
-                            user_id=prop_user_id,
-                            username=prop_username,
-                            full_name=prop_full_name,
-                            is_private=prop_is_private,
-                            is_verified=prop_is_verified,
-                            profile_picture_url=prop_profile_picture_url,
-                            is_possible_scammer=prop_is_possible_scammer
-                        )
+                        except KeyError:
+                            raise APIError()
 
                         generated_count += 1
 
