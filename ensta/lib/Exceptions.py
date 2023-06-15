@@ -32,3 +32,9 @@ class ChallengeError(Exception):
 
     def __init__(self, message):
         super().__init__(message)
+
+
+class APIError(Exception):
+
+    def __init__(self):
+        super().__init__("Looks like Instagram has made changes to the API Response. Please raise this as an issue on GitHub.")
