@@ -4,7 +4,6 @@ import string
 import json
 from json import JSONDecodeError
 from collections.abc import Generator
-from .Guest import Guest
 from .lib.Commons import (
     refresh_csrf_token,
     update_app_id,
@@ -23,8 +22,9 @@ from .lib import (
 )
 from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
 from .containers.ProfileHost import ProfileHost
-from .containers.Post import Post
 from .containers.PostUser import PostUser
+from .containers.Post import Post
+from .Guest import Guest
 
 USERNAME = 0
 UID = 1
@@ -371,72 +371,6 @@ class Host:
                 yield None
                 return None
 
-    def posts(self, username: str, count: int = 0) -> Generator[Post, None, None]:
-        username = format_username(username)
-
-        refresh_csrf_token(self)
-        request_headers = {
-            "accept": "*/*",
-            "accept-language": "en-US,en;q=0.9",
-            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.110\", \"Google Chrome\";v=\"114.0.5735.110\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-ch-ua-platform-version": "\"15.0.0\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
-            "viewport-width": "1475",
-            "x-asbd-id": "129477",
-            "x-csrftoken": self.csrf_token,
-            "x-ig-app-id": self.insta_app_id,
-            "x-ig-www-claim": self.x_ig_www_claim,
-            "x-requested-with": "XMLHttpRequest",
-            "Referer": f"https://www.instagram.com/{username}/",
-            "Referrer-Policy": "strict-origin-when-cross-origin"
-        }
-
-        current_max_id = ""
-        generated_count = 0
-
-        while True:
-            current_max_id_text = ""
-
-            if current_max_id != "":
-                current_max_id_text = f"&max_id={current_max_id}"
-
-            try:
-                count_text = 35
-
-                if count < 35:
-                    count_text = count
-
-                http_response = self.request_session.get(f"https://www.instagram.com/api/v1/feed/user/{username}/username/?count={count_text}{current_max_id_text}", headers=request_headers)
-                response_json = http_response.json()
-
-                if "status" not in response_json or "items" not in response_json:
-                    yield None
-                    return None
-
-                if response_json["status"] != "ok":
-                    yield None
-                    return None
-
-                for each_item in response_json["items"]:
-                    if generated_count < count or count == 0:
-
-                        yield self._process_post_data(each_item)
-                        generated_count += 1
-
-                if (generated_count < count or count == 0) and "next_max_id" in response_json:
-                    current_max_id = response_json["next_max_id"]
-                else:
-                    return None
-            except JSONDecodeError:
-                yield None
-                return None
-
     def _identifier(self, identifier: str | int, required: str | int):
         identifier = format_identifier(identifier)
 
@@ -535,6 +469,72 @@ class Host:
     def get_username(self, uid: str | int) -> str | None:
         return self.guest.get_username(uid, __session__=self.request_session)
 
+    def posts(self, username: str, count: int = 0) -> Generator[Post, None, None]:
+        username = format_username(username)
+
+        refresh_csrf_token(self)
+        request_headers = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.110\", \"Google Chrome\";v=\"114.0.5735.110\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": f"https://www.instagram.com/{username}/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        current_max_id = ""
+        generated_count = 0
+
+        while True:
+            current_max_id_text = ""
+
+            if current_max_id != "":
+                current_max_id_text = f"&max_id={current_max_id}"
+
+            try:
+                count_text = 35
+
+                if count < 35:
+                    count_text = count
+
+                http_response = self.request_session.get(f"https://www.instagram.com/api/v1/feed/user/{username}/username/?count={count_text}{current_max_id_text}", headers=request_headers)
+                response_json = http_response.json()
+
+                if "status" not in response_json or "items" not in response_json:
+                    yield None
+                    return None
+
+                if response_json["status"] != "ok":
+                    yield None
+                    return None
+
+                for each_item in response_json["items"]:
+                    if generated_count < count or count == 0:
+
+                        yield self._process_post_data(each_item)
+                        generated_count += 1
+
+                if (generated_count < count or count == 0) and "next_max_id" in response_json:
+                    current_max_id = response_json["next_max_id"]
+                else:
+                    return None
+            except JSONDecodeError:
+                yield None
+                return None
+
     def post(self, share_url: str) -> Post | None:
         share_url: str = format_url(share_url)
         request_headers = {
@@ -628,7 +628,7 @@ class Host:
             )
 
         return Post(
-            _instance=self.__class__,
+            instance=self,
             share_url=f"https://www.instagram.com/p/{data.get('code', '')}",
             taken_at=data.get("taken_at", 0),
             unique_key=data.get("pk", ""),

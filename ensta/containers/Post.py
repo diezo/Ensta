@@ -1,13 +1,12 @@
 from ensta.containers import PostUser
 from dataclasses import dataclass, field
-from ensta import Host
 from ensta.lib.Commons import refresh_csrf_token
 from json import JSONDecodeError
 
 
 @dataclass(frozen=False)
 class Post:
-    _instance: type[Host] | None = None
+    instance: any = None
     share_url: str = ""
     taken_at: int = 0
     unique_key: str = ""
@@ -49,12 +48,12 @@ class Post:
     def _like_action(self, action: str = "like") -> bool:
         if self.unique_key == "": return False
 
-        refresh_csrf_token(self._instance)
+        refresh_csrf_token(self.instance)
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "content-type": "application/x-www-form-urlencoded",
-            "sec-ch-prefers-color-scheme": self._instance.preferred_color_scheme,
+            "sec-ch-prefers-color-scheme": self.instance.preferred_color_scheme,
             "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
             "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.110\", \"Google Chrome\";v=\"114.0.5735.110\"",
             "sec-ch-ua-mobile": "?0",
@@ -65,9 +64,9 @@ class Post:
             "sec-fetch-site": "same-origin",
             "viewport-width": "1475",
             "x-asbd-id": "129477",
-            "x-csrftoken": self._instance.csrf_token,
-            "x-ig-app-id": self._instance.insta_app_id,
-            "x-ig-www-claim": self._instance.x_ig_www_claim,
+            "x-csrftoken": self.instance.csrf_token,
+            "x-ig-app-id": self.instance.insta_app_id,
+            "x-ig-www-claim": self.instance.x_ig_www_claim,
             "x-instagram-ajax": "1007670408",
             "x-requested-with": "XMLHttpRequest",
             "Referer": f"https://www.instagram.com/p/{self.code}/",
@@ -75,7 +74,7 @@ class Post:
         }
 
         try:
-            http_response = self._instance.request_session.post(f"https://www.instagram.com/api/v1/web/likes/{self.unique_key}/{action}/", headers=request_headers)
+            http_response = self.instance.request_session.post(f"https://www.instagram.com/api/v1/web/likes/{self.unique_key}/{action}/", headers=request_headers)
             response_json = http_response.json()
 
             if "status" in response_json:
