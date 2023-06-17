@@ -71,3 +71,7 @@ def format_uid(uid: str) -> str:
 
 def format_identifier(identifier: str | int) -> str:
     return str(identifier).lower().replace(" ", "")
+
+
+def format_url(url: str) -> str:
+    return url.strip()
