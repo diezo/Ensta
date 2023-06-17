@@ -1,3 +1,4 @@
 requests
 selenium
 browser-cookie3
+fake-useragent

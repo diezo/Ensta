@@ -13,6 +13,7 @@ from .lib.Exceptions import APIError
 from .containers.Profile import Profile
 from .containers.ProfileHost import ProfileHost
 import dataclasses
+from fake_useragent import UserAgent
 
 
 class Guest:
@@ -43,13 +44,14 @@ class Guest:
             "first_name": username.capitalize(),
             "opt_into_one_tap": False
         }
+        ua = UserAgent().random
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "content-type": "application/x-www-form-urlencoded",
             "sec-ch-prefers-color-scheme": random.choice(["light", "dark"]),
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua": ua,
+            "sec-ch-ua-full-version-list": ua,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -79,12 +81,13 @@ class Guest:
     def profile(self, username: str, __session__: requests.Session | None = None) -> Profile | ProfileHost | None:
         username: str = format_username(username)
         refresh_csrf_token(self)
+        ua = UserAgent().random
         request_headers: dict = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": random.choice(["light", "dark"]),
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua": ua,
+            "sec-ch-ua-full-version-list": ua,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -107,7 +110,7 @@ class Guest:
 
             http_response: requests.Response = session.get(
                 f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
-                headers=request_headers
+                headers=request_headers,
             )
             response_json: dict = http_response.json()
 
