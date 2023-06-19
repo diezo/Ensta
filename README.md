@@ -12,8 +12,10 @@ Two type of classes are supported - ***Guest & Host***.
 
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
-## 📢 Announcement
-Users can now log in through their **Username** and **Password** to generate SessionId! [See this](https://github.com/diezo/ensta#:~:text=NewSessionID(%22username%22%2C%20%22password%22))
+## 📢 Announcements
+**[#02]** [AutoHost](https://github.com/diezo/ensta/) is released! Authentication update to the *Host Class*.
+
+**[#01]** Users can now log in through their **Username** and **Password** to generate SessionId! [See this](https://github.com/diezo/ensta#:~:text=NewSessionID(%22username%22%2C%20%22password%22))
 
 ## Installation
 To install this package using [Python's PIP](https://pypi.org/project/pip/), run this command in a terminal window:
