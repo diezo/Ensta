@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Liker import Liker
+from .Liker import Liker
 
 
 @dataclass(frozen=True)
