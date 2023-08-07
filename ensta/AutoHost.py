@@ -12,7 +12,7 @@ class AutoHost(Host):
     load: any = None
     file: str | None = None
 
-    def __init__(self, username: str, password: str, file: str = None, save: any = None, load: any = None) -> None:
+    def __init__(self, username: str, password: str, file: str = None, save: any = None, load: any = None, proxy: dict[str, str] | None = None) -> None:
 
         self.username: str = username
         self.password: str = password
@@ -36,7 +36,7 @@ class AutoHost(Host):
             else: sessionid: str = self._new_session()
 
             # Initialize Parent Class
-            super(AutoHost, self).__init__(sessionid)
+            super(AutoHost, self).__init__(sessionid, proxy)
 
         # Load From File
         else:
@@ -58,7 +58,7 @@ class AutoHost(Host):
             else: sessionid: str = self._new_session()
 
             # Initialize Parent Class
-            super(AutoHost, self).__init__(sessionid)
+            super(AutoHost, self).__init__(sessionid, proxy)
 
     def _new_session(self) -> str:
         # Generate New SessionID
