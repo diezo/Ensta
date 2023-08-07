@@ -22,18 +22,16 @@ class Guest:
     insta_app_id: str = None
     csrf_token: str = None
 
-    def __init__(self, homepage_source: str = None, app_id: str | int = None) -> None:
+    def __init__(self, homepage_source: str = None, app_id: str | int = None, proxy: dict[str, str] | None = None) -> None:
         update_session(self)
 
-        if homepage_source is not None:
-            self.homepage_source = homepage_source
-        else:
-            update_homepage_source(self)
+        if proxy is not None: self.request_session.proxies.update(proxy)
 
-        if app_id is not None:
-            self.insta_app_id = str(app_id)
-        else:
-            update_app_id(self)
+        if homepage_source is not None: self.homepage_source = homepage_source
+        else: update_homepage_source(self)
+
+        if app_id is not None: self.insta_app_id = str(app_id)
+        else: update_app_id(self)
 
     def username_availability(self, username: str) -> bool | None:
         username = format_username(username)
