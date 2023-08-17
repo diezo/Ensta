@@ -12,7 +12,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Deepak Soni",
-    author_email="lonelycube@proton.me",
+    author_email="sonniiii@outlook.com",
     url="https://github.com/diezo/ensta",
     download_url="https://github.com/diezo/ensta/archive/refs/tags/v4.0.tar.gz",
     keywords=["instagram-client", "instagram", "api-wrapper", "instagram-scraper", "instagram-api", "instagram-sdk", "instagram-photos", "instagram-api-python", "instabot", "instagram-stories", "instagram-bot", "instapy", "instagram-downloader", "instagram-account", "instagram-crawler", "instagram-private-api", "igtv", "instagram-automation", "reels", "instagram-feed"],
