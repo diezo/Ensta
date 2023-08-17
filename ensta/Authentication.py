@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from urllib.parse import unquote_plus
 
 
+# noinspection PyPep8Naming
 def NewSessionID(username: str, password: str) -> str:
     options: Options = Options()
     options.add_argument("--log-level=3")
