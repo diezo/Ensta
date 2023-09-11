@@ -12,10 +12,11 @@ from urllib.parse import unquote_plus
 # noinspection PyPep8Naming
 def NewSessionID(username: str, password: str) -> str:
     options: Options = Options()
-    options.add_argument("--log-level=3")
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    options.add_argument("--blink-settings=imagesEnabled=false")
+    options.add_argument("--disable-extensions")
+    options.add_argument("disable-infobars")
     options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
 
     driver: webdriver.Chrome = webdriver.Chrome(options=options)
     driver.get("https://www.instagram.com/accounts/login/")

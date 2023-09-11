@@ -1,8 +1,7 @@
+import random
 import string
 import requests
 import requests.cookies
-import random
-from requests.cookies import RequestsCookieJar
 from .Exceptions import NetworkError
 
 
@@ -17,6 +16,7 @@ def update_app_id(self) -> None:
 def refresh_csrf_token(self) -> None:
     self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
     self.request_session.cookies.set("csrftoken", self.csrf_token)
+
 
 def update_session(self) -> None:
     self.request_session = requests.Session()
