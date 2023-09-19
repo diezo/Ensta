@@ -9,7 +9,7 @@ from .lib.Commons import (
     format_username,
     format_uid
 )
-from .lib.Exceptions import APIError
+from .lib.Exceptions import APIError, NetworkError
 from .containers.Profile import Profile
 from .containers.ProfileHost import ProfileHost
 import dataclasses
@@ -74,7 +74,7 @@ class Guest:
             if "errors" in response_json:
                 return "username" not in response_json["errors"]
         except JSONDecodeError:
-            return None
+            raise NetworkError("HTTP Response is not a valid JSON.")
 
     def profile(self, username: str, __session__: requests.Session | None = None) -> Profile | ProfileHost | None:
         username: str = format_username(username)
@@ -119,7 +119,7 @@ class Guest:
                             data: dict = response_json["data"]["user"]
 
                             if data is None:
-                                return None
+                                raise APIError("User object not found inside HTTP response.")
 
                             profile = Profile(
                                 biography=data["biography"],
@@ -174,7 +174,7 @@ class Guest:
                         except KeyError:
                             raise APIError()
         except JSONDecodeError:
-            return None
+            raise NetworkError("HTTP Response is not a valid JSON.")
 
     def get_uid(self, username: str) -> str | None:
         username: str = username.strip().lower().replace(" ", "")
@@ -201,4 +201,4 @@ class Guest:
                 return format_username(response_json["user"]["username"])
 
         except JSONDecodeError:
-            return None
+            raise NetworkError("HTTP Response is not a valid JSON.")

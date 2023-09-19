@@ -18,7 +18,8 @@ from .lib import (
     NetworkError,
     IdentifierError,
     DevelopmentError,
-    APIError
+    APIError,
+    ConversionError
 )
 from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
 from .containers.ProfileHost import ProfileHost
@@ -98,7 +99,7 @@ class BaseHost:
 
     def follow(self, identifier: str | int) -> FollowedStatus | None:
         conversion_success, identifier = self._identifier(identifier, UID)
-        if not conversion_success: return None
+        if not conversion_success: raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
         refresh_csrf_token(self)
@@ -148,11 +149,11 @@ class BaseHost:
                             previous_following=response_json["previous_following"]
                         )
         except JSONDecodeError:
-            return None
+            raise NetworkError("HTTP Response is not a valid JSON.")
 
     def unfollow(self, identifier: str | int) -> UnfollowedStatus | None:
         conversion_success, identifier = self._identifier(identifier, UID)
-        if not conversion_success: return None
+        if not conversion_success: raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
         refresh_csrf_token(self)
@@ -199,13 +200,13 @@ class BaseHost:
                             is_my_follower=response_json["friendship_status"]["followed_by"]
                         )
         except JSONDecodeError:
-            return None
+            raise NetworkError("HTTP Response is not a valid JSON.")
 
     def followers(self, identifier: str | int, count: int = 0) -> Generator[FollowPerson, None, None]:
         conversion_success, identifier = self._identifier(identifier, UID)
         if not conversion_success:
             yield None
-            return None
+            raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
         refresh_csrf_token(self)
@@ -251,11 +252,11 @@ class BaseHost:
 
                 if "status" not in response_json or "users" not in response_json:
                     yield None
-                    return None
+                    raise NetworkError("HTTP response doesn't include 'status' or 'users' node.")
 
                 if response_json["status"] != "ok":
                     yield None
-                    return None
+                    raise NetworkError("HTTP response status not 'ok'.")
 
                 for each_item in response_json["users"]:
                     if generated_count < count or count == 0:
@@ -285,13 +286,13 @@ class BaseHost:
                     return None
             except JSONDecodeError:
                 yield None
-                return None
+                raise NetworkError("HTTP Response is not a valid JSON.")
 
     def followings(self, identifier: str | int, count: int = 0) -> Generator[FollowPerson, None, None]:
         conversion_success, identifier = self._identifier(identifier, UID)
         if not conversion_success:
             yield None
-            return None
+            raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
         refresh_csrf_token(self)
@@ -339,11 +340,11 @@ class BaseHost:
 
                 if "status" not in response_json or "users" not in response_json:
                     yield None
-                    return None
+                    raise NetworkError("HTTP response doesn't include 'status' or 'users' node.")
 
                 if response_json["status"] != "ok":
                     yield None
-                    return None
+                    raise NetworkError("HTTP response status not 'ok'.")
 
                 for each_item in response_json["users"]:
                     if generated_count < count or count == 0:
@@ -371,7 +372,7 @@ class BaseHost:
                     return None
             except JSONDecodeError:
                 yield None
-                return None
+                raise NetworkError("HTTP Response is not a valid JSON.")
 
     def _identifier(self, identifier: str | int, required: str | int):
         identifier = format_identifier(identifier)
@@ -517,11 +518,11 @@ class BaseHost:
 
                 if "status" not in response_json or "items" not in response_json:
                     yield None
-                    return None
+                    raise NetworkError("HTTP response doesn't include 'status' or 'items' node.")
 
                 if response_json["status"] != "ok":
                     yield None
-                    return None
+                    raise NetworkError("HTTP response status not 'ok'.")
 
                 for each_item in response_json["items"]:
                     if generated_count < count or count == 0:
@@ -535,7 +536,7 @@ class BaseHost:
                     return None
             except JSONDecodeError:
                 yield None
-                return None
+                raise NetworkError("HTTP Response is not a valid JSON.")
 
     def post(self, share_url: str) -> Post | None:
         share_url: str = format_url(share_url)
@@ -586,7 +587,7 @@ class BaseHost:
                             return self._process_post_data(selected_post)
 
         except JSONDecodeError:
-            return None
+            raise NetworkError("HTTP Response is not a valid JSON.")
 
     def _process_post_data(self, data: dict) -> Post:
 

@@ -36,5 +36,14 @@ class ChallengeError(Exception):
 
 class APIError(Exception):
 
-    def __init__(self):
-        super().__init__("Looks like Instagram has made changes to the API Response. Please raise this as an issue on GitHub.")
+    def __init__(self, message: str | None = None):
+        if message is not None:
+            super().__init__("Looks like Instagram has made changes to the API Response. Please raise this as an issue on GitHub.")
+        else:
+            super().__init__(message)
+
+
+class ConversionError(Exception):
+
+    def __init__(self, message):
+        super().__init__(message)

@@ -15,5 +15,6 @@ from .Exceptions import (
     DevelopmentError,
     AuthenticationError,
     ChallengeError,
-    APIError
+    APIError,
+    ConversionError
 )
