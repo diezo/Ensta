@@ -22,7 +22,7 @@ def update_session(self) -> None:
     self.request_session = requests.Session()
 
 
-def update_homepage_source(self) -> None:
+def update_homepage_source(self, proxy: dict[str, str] | None = None) -> None:
     request_headers = {
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "accept-language": "en-US,en;q=0.9",
@@ -40,7 +40,7 @@ def update_homepage_source(self) -> None:
         "viewport-width": "1475",
         "Referrer-Policy": "strict-origin-when-cross-origin"
     }
-    temp_homepage_source = requests.get("https://www.instagram.com/", headers=request_headers).text.strip()
+    temp_homepage_source = requests.get("https://www.instagram.com/", headers=request_headers, proxies=proxy).text.strip()
 
     if temp_homepage_source != "":
         self.homepage_source = temp_homepage_source

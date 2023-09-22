@@ -28,7 +28,7 @@ class Guest:
         if proxy is not None: self.request_session.proxies.update(proxy)
 
         if homepage_source is not None: self.homepage_source = homepage_source
-        else: update_homepage_source(self)
+        else: update_homepage_source(self, proxy=proxy)
 
         if app_id is not None: self.insta_app_id = str(app_id)
         else: update_app_id(self)
