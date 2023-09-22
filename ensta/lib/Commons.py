@@ -40,7 +40,7 @@ def update_homepage_source(self) -> None:
         "viewport-width": "1475",
         "Referrer-Policy": "strict-origin-when-cross-origin"
     }
-    temp_homepage_source = requests.get("https://www.instagram.com/", headers=request_headers).text.strip()
+    temp_homepage_source = self.request_session.get("https://www.instagram.com/", headers=request_headers).text.strip()
 
     if temp_homepage_source != "":
         self.homepage_source = temp_homepage_source
