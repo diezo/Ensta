@@ -2,11 +2,12 @@ from distutils.core import setup
 from pathlib import Path
 
 long_description = (Path(__file__).parent / "README.md").read_text(encoding="utf-8")
+version = "4.3"
 
 setup(
     name="ensta",
     packages=["ensta", "ensta.lib", "ensta.containers"],
-    version="4.2",
+    version=version,
     license="MIT",
     description="🔥 Fastest & Simplest Python Package For Instagram Automation",
     long_description=long_description,
@@ -14,7 +15,7 @@ setup(
     author="Deepak Soni",
     author_email="sonniiii@outlook.com",
     url="https://github.com/diezo/ensta",
-    download_url="https://github.com/diezo/ensta/archive/refs/tags/v4.2.tar.gz",
+    download_url=f"https://github.com/diezo/ensta/archive/refs/tags/v{version}.tar.gz",
     keywords=["instagram-client", "instagram", "api-wrapper", "instagram-scraper", "instagram-api", "instagram-sdk", "instagram-photos", "instagram-api-python", "instabot", "instagram-stories", "instagram-bot", "instapy", "instagram-downloader", "instagram-account", "instagram-crawler", "instagram-private-api", "igtv", "instagram-automation", "reels", "instagram-feed"],
     install_requires=["requests", "selenium", "fake-useragent"],
     classifiers=[
