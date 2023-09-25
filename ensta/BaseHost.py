@@ -51,7 +51,8 @@ class BaseHost:
 
         self.guest = Guest(
             homepage_source=self.homepage_source,
-            app_id=self.insta_app_id
+            app_id=self.insta_app_id,
+            proxy=proxy
         )
 
         self.request_session.cookies.set("sessionid", session_id)
