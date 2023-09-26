@@ -18,7 +18,7 @@ def NewSessionID(username: str, password: str, proxy: dict[str, str] | None = No
     options.add_argument("disable-infobars")
     options.add_argument("--headless")
 
-    if proxy.get("https", "").strip() != "":
+    if proxy is not None and proxy.get("https", "").strip() != "":
         options.add_argument(f"--proxy-server={proxy['https'].strip()}")
 
     driver: webdriver.Chrome = webdriver.Chrome(options=options)
