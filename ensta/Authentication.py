@@ -10,15 +10,16 @@ from urllib.parse import unquote_plus
 
 
 # noinspection PyPep8Naming
-def NewSessionID(username: str, password: str, proxy: dict[str, str] = None) -> str:
+def NewSessionID(username: str, password: str, proxy: dict[str, str] | None = None) -> str:
     options: Options = Options()
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
     options.add_argument("--blink-settings=imagesEnabled=false")
     options.add_argument("--disable-extensions")
     options.add_argument("disable-infobars")
     options.add_argument("--headless")
-    for proxy_url in proxy.values():
-        options.add_argument(f'--proxy-server={proxy_url}')
+
+    if proxy.get("https", "").strip() != "":
+        options.add_argument(f"--proxy-server={proxy['https'].strip()}")
 
     driver: webdriver.Chrome = webdriver.Chrome(options=options)
     driver.get("https://www.instagram.com/accounts/login/")
