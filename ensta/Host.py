@@ -57,7 +57,7 @@ class Host(BaseHost):
                     except SessionError: return self.new_session()
 
     def new_session(self) -> None:
-        session_id: str = NewSessionID(self.username, self.password)
+        session_id: str = NewSessionID(self.username, self.password, self.proxy)
         if self.save: self.save(session_id)
 
         if self.file:
