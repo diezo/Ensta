@@ -122,6 +122,7 @@ class Guest:
                                 raise APIError("User object not found inside HTTP response.")
 
                             profile = Profile(
+                                raw=data,
                                 biography=data["biography"],
                                 biography_links=data["bio_links"],
                                 country_block=data["country_block"],
@@ -129,6 +130,7 @@ class Guest:
                                 follower_count=data["edge_followed_by"]["count"],
                                 following_count=data["edge_follow"]["count"],
                                 user_id=data["id"],
+                                category_name=data["category_name"],
                                 is_business_account=data["is_business_account"],
                                 is_professional_account=data["is_professional_account"],
                                 is_supervision_enabled=data["is_supervision_enabled"],

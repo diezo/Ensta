@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass(frozen=False)
 class Profile:
 
+    raw: dict = None
     biography: str = None
     biography_links: list = None
     country_block: bool = None
@@ -11,6 +12,7 @@ class Profile:
     follower_count: int = None
     following_count: int = None
     user_id: str = None
+    category_name: str = None
     is_business_account: bool = None
     is_professional_account: bool = None
     is_supervision_enabled: bool = None
