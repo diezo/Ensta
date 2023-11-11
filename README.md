@@ -18,6 +18,24 @@ To install this package, run the below command in a terminal window:
 $ pip install ensta --upgrade
 ```
 
+## Supported Actions
+You can do a lot with ensta, here are some examples:
+
+- Login using username, password or sessionid
+- Check if username is available
+- Fetch someone's profile
+- Convert username to userid and vice versa
+- Follow/unfollow accounts
+- Get followers/followings list
+- Change account type to public/private
+- Fetch someone's posts
+- Get entire data of specific post
+- Like/unlike posts
+- Change your biography, display name
+- Get your private data like email, gender, birthday etc.
+
+I'm doing my best to implement as many features as I can in this library. If you think a feature is missing or not working, please do raise an issue.
+
 ## 🧔🏻‍♂️ Guest Mode
 This mode doesn't require login and can be used to fetch publicly available data from Instagram's Servers.
 
