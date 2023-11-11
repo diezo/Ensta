@@ -25,6 +25,7 @@ from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
 from .containers.ProfileHost import ProfileHost
 from .containers.PostUser import PostUser
 from .containers.Post import Post
+from .containers.PrivateInfo import PrivateInfo
 from .Guest import Guest
 
 USERNAME = 0
@@ -682,3 +683,155 @@ class BaseHost:
             location_latitude=data.get("lat", 0),
             location_longitude=data.get("lng", 0)
         )
+
+    def private_info(self) -> PrivateInfo:
+        refresh_csrf_token(self)
+        request_headers = {
+            "accept": "*/*",
+            "dpr": "1.30208",
+            "sec-ch-prefers-color-scheme": "dark",
+            "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
+            "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"119.0.6045.124\", \"Chromium\";v=\"119.0.6045.124\", \"Not?A_Brand\";v=\"24.0.0.0\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-model": "\"\"",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": "https://www.instagram.com/accounts/edit/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        http_response = self.request_session.get(f"https://www.instagram.com/api/v1/accounts/edit/web_form_data/", headers=request_headers)
+
+        try:
+            response_json: dict = http_response.json()
+
+            if "status" not in response_json: raise NetworkError("Key 'status' not in response json.")
+            if response_json.get("status") != "ok": raise NetworkError("Key 'status' not 'ok' in response json.")
+
+            data: json = response_json.get("form_data", {})
+            if len(data.keys()) == 0: raise NetworkError("Form data doesn't contain any keys.")
+
+            return PrivateInfo(
+                first_name=data.get("first_name", ""),
+                last_name=data.get("last_name", ""),
+                email=data.get("email", ""),
+                is_email_confirmed=data.get("is_email_confirmed", False),
+                is_phone_confirmed=data.get("is_phone_confirmed", False),
+                username=data.get("username", ""),
+                phone_number=data.get("phone_number", ""),
+                gender=("f" if data.get("gender", 0) == 0 else "m"),
+                birthday=data.get("birthday", ""),
+                fb_birthday=data.get("fb_birthday", ""),
+                biography=data.get("biography", ""),
+                external_url=data.get("external_url", ""),
+                chaining_enabled=data.get("chaining_enabled", False),
+                presence_disabled=data.get("presence_disabled", False),
+                business_account=data.get("business_account", False),
+                user_tag_review_enabled=data.get("usertag_review_enabled", False),
+                custom_gender=data.get("custom_gender", ""),
+                trusted_username=data.get("trusted_username", ""),
+                trust_days=data.get("trust_days", 0)
+            )
+
+        except JSONDecodeError:
+            raise NetworkError("HTTP Response is not a valid JSON.")
+
+    def change_bio(self, biography: str) -> bool:
+        private_info = self.private_info()
+
+        refresh_csrf_token(self)
+        request_headers = {
+            "accept": "*/*",
+            "content-type": "application/x-www-form-urlencoded",
+            "dpr": "1.30208",
+            "sec-ch-prefers-color-scheme": "dark",
+            "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
+            "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"119.0.6045.124\", \"Chromium\";v=\"119.0.6045.124\", \"Not?A_Brand\";v=\"24.0.0.0\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-model": "\"\"",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-instagram-ajax": "1009841815",
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": "https://www.instagram.com/accounts/edit/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        body_json = {
+            "biography": biography,
+            "chaining_enabled": "on" if private_info.chaining_enabled else "off",
+            "email": private_info.email,
+            "external_url": private_info.external_url,
+            "first_name": private_info.first_name,
+            "phone_number": private_info.phone_number,
+            "username": private_info.username
+        }
+
+        http_response = self.request_session.post(f"https://www.instagram.com/api/v1/web/accounts/edit/", headers=request_headers, data=body_json)
+
+        try:
+            response_json: dict = http_response.json()
+
+            if "status" not in response_json: raise NetworkError("Key 'status' not in response json. Possibly it's a fault from your side.")
+            return response_json.get("status") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError("HTTP Response is not a valid JSON.")
+
+    def change_display_name(self, display_name: str) -> bool:
+        private_info = self.private_info()
+
+        refresh_csrf_token(self)
+        request_headers = {
+            "accept": "*/*",
+            "content-type": "application/x-www-form-urlencoded",
+            "dpr": "1.30208",
+            "sec-ch-prefers-color-scheme": "dark",
+            "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
+            "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"119.0.6045.124\", \"Chromium\";v=\"119.0.6045.124\", \"Not?A_Brand\";v=\"24.0.0.0\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-model": "\"\"",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-instagram-ajax": "1009841815",
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": "https://www.instagram.com/accounts/edit/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        body_json = {
+            "biography": private_info.biography,
+            "chaining_enabled": "on" if private_info.chaining_enabled else "off",
+            "email": private_info.email,
+            "external_url": private_info.external_url,
+            "first_name": display_name,
+            "phone_number": private_info.phone_number,
+            "username": private_info.username
+        }
+
+        http_response = self.request_session.post(f"https://www.instagram.com/api/v1/web/accounts/edit/", headers=request_headers, data=body_json)
+
+        try:
+            response_json: dict = http_response.json()
+
+            if "status" not in response_json: raise NetworkError("Key 'status' not in response json. Possibly it's a fault from your side.")
+            return response_json.get("status") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError("HTTP Response is not a valid JSON.")
