@@ -107,7 +107,7 @@ class BaseHost:
         refresh_csrf_token(self)
         body_json = {
             "container_module": "profile",
-            "nav_chain": f"PolarisProfileRoot:profilePage:1:via_cold_start",
+            "nav_chain": f"PolarisProfileNestedContentRoot:profilePage:1:via_cold_start",
             "user_id": identifier
         }
         request_headers = {
@@ -150,6 +150,11 @@ class BaseHost:
                             is_my_follower=response_json["friendship_status"]["followed_by"],
                             previous_following=response_json["previous_following"]
                         )
+                else:
+                    if response_json["status"] != "ok": raise NetworkError("Response \"Status\" not ok.")
+                    else: raise NetworkError("'friendship_status' attribute not in response json.")
+            else:
+                raise NetworkError("'status' attribute not in response json.")
         except JSONDecodeError:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
@@ -201,6 +206,11 @@ class BaseHost:
                             unfollowed=not response_json["friendship_status"]["following"] and not response_json["friendship_status"]["outgoing_request"],
                             is_my_follower=response_json["friendship_status"]["followed_by"]
                         )
+                else:
+                    if response_json["status"] != "ok": raise NetworkError("Response \"Status\" not ok.")
+                    else: raise NetworkError("'friendship_status' attribute not in response json.")
+            else:
+                raise NetworkError("'status' attribute not in response json.")
         except JSONDecodeError:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
