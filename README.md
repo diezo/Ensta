@@ -126,7 +126,7 @@ for post in posts:
     for user in likers: print(user.username)
 ```
 
-### Generate Posts List
+### Get Your Private Info
 ```python
 from ensta import Host
 
