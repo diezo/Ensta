@@ -21,7 +21,8 @@ $ pip install ensta --upgrade
 ## Supported Actions
 You can do a lot with ensta, here's a list:
 
-- Username/Password & SessionID login
+- Username/Password & SessionID Login
+- Upload Posts - With Caption, Comments Enabled, etc.
 - Check Username Availability
 - Fetch Profile Data
 - Convert Username to UID, and vice versa.
@@ -117,6 +118,20 @@ host = Host(username, password)
 
 print(host.change_display_name("Lionel Messi"))
 print(host.change_bio("Athlete"))
+```
+
+### Upload Post
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+status = host.upload_post(
+    photo_path="Picture.jpg",
+    caption="Enjoying the sunset! 🌇",
+)
+
+print(status)
 ```
 
 ### Generate Posts List
