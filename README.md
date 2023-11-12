@@ -65,7 +65,10 @@ print(guest.username_availability("nevergiveup"))
 
 ## 👨🏻‍💻 Code Samples
 
-### Followers / Followings List
+<details>
+
+<summary>Followers / Followings List</summary><br>
+
 ```python
 from ensta import Host
 
@@ -77,8 +80,12 @@ followings = host.followings("cristiano")
 for user in followers: print(user.username)
 for user in followings: print(user.username)
 ```
+</details>
 
-### Follow / Unfollow People
+<details>
+
+<summary>Follow / Unfollow People</summary><br>
+
 ```python
 from ensta import Host
 
@@ -87,8 +94,12 @@ host = Host(username, password)
 print(host.follow("cristiano"))
 print(host.unfollow("cristiano"))
 ```
+</details>
 
-### Fetch Profile Data (Host)
+<details>
+
+<summary>Fetch Profile Data (Host)</summary><br>
+
 ```python
 from ensta import Host
 
@@ -98,8 +109,12 @@ profile = host.profile("cristiano")
 print(profile.full_name)
 print(profile.biography)
 ```
+</details>
 
-### Fetch Profile Data (Guest)
+<details>
+
+<summary>Fetch Profile Data (Guest)</summary><br>
+
 ```python
 from ensta import Guest
 
@@ -109,8 +124,12 @@ profile = guest.profile("leomessi")
 print(profile.biography)
 print(profile.full_name)
 ```
+</details>
 
-### Update Profile
+<details>
+
+<summary>Update Profile</summary><br>
+
 ```python
 from ensta import Host
 
@@ -119,8 +138,12 @@ host = Host(username, password)
 print(host.change_display_name("Lionel Messi"))
 print(host.change_bio("Athlete"))
 ```
+</details>
 
-### Upload Post
+<details>
+
+<summary>Upload Post</summary><br>
+
 ```python
 from ensta import Host
 
@@ -133,8 +156,12 @@ status = host.upload_post(
 
 print(status)
 ```
+</details>
 
-### Generate Posts List
+<details>
+
+<summary>Generate Posts List</summary><br>
+
 ```python
 from ensta import Host
 
@@ -151,8 +178,12 @@ for post in posts:
     likers = post.likers()  # Likers List
     for user in likers: print(user.username)
 ```
+</details>
 
-### Get Your Private Info
+<details>
+
+<summary>Get Your Private Info</summary><br>
+
 ```python
 from ensta import Host
 
@@ -164,6 +195,7 @@ print(me.gender)
 print(me.birthday)
 print(me.email)
 ```
+</details>
 
 ## ❤️ Support Me
 If you think this library is useful, please consider donating:
