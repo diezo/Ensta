@@ -34,38 +34,33 @@ You can do a lot with ensta, here's a list:
 - Change your biography, display name
 - Get your private data like email, gender, birthday etc.
 
-I'm doing my best to implement as many features as I can in this library. If you think a feature is missing or not working, please do raise an issue.
+Any feature missing? Raise an issue.
+
+## 🧔🏻‍♂️ Host Mode
+Requires login through Username/Password or SessionId. Can be used to fetch data that requires login as well as update your own profile.
+
+Example:
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+print(host.follow("leomessi"))
+print(host.unfollow("leomessi"))
+print(host.profile("leomessi"))
+```
 
 ## 🧔🏻‍♂️ Guest Mode
-This mode doesn't require login and can be used to fetch publicly available data from Instagram's Servers.
+Doesn't require login but is limited to certain actions.
 
-Here's an example where an instance of *Guest Class* is created to fetch [Cristiano Ronaldo's](https://www.instagram.com/cristiano/) profile information:
+Example:
 
 ```python
 from ensta import Guest
 
 guest = Guest()
-profile = guest.profile("cristiano")
-
-if profile is not None:
-    print(profile.biography)
-    print(profile.follower_count)
-    print(profile.following_count)
-```
-
-## 🧔🏻‍♂️ Host Mode
-This mode requires login through *Username* & *Password*.
-It can be used to take actions that require login. Additionally, users can update their own profile through this class.
-
-Here's an example where an instance of *Host Class* is created to follow [Cristiano Ronaldo's](https://www.instagram.com/cristiano/) account:
-
-```python
-from ensta import Host
-
-host = Host("username", "password")
-status = host.follow("cristiano")
-
-print(status)
+print(guest.profile("leomessi"))
 ```
 
 ### Code Samples:
