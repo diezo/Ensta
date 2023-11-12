@@ -1,4 +1,4 @@
-# 🤖 Ensta - Simple Instagram API
+# Ensta - Free Instagram API
 [![PyPI](https://img.shields.io/pypi/v/ensta)](https://pypi.org/project/ensta)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
@@ -6,22 +6,22 @@
 
 <img style="border-radius: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/logo.png"/>
 
-This package lets you use Instagram's Internal Web API through simple functions and classes. Ensta uses Instagram's Original Web API to scrape data which makes it a reliable choice over other third-party scrapers. This library mainly focuses on Simplicity & Reliability.
+Ensta uses Instagram's Internal Web API for data scraping which makes it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always remains up-to-date.
 
 Two type of classes are supported - ***Guest & Host***.
 
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Installation
-To install this package, run the below command in a terminal window:
+Run this command:
 ```shell
 $ pip install ensta --upgrade
 ```
 
 ## Supported Actions
-You can do a lot with ensta, here are some examples:
+You can do a lot with ensta, here's a list:
 
-- Login using username, password or sessionid
+- Username/password & sessionid login
 - Check if username is available
 - Fetch someone's profile
 - Convert username to userid and vice versa
