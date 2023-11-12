@@ -39,58 +39,110 @@ Any missing feature? Raise an issue.
 ## 🧔🏻‍♂️ Host Mode
 Requires login through Username/Password or SessionId. Can fetch data that requires login. Can update your profile info.
 
-Example:
-
 ```python
 from ensta import Host
 
 host = Host(username, password)
 
-print(host.follow("leomessi"))
-print(host.unfollow("leomessi"))
 print(host.profile("leomessi"))
+print(host.follow("leomessi"))
+print(host.change_bio("hello"))
 ```
 
 ## 🧔🏻‍♂️ Guest Mode
 Doesn't require login but is limited to certain actions.
 
-Example:
-
 ```python
 from ensta import Guest
 
 guest = Guest()
+
 print(guest.profile("leomessi"))
+print(guest.get_uid("leomessi"))
+print(guest.username_availability("nevergiveup"))
 ```
 
-### Code Samples:
-1. **Fetch Followers / Followings List**
-    ```python
-    from ensta import Host
+## 👨🏻‍💻 Code Samples
 
-    host = Host("username", "password")
-   
-    followers = host.followers("cristiano")
-    followings = host.followings("cristiano")
+### Followers / Followings List
+```python
+from ensta import Host
 
-    for user in followers: print(user.username)
-    for user in followings: print(user.username)
-    ```
+host = Host(username, password)
 
-3. **Follow / Unfollow People**
-    ```python
-    from ensta import Host
+followers = host.followers("cristiano")
+followings = host.followings("cristiano")
+
+for user in followers: print(user.username)
+for user in followings: print(user.username)
+```
+
+### Follow / Unfollow People
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+print(host.follow("cristiano"))
+print(host.unfollow("cristiano"))
+```
+
+### Fetch Profile Data
+```python
+from ensta import Host
+
+host = Host(username, password)
+profile = host.profile("cristiano")
+
+print(profile.full_name)
+print(profile.biography)
+```
+
+### Update Profile
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+print(host.change_display_name("Lionel Messi"))
+print(host.change_bio("Athlete"))
+```
+
+### Generate Posts List
+```python
+from ensta import Host
+
+host = Host(username, password)
+posts = host.posts("leomessi")
+
+for post in posts:
+    print(post.caption_text)  # Post Data
+    print(post.like_count)  # Post Data
     
-    host = Host("username", "password")
-   
-    print(host.follow("cristiano"))
-    print(host.unfollow("cristiano"))
-    ```
+    print(post.like())  # Like()
+    print(post.unlike())  # Unlike()
+
+    likers = post.likers()  # Likers List
+    for user in likers: print(user.username)
+```
+
+### Generate Posts List
+```python
+from ensta import Host
+
+host = Host(username, password)
+me = host.private_info()
+
+print(me.biography)
+print(me.gender)
+print(me.birthday)
+print(me.email)
+```
 
 ## ❤️ Support Me
-If you'd like to support me in developing Ensta, please consider donating here: 
+If you think this library is useful, please consider donating:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
 ## Disclaimer
-This is a third-party package, and not approved by Instagram. It doesn't promote illegal activities or activities that violate [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/) such as spamming users, creating bot accounts, misusing data etc. You are solely responsible for all the actions you take using this package.
+This is a third-party package, and is not associated with Instagram. It doesn't promote activities that violate [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/) such as spamming users, misusing data etc. You are solely responsible for all the actions you take using this package.
