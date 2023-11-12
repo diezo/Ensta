@@ -47,3 +47,9 @@ class ConversionError(Exception):
 
     def __init__(self, message):
         super().__init__(message)
+
+
+class FileTypeError(Exception):
+
+    def __init__(self, message):
+        super().__init__(message)

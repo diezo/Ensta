@@ -16,5 +16,6 @@ from .Exceptions import (
     AuthenticationError,
     ChallengeError,
     APIError,
-    ConversionError
+    ConversionError,
+    FileTypeError
 )
