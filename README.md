@@ -4,7 +4,7 @@
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 [![Twitter Share](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
 
-<img style="border-radius: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/logo.png"/>
+<!-- <img style="border-radius: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/logo.png"/> -->
 
 Ensta uses Instagram's Internal Web API for data scraping which makes it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always remains up-to-date.
 
@@ -21,23 +21,23 @@ $ pip install ensta --upgrade
 ## Supported Actions
 You can do a lot with ensta, here's a list:
 
-- Username/password & sessionid login
-- Check if username is available
-- Fetch someone's profile
-- Convert username to userid and vice versa
-- Follow/unfollow accounts
-- Get followers/followings list
-- Change account type to public/private
-- Fetch someone's posts
-- Get entire data of specific post
-- Like/unlike posts
-- Change your biography, display name
-- Get your private data like email, gender, birthday etc.
+- Username/Password & SessionID login
+- Check Username Availability
+- Fetch Profile Data
+- Convert Username to UID, and vice versa.
+- Follow/Unfollow Users
+- Generate Followers/Followings List
+- Change Account Type - Public/Private
+- Generate Posts List
+- Fetch Post Data
+- Like/Unlike Post
+- Edit Biography & Display Name
+- Fetch your Email, Gender, Date of birth, etc.
 
-Any feature missing? Raise an issue.
+Any missing feature? Raise an issue.
 
 ## 🧔🏻‍♂️ Host Mode
-Requires login through Username/Password or SessionId. Can be used to fetch data that requires login as well as update your own profile.
+Requires login through Username/Password or SessionId. Can fetch data that requires login. Can update your profile info.
 
 Example:
 
