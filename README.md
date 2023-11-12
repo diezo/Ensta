@@ -87,7 +87,7 @@ print(host.follow("cristiano"))
 print(host.unfollow("cristiano"))
 ```
 
-### Fetch Profile Data
+### Fetch Profile Data (Host)
 ```python
 from ensta import Host
 
@@ -96,6 +96,17 @@ profile = host.profile("cristiano")
 
 print(profile.full_name)
 print(profile.biography)
+```
+
+### Fetch Profile Data (Guest)
+```python
+from ensta import Guest
+
+guest = Guest()
+profile = guest.profile("leomessi")
+
+print(profile.biography)
+print(profile.full_name)
 ```
 
 ### Update Profile
