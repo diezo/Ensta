@@ -267,10 +267,10 @@ print(guest.get_uid("leomessi"))
 print(guest.username_availability("nevergiveup"))
 ```
 
-## ❤️ Support Me
-If you think this library is useful, please consider donating:
+## ❤️ Donate
+Want to keep this project going? Please consider donating:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
-## Disclaimer
-This is a third-party package, and is not associated with Instagram. It doesn't promote activities that violate [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/) such as spamming users, misusing data etc. You are solely responsible for all the actions you take using this package.
+## Legal
+This is a third-party package, and not associated with Instagram. It doesn't promote activities that violate [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/) such as spamming users, misusing data etc. You are solely responsible for all the actions you take using this package.
