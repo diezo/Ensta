@@ -19,21 +19,225 @@ $ pip install ensta --upgrade
 ```
 
 ## Supported Actions
-You can do a lot with ensta, here's a list:
+You can do a lot with ensta, here's some code:
 
-- Username/Password & SessionID Login
-- Upload Posts - With Caption, Comments Enabled, etc.
-- Check Username Availability
-- Fetch Profile Data
-- Convert Username to UID, and vice versa.
-- Follow/Unfollow Users
-- Generate Followers/Followings List
-- Change Account Type - Public/Private
-- Generate Posts List
-- Fetch Post Data
-- Like/Unlike Post
-- Edit Biography & Display Name
-- Fetch your Email, Gender, Date of birth, etc.
+<details>
+
+<summary>Username, Password & SessionID Login</summary><br>
+
+**Login using Username & Password:**
+```python
+from ensta import Host
+
+host = Host(username, password)
+```
+
+**Login using SessionID:**
+```python
+from ensta import BaseHost
+
+host = BaseHost(session_id)
+```
+
+</details>
+
+<details>
+
+<summary>Upload Posts</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+host.upload_post(
+    photo_path="Picture.jpg",
+    caption="Travelling 🌆",
+)
+```
+
+</details>
+
+<details>
+
+<summary>Check Username Availability</summary><br>
+
+```python
+from ensta import Guest
+
+guest = Guest()
+
+print(guest.username_availability("theusernameiwant"))
+```
+
+</details>
+
+<details>
+
+<summary>Fetch Profile Data</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+profile = host.profile("leomessi")
+
+print(profile.full_name)
+print(profile.biography)
+print(profile.follower_count)
+```
+
+</details>
+
+<details>
+
+<summary>Convert Username to UID, and vice versa.</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+username = host.get_username(427553890)
+uid = host.get_uid("leomessi")
+
+print(username, uid)
+```
+
+</details>
+
+<details>
+
+<summary>Follow / Unfollow Users</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+print(host.follow("leomessi"))
+print(host.unfollow("leomessi"))
+```
+
+</details>
+
+<details>
+
+<summary>Generate Followers / Followings List</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+followers = host.followers("leomessi", count=100)  # Want full list? Set count to '0'
+followings = host.followings("leomessi", count=100)  # Want full list? Set count to '0'
+
+for user in followers:
+    print(user.username)
+
+for user in followings:
+    print(user.username)
+```
+
+</details>
+
+<details>
+
+<summary>Switch Account Type - Public/Private</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+print(host.switch_to_public_account())
+print(host.switch_to_private_account())
+```
+
+</details>
+
+<details>
+
+<summary>Fetch Someone's Posts</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+posts = host.posts("leomessi", 100)  # Want full list? Set count to '0'
+
+for post in posts:
+    print(post.caption_text)
+    print(post.like_count)
+    
+    ...
+```
+
+</details>
+
+<details>
+
+<summary>Fetch Data of Individual Post</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+post = host.post("https://www.instagram.com/p/Czgyw07t_c3/")
+
+print(post.caption_text)
+print(post.like_count)
+
+...
+```
+
+</details>
+
+<details>
+
+<summary>Like/Unlike Posts</summary><br>
+
+```python
+...
+
+post.like()
+post.unlike()
+```
+
+</details>
+
+<details>
+
+<summary>Edit Biography, Display Name</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+host.change_display_name("Lionel Messi")
+host.change_bio("Athlete")
+```
+
+</details>
+
+<details>
+
+<summary>Fetch Your Email, Gender, Birthday, etc.</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+me = host.private_info()
+
+print(me.email)
+print(me.gender)
+print(me.birthday)
+```
+
+</details>
 
 Any missing feature? Raise an issue.
 
@@ -62,140 +266,6 @@ print(guest.profile("leomessi"))
 print(guest.get_uid("leomessi"))
 print(guest.username_availability("nevergiveup"))
 ```
-
-## 👨🏻‍💻 Code Samples
-
-<details>
-
-<summary>Followers / Followings List</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-
-followers = host.followers("cristiano")
-followings = host.followings("cristiano")
-
-for user in followers: print(user.username)
-for user in followings: print(user.username)
-```
-</details>
-
-<details>
-
-<summary>Follow / Unfollow People</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-
-print(host.follow("cristiano"))
-print(host.unfollow("cristiano"))
-```
-</details>
-
-<details>
-
-<summary>Fetch Profile Data (Host)</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-profile = host.profile("cristiano")
-
-print(profile.full_name)
-print(profile.biography)
-```
-</details>
-
-<details>
-
-<summary>Fetch Profile Data (Guest)</summary><br>
-
-```python
-from ensta import Guest
-
-guest = Guest()
-profile = guest.profile("leomessi")
-
-print(profile.biography)
-print(profile.full_name)
-```
-</details>
-
-<details>
-
-<summary>Update Profile</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-
-print(host.change_display_name("Lionel Messi"))
-print(host.change_bio("Athlete"))
-```
-</details>
-
-<details>
-
-<summary>Upload Post</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-
-status = host.upload_post(
-    photo_path="Picture.jpg",
-    caption="Enjoying the sunset! 🌇",
-)
-
-print(status)
-```
-</details>
-
-<details>
-
-<summary>Generate Posts List</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-posts = host.posts("leomessi")
-
-for post in posts:
-    print(post.caption_text)  # Post Data
-    print(post.like_count)  # Post Data
-    
-    print(post.like())  # Like()
-    print(post.unlike())  # Unlike()
-
-    likers = post.likers()  # Likers List
-    for user in likers: print(user.username)
-```
-</details>
-
-<details>
-
-<summary>Get Your Private Info</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-me = host.private_info()
-
-print(me.biography)
-print(me.gender)
-print(me.birthday)
-print(me.email)
-```
-</details>
 
 ## ❤️ Support Me
 If you think this library is useful, please consider donating:
