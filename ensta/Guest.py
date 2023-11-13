@@ -178,9 +178,9 @@ class Guest:
         except JSONDecodeError:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
-    def get_uid(self, username: str) -> str | None:
+    def get_uid(self, username: str, __session__: requests.Session | None = None) -> str | None:
         username: str = username.strip().lower().replace(" ", "")
-        response: Profile | None = self.profile(username)
+        response: Profile | None = self.profile(username, __session__)
 
         if response.user_id is not None:
             return format_uid(response.user_id)

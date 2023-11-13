@@ -490,6 +490,9 @@ class BaseHost:
     def get_username(self, uid: str | int) -> str | None:
         return self.guest.get_username(uid, __session__=self.request_session)
 
+    def get_uid(self, username: str) -> str | None:
+        return self.guest.get_uid(username, __session__=self.request_session)
+
     def posts(self, username: str, count: int = 0) -> Generator[Post, None, None]:
         username = format_username(username)
 
