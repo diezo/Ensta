@@ -241,7 +241,7 @@ print(me.birthday)
 
 Any missing feature? Raise an issue.
 
-## 🧔🏻‍♂️ Host Mode
+## Host Mode
 Requires login through Username/Password or SessionId. Can fetch data that requires login. Can update your profile info.
 
 ```python
@@ -254,7 +254,7 @@ print(host.follow("leomessi"))
 print(host.change_bio("hello"))
 ```
 
-## 🧔🏻‍♂️ Guest Mode
+## Guest Mode
 Doesn't require login but is limited to certain actions.
 
 ```python
