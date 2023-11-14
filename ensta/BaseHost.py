@@ -2,9 +2,9 @@ import requests
 import random
 import string
 import json
-from PIL import Image
+import moviepy.editor
 from pathlib import Path
-from time import time
+import time
 from uuid import uuid4
 from json import JSONDecodeError
 from collections.abc import Generator
@@ -45,6 +45,7 @@ class BaseHost:
     x_ig_www_claim: str = None
     csrf_token: str = None
     guest: Guest = None
+    own_username: str = None
 
     def __init__(self, session_id: str, proxy: dict[str, str] | None = None) -> None:
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
@@ -100,7 +101,7 @@ class BaseHost:
         http_response = self.request_session.get("https://www.instagram.com/api/v1/accounts/edit/web_form_data/", headers=request_headers)
 
         try:
-            http_response.json()
+            self.own_username = str(http_response.json()["form_data"]["username"])
             return True
         except JSONDecodeError:
             return False
@@ -844,13 +845,13 @@ class BaseHost:
         except JSONDecodeError:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
-    def __upload_photo(self, path: str) -> tuple[str, int, int]:
+    def __upload_photo(self, path: str, arg_upload_id: str | None = None) -> str:
         refresh_csrf_token(self)
         path: Path = Path(path)
 
         if path.suffix not in (".jpg", ".jpeg"): raise FileTypeError("Only jpg and jpeg image types are allowed to post.")
 
-        upload_id = str(int(time()) * 1000)
+        upload_id = arg_upload_id if arg_upload_id is not None else str(int(time.time()) * 1000)
         waterfall_id = str(uuid4())
         upload_name = f"{upload_id}_0_{random.randint(1000000000, 9999999999)}"
 
@@ -886,16 +887,72 @@ class BaseHost:
             if response_json.get("status", "") != "ok": raise NetworkError("Response json key 'status' not ok.")
             if response_json.get("upload_id", "") == "": raise NetworkError("Key 'upload_id' in response json doesn't exist or is invalid.")
 
-            image_dimensions: tuple[int, int] = Image.open(path).size
+            return str(response_json.get("upload_id"))
 
-            return str(response_json.get("upload_id")), image_dimensions[0], image_dimensions[1]
+        except JSONDecodeError:
+            raise NetworkError("Response not a valid json.")
+
+    def __upload_video(self, path: str, arg_upload_id: str | None = None) -> tuple[bool, any, any, any]:
+        refresh_csrf_token(self)
+        video_editor = moviepy.editor.VideoFileClip(path)
+
+        path: Path = Path(path)
+        waterfall_id = str(uuid4())
+
+        upload_id = arg_upload_id if arg_upload_id is not None else str(int(time.time()) * 1000)
+        upload_name = f"{upload_id}_0_{random.randint(1000000000, 9999999999)}"
+
+        own_uid = self.profile(self.own_username).user_id
+
+        rupload_params = {
+            "is_clips_video": "1",
+            "retry_context": "{\"num_step_auto_retry\": 0, \"num_reupload\": 0, \"num_step_manual_retry\": 0}",
+            "media_type": "2",
+            "xsharing_user_ids": json.dumps([own_uid]),
+            "upload_id": upload_id,
+            "upload_media_duration_ms": str(int(video_editor.duration * 1000)),
+            "upload_media_width": str(video_editor.size[0]),
+            "upload_media_height": str(video_editor.size[1])
+        }
+
+        request_headers__get = {
+            "accept-encoding": "gzip",
+            "x-instagram-rupload-params": json.dumps(rupload_params),
+            "x_fb_video_waterfall_id": waterfall_id,
+            "x-entity-type": "video/mp4"
+        }
+
+        http_response__get = self.request_session.get(f"https://i.instagram.com/rupload_igvideo/{upload_name}", headers=request_headers__get)
+        if http_response__get.status_code != 200: raise NetworkError("Video Upload 'GET' Request failed. Status code not 200.")
+
+        # POST Request
+
+        with open(path, "rb") as file:
+            video_data = file.read()
+            video_length = str(len(video_data))
+
+        request_headers = {
+            "offset": "0",
+            "x-entity-name": upload_name,
+            "x-entity-length": video_length,
+            "content-type": "application/octet-stream",
+            "content-length": video_length,
+            **request_headers__get
+        }
+
+        http_response = self.request_session.post(f"https://i.instagram.com/rupload_igvideo/{upload_name}", data=video_data, headers=request_headers)
+
+        try:
+            response_json: dict = http_response.json()
+
+            return response_json.get("status", "") == "ok", video_editor.duration, video_editor.size[0], video_editor.size[1]
 
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
     def upload_post(self, photo_path: str, caption: str = "", archive_only: bool = False, disable_comments: bool = False, like_and_view_counts_disabled: bool = False, video_subtitles_enabled: bool = False) -> bool:  # TODO: Implement Return Value
         refresh_csrf_token(self)
-        upload_id, width, height = self.__upload_photo(photo_path)
+        upload_id = self.__upload_photo(photo_path)
 
         request_headers: dict = {
             "accept": "*/*",
@@ -926,19 +983,79 @@ class BaseHost:
         body_json = {
             "archive_only": archive_only,
             "caption": caption,
-            "clips_share_preview_to_feed": 1,
-            "disable_comments": 1 if disable_comments else 0,
+            "clips_share_preview_to_feed": "1",
+            "disable_comments": "1" if disable_comments else "0",
             "disable_oa_reuse": False,
-            "igtv_share_preview_to_feed": 1,
-            "is_meta_only_post": 0,
-            "is_unified_video": 1,
-            "like_and_view_counts_disabled": 1 if like_and_view_counts_disabled else 0,
+            "igtv_share_preview_to_feed": "1",
+            "is_meta_only_post": "0",
+            "is_unified_video": "1",
+            "like_and_view_counts_disabled": "1" if like_and_view_counts_disabled else "0",
             "source_type": "library",
             "upload_id": upload_id,
-            "video_subtitles_enabled": 1 if video_subtitles_enabled else 0
+            "video_subtitles_enabled": "1" if video_subtitles_enabled else "0"
         }
 
         http_response = self.request_session.post("https://www.instagram.com/api/v1/media/configure/", headers=request_headers, data=body_json)
+
+        try:
+            response_json: dict = http_response.json()
+
+            return response_json.get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError("Response not a valid json.")
+
+    def upload_reel(self, video_path: str, thumbnail_path: str, caption: str = "", archive_only: bool = False, disable_comments: bool = False, like_and_view_counts_disabled: bool = False, video_subtitles_enabled: bool = False) -> bool:  # TODO: Implement Return Value
+        upload_id = str(int(time.time()) * 1000)
+
+        video_success, video_duration, video_width, video_height = self.__upload_video(video_path, upload_id)
+
+        if not video_success: return False
+        if not self.__upload_photo(thumbnail_path, upload_id): return False
+
+        refresh_csrf_token(self)
+        request_headers: dict = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "content-type": "application/x-www-form-urlencoded",
+            "dpr": "1.30208",
+            "sec-ch-prefers-color-scheme": "dark",
+            "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
+            "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"119.0.6045.124\", \"Chromium\";v=\"119.0.6045.124\", \"Not?A_Brand\";v=\"24.0.0.0\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-model": "\"\"",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-instagram-ajax": "1009848613",
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": "https://www.instagram.com/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        body_json = {
+            "archive_only": archive_only,
+            "caption": caption,
+            "clips_share_preview_to_feed": "1",
+            "disable_comments": "1" if disable_comments else "0",
+            "disable_oa_reuse": "0",
+            "igtv_share_preview_to_feed": "1",
+            "is_meta_only_post": "0",
+            "is_unified_video": "1",
+            "like_and_view_counts_disabled": "1" if like_and_view_counts_disabled else "0",
+            "source_type": "library",
+            "upload_id": upload_id,
+            "video_subtitles_enabled": "1" if video_subtitles_enabled else "0"
+        }
+
+        http_response = self.request_session.post("https://www.instagram.com/api/v1/media/configure_to_clips/", headers=request_headers, data=body_json)
 
         try:
             response_json: dict = http_response.json()

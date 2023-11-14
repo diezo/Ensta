@@ -60,6 +60,24 @@ host.upload_post(
 
 <details>
 
+<summary>Upload Reels</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+host.upload_reel(
+    video_path="Video.mp4",
+    thumbnail_path="Thumbnail.jpg",
+    caption="Enjoying the winter! ⛄"
+)
+```
+
+</details>
+
+<details>
+
 <summary>Check Username Availability</summary><br>
 
 ```python
