@@ -410,7 +410,7 @@ class BaseHost:
             return True, identifier
 
         elif is_username and required == UID:
-            user_id = self.guest.get_uid(identifier)
+            user_id = self.get_uid(identifier)
 
             if user_id is not None and user_id != "":
                 return True, user_id
@@ -418,7 +418,7 @@ class BaseHost:
                 return False, None
 
         elif not is_username and required == USERNAME:
-            username = self.guest.get_username(identifier)
+            username = self.get_username(identifier)
 
             if username is not None and username != "":
                 return True, username
