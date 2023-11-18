@@ -23,6 +23,18 @@ You can do a lot with ensta, here's some code:
 
 <details>
 
+<summary>Proxy Support</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password, proxy={"http": "http://1.2.3.4", "https": "https://1.2.3.4"})
+```
+
+</details>
+
+<details>
+
 <summary>Username Password Login</summary><br>
 
 ```python
