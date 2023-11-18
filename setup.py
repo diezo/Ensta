@@ -2,7 +2,7 @@ from distutils.core import setup
 from pathlib import Path
 
 long_description = (Path(__file__).parent / "README.md").read_text(encoding="utf-8")
-version = "5.0.2"
+version = "5.0.3"
 
 setup(
     name="ensta",
@@ -17,7 +17,7 @@ setup(
     url="https://github.com/diezo/ensta",
     download_url=f"https://github.com/diezo/ensta/archive/refs/tags/v{version}.tar.gz",
     keywords=["instagram-client", "instagram", "api-wrapper", "instagram-scraper", "instagram-api", "instagram-sdk", "instagram-photos", "instagram-api-python", "instabot", "instagram-stories", "instagram-bot", "instapy", "instagram-downloader", "instagram-account", "instagram-crawler", "instagram-private-api", "igtv", "instagram-automation", "reels", "instagram-feed"],
-    install_requires=["requests", "selenium", "moviepy"],
+    install_requires=["requests", "selenium", "moviepy", "pycryptodome"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
