@@ -23,7 +23,7 @@ from .lib import (
     ConversionError,
     FileTypeError
 )
-from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson, PostUpload)
+from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
 from .containers.ProfileHost import ProfileHost
 from .containers.PostUser import PostUser
 from .containers.Post import Post
@@ -43,8 +43,10 @@ class BaseHost:
     csrf_token: str = None
     guest: Guest = None
     own_username: str = None
+    user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
+                      "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 
-    def __init__(self, session_id: str, proxy: dict[str, str] | None = None) -> None:
+    def __init__(self, session_id: str, proxy: dict[str, str] | None = None, skip_auth_verification: bool = False) -> None:
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
         self.request_session = requests.Session()
 
@@ -53,8 +55,8 @@ class BaseHost:
         self.guest = Guest(proxy=proxy)
         self.request_session.cookies.set("sessionid", session_id)
 
-        if not self.authenticated():
-            raise SessionError("SessionID is incorrect or expired.")
+        if not skip_auth_verification and not self.authenticated():
+            raise SessionError("Invalid login details.")
 
     def authenticated(self) -> bool:
         refresh_csrf_token(self)
@@ -62,8 +64,8 @@ class BaseHost:
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -103,8 +105,8 @@ class BaseHost:
             "accept-language": "en-US,en;q=0.9",
             "content-type": "application/x-www-form-urlencoded",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -162,8 +164,8 @@ class BaseHost:
             "accept-language": "en-US,en;q=0.9",
             "content-type": "application/x-www-form-urlencoded",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -214,8 +216,8 @@ class BaseHost:
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -300,8 +302,8 @@ class BaseHost:
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -427,8 +429,8 @@ class BaseHost:
             "accept-language": "en-US,en;q=0.9",
             "content-type": "application/x-www-form-urlencoded",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -483,8 +485,8 @@ class BaseHost:
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.110\", \"Google Chrome\";v=\"114.0.5735.110\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -548,8 +550,8 @@ class BaseHost:
             "accept-language": "en-US,en;q=0.9",
             "cache-control": "max-age=0",
             "sec-ch-prefers-color-scheme": "dark",
-            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.110\", \"Google Chrome\";v=\"114.0.5735.110\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -680,8 +682,8 @@ class BaseHost:
             "accept": "*/*",
             "dpr": "1.30208",
             "sec-ch-prefers-color-scheme": "dark",
-            "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
-            "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"119.0.6045.124\", \"Chromium\";v=\"119.0.6045.124\", \"Not?A_Brand\";v=\"24.0.0.0\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-model": "\"\"",
             "sec-ch-ua-platform": "\"Windows\"",
@@ -741,8 +743,8 @@ class BaseHost:
             "content-type": "application/x-www-form-urlencoded",
             "dpr": "1.30208",
             "sec-ch-prefers-color-scheme": "dark",
-            "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
-            "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"119.0.6045.124\", \"Chromium\";v=\"119.0.6045.124\", \"Not?A_Brand\";v=\"24.0.0.0\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-model": "\"\"",
             "sec-ch-ua-platform": "\"Windows\"",
@@ -788,8 +790,8 @@ class BaseHost:
             "content-type": "application/x-www-form-urlencoded",
             "dpr": "1.30208",
             "sec-ch-prefers-color-scheme": "dark",
-            "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
-            "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"119.0.6045.124\", \"Chromium\";v=\"119.0.6045.124\", \"Not?A_Brand\";v=\"24.0.0.0\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-model": "\"\"",
             "sec-ch-ua-platform": "\"Windows\"",
@@ -941,8 +943,8 @@ class BaseHost:
             "content-type": "application/x-www-form-urlencoded",
             "dpr": "1.30208",
             "sec-ch-prefers-color-scheme": "dark",
-            "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
-            "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"119.0.6045.124\", \"Chromium\";v=\"119.0.6045.124\", \"Not?A_Brand\";v=\"24.0.0.0\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-model": "\"\"",
             "sec-ch-ua-platform": "\"Windows\"",
@@ -1001,8 +1003,8 @@ class BaseHost:
             "content-type": "application/x-www-form-urlencoded",
             "dpr": "1.30208",
             "sec-ch-prefers-color-scheme": "dark",
-            "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
-            "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"119.0.6045.124\", \"Chromium\";v=\"119.0.6045.124\", \"Not?A_Brand\";v=\"24.0.0.0\"",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-model": "\"\"",
             "sec-ch-ua-platform": "\"Windows\"",

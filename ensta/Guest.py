@@ -9,7 +9,6 @@ from .lib.Exceptions import APIError, NetworkError
 from .containers.Profile import Profile
 from .containers.ProfileHost import ProfileHost
 import dataclasses
-from fake_useragent import UserAgent
 
 
 class Guest:
@@ -18,6 +17,8 @@ class Guest:
     insta_app_id: str = "936619743392459"
     preferred_color_scheme: str = "dark"
     csrf_token: str = None
+    user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
+                      "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 
     def __init__(self, proxy: dict[str, str] | None = None) -> None:
         self.request_session = requests.Session()
@@ -26,20 +27,20 @@ class Guest:
     def username_availability(self, username: str) -> bool | None:
         username = format_username(username)
         refresh_csrf_token(self)
+
         body_json = {
             "email": f"{username}@{self.csrf_token}.com",
             "username": username,
             "first_name": username.capitalize(),
             "opt_into_one_tap": False
         }
-        ua = UserAgent().random
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "content-type": "application/x-www-form-urlencoded",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": ua,
-            "sec-ch-ua-full-version-list": ua,
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -69,13 +70,13 @@ class Guest:
     def profile(self, username: str, __session__: requests.Session | None = None) -> Profile | ProfileHost | None:
         username: str = format_username(username)
         refresh_csrf_token(self)
-        ua = UserAgent().random
+
         request_headers: dict = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": ua,
-            "sec-ch-ua-full-version-list": ua,
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",

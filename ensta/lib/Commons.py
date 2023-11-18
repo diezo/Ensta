@@ -1,7 +1,5 @@
 import random
 import string
-import requests
-import requests.cookies
 from requests.cookies import RequestsCookieJar
 
 

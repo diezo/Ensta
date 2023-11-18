@@ -17,7 +17,7 @@ setup(
     url="https://github.com/diezo/ensta",
     download_url=f"https://github.com/diezo/ensta/archive/refs/tags/v{version}.tar.gz",
     keywords=["instagram-client", "instagram", "api-wrapper", "instagram-scraper", "instagram-api", "instagram-sdk", "instagram-photos", "instagram-api-python", "instabot", "instagram-stories", "instagram-bot", "instapy", "instagram-downloader", "instagram-account", "instagram-crawler", "instagram-private-api", "igtv", "instagram-automation", "reels", "instagram-feed"],
-    install_requires=["requests", "selenium", "fake-useragent", "moviepy"],
+    install_requires=["requests", "selenium", "moviepy"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
