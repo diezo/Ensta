@@ -1,79 +1,84 @@
-from .lib.Exceptions import (
-    AuthenticationError,
-    ChallengeError
-)
-from selenium import webdriver
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from urllib.parse import unquote_plus
+from requests import Response
+from .lib.Exceptions import (AuthenticationError, NetworkError)
+import requests
+import json
+from json import JSONDecodeError
+import string
+import base64
+import random
+from requests import Session
+from .PasswordEncryption import PasswordEncryption
 
 
-# noinspection PyPep8Naming
-def NewSessionID(username: str, password: str, proxy: dict[str, str] | None = None) -> str:
-    options: Options = Options()
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    options.add_argument("--blink-settings=imagesEnabled=false")
-    options.add_argument("--disable-extensions")
-    options.add_argument("disable-infobars")
-    options.add_argument("--headless")
+def new_session_id(username: str, password: str, proxy: dict[str, str] | None = None) -> str:
+    request_session: Session = requests.Session()
+    if proxy is not None: request_session.proxies.update(proxy)
 
-    if proxy is not None and proxy.get("https", "").strip() != "":
-        options.add_argument(f"--proxy-server={proxy['https'].strip()}")
+    encryption = PasswordEncryption(request_session)
+    encrypted_password = encryption.encrypt(password)
 
-    driver: webdriver.Chrome = webdriver.Chrome(options=options)
-    driver.get("https://www.instagram.com/accounts/login/")
+    data: dict = {
+        "enc_password": encrypted_password,
+        "optIntoOneTap": False,
+        "queryParams": "{}",
+        "trustedDeviceRecords": "{}",
+        "username": username
+    }
 
-    while True:
-        temp_elements = driver.find_elements(By.CLASS_NAME, "_aa4b")
+    csrf_token: str = "".join(random.choices(string.ascii_letters + string.digits, k=32))
 
-        for each in temp_elements:
-            each: WebElement | list[WebElement]
+    headers: dict = {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "content-type": "application/x-www-form-urlencoded",
+        "dpr": "1.30208",
+        "sec-ch-prefers-color-scheme": "dark",
+        "sec-ch-ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+        "sec-ch-ua-full-version-list": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-model": "\"\"",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-ch-ua-platform-version": "\"15.0.0\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "viewport-width": "1475",
+        "x-asbd-id": "129477",
+        "x-csrftoken": csrf_token,
+        "x-ig-app-id": "936619743392459",
+        "x-ig-www-claim": "0",
+        "x-instagram-ajax": "1009977574",
+        "x-requested-with": "XMLHttpRequest",
+        "x-web-device-id": "25532C62-8BBC-4927-B6C5-02631D6E05BF",
+        "cookie": f"dpr=1.3020833730697632; csrftoken={csrf_token}",
+        "Referer": "https://www.instagram.com/",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+    }
 
-            if len(each.find_elements(By.CLASS_NAME, "_add6")) > 0:
-                temp_elements = each.find_elements(By.CLASS_NAME, "_add6")
-                break
+    http_response: Response = request_session.post("https://www.instagram.com/api/v1/web/accounts/login/ajax/", data=data, headers=headers)
 
-        for each in temp_elements:
-            each: WebElement | list[WebElement]
+    try:
+        response_json: dict = http_response.json()
 
-            if len(each.find_elements(By.CLASS_NAME, "_ac4d")) > 0:
-                temp_elements = each.find_elements(By.CLASS_NAME, "_ac4d")
-                break
+        if response_json.get("status", "") != "ok": raise AuthenticationError("User doesn't exist.")
+        if response_json.get("user", False) is False or response_json.get("authenticated", False) is False: raise AuthenticationError("Invalid password.")
 
-        if len(temp_elements) > 0:
-            elements: list[WebElement] = temp_elements
-            break
+        session_id: str = http_response.cookies.get("sessionid", "")
+        rur: str = http_response.cookies.get("rur", "")
+        mid: str = http_response.cookies.get("mid", "")
+        user_id: str = response_json.get("userId", "")
+        ig_did: str = response_json.get("ig_did", "")
 
-    username_input: WebElement = elements[0]
-    password_input: WebElement = elements[1]
+        if session_id == "" or user_id == "": raise AuthenticationError("Unable to login.")
 
-    username_input.send_keys(username)
-    password_input.send_keys(password)
+        return base64.b64encode(json.dumps({
+            "session_id": session_id,
+            "rur": rur,
+            "mid": mid,
+            "user_id": user_id,
+            "ig_did": ig_did,
+            "username": username
+        }).encode("utf-8")).decode("utf-8")
 
-    form_element = driver.find_element(By.ID, "loginForm")
-    form_element.submit()
-
-    sessionid: str | None = None
-
-    while True:
-
-        cookie_object = driver.get_cookie("sessionid")
-
-        if cookie_object is not None and "value" in cookie_object and str(cookie_object["value"]).strip() != "":
-            sessionid = unquote_plus(str(cookie_object["value"]).strip())
-            break
-
-        if "challenge" in driver.current_url:
-            raise ChallengeError("Challenge required to login. This usually happens because of weak password or too many login attempts from the same IP Address. Try changing your password to a strong one.")
-
-        try:
-            driver.find_element(By.ID, "slfErrorAlert")
-            break
-        except:
-            pass
-
-    if sessionid is not None:
-        return sessionid
-    else:
-        raise AuthenticationError("Incorrect username or password!")
+    except JSONDecodeError:
+        raise NetworkError("Response got while logging in was not a valid json. Are you able to visit Instagram on the web?")

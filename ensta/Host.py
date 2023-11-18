@@ -1,11 +1,13 @@
-from .BaseHost import BaseHost
-from .lib.Exceptions import SessionError
-from .Authentication import NewSessionID
 import os
+from .SessionHost import SessionHost
+from .lib.Exceptions import SessionError
+from .Authentication import new_session_id
+import json
+import base64
 
 
 # noinspection PyMissingConstructor
-class Host(BaseHost):
+class Host(SessionHost):
 
     DEFAULT_FILE: str = "ensta-session.txt"
 
@@ -40,27 +42,30 @@ class Host(BaseHost):
             except SessionError: return self.new_session()
 
         elif self.load:
-            session_id: str = self.load().strip()
+            session_data: str = self.load().strip()
 
-            if session_id == "": return self.new_session()
+            if session_data == "": return self.new_session()
             else:
-                try: super().__init__(session_id, self.proxy)
+                try: super().__init__(session_data, self.proxy)
                 except SessionError: return self.new_session()
 
         elif self.file:
             if not os.path.exists(self.file): return self.new_session()
 
             with open(self.file, "r") as reading:
-                if (session_id := reading.read().strip()) == "": return self.new_session()
+                if (session_data := reading.read().strip()) == "": return self.new_session()
+
                 else:
-                    try: super().__init__(session_id, self.proxy)
-                    except SessionError: return self.new_session()
+                    try:
+                        if json.loads(base64.b64decode(session_data))["username"] != self.username: raise Exception()
+                        super().__init__(session_data, self.proxy)
+                    except Exception: return self.new_session()
 
     def new_session(self) -> None:
-        session_id: str = NewSessionID(self.username, self.password, self.proxy)
-        if self.save: self.save(session_id)
+        session_data: str = new_session_id(self.username, self.password, self.proxy)
+        if self.save: self.save(session_data)
 
         if self.file:
-            with open(self.file, "w") as writing: writing.write(session_id)
+            with open(self.file, "w") as writing: writing.write(session_data)
 
-        self.load_session(session_id)
+        self.load_session(session_data)

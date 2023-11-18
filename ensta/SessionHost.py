@@ -1,19 +1,22 @@
-import requests
+import base64
+import json
 import random
 import string
-import json
-import moviepy.editor
-from pathlib import Path
 import time
-from uuid import uuid4
-from json import JSONDecodeError
 from collections.abc import Generator
-from .lib.Commons import (
-    refresh_csrf_token,
-    format_identifier,
-    format_url,
-    format_username
-)
+from json import JSONDecodeError
+from pathlib import Path
+from uuid import uuid4
+
+import moviepy.editor
+import requests
+
+from .Guest import Guest
+from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
+from .containers.Post import Post
+from .containers.PostUser import PostUser
+from .containers.PrivateInfo import PrivateInfo
+from .containers.ProfileHost import ProfileHost
 from .lib import (
     SessionError,
     NetworkError,
@@ -23,18 +26,17 @@ from .lib import (
     ConversionError,
     FileTypeError
 )
-from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
-from .containers.ProfileHost import ProfileHost
-from .containers.PostUser import PostUser
-from .containers.Post import Post
-from .containers.PrivateInfo import PrivateInfo
-from .Guest import Guest
+from .lib.Commons import (
+    format_identifier,
+    format_url,
+    format_username
+)
 
 USERNAME = 0
 UID = 1
 
 
-class BaseHost:
+class SessionHost:
     request_session: requests.Session = None
     homepage_source: str = None
     insta_app_id: str = "936619743392459"
@@ -42,23 +44,32 @@ class BaseHost:
     x_ig_www_claim: str = None
     csrf_token: str = None
     guest: Guest = None
-    own_username: str = None
+    user_id: str = None
     user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
                       "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 
-    def __init__(self, session_id: str, proxy: dict[str, str] | None = None, skip_auth_verification: bool = False) -> None:
+    def __init__(self, session_data: str, proxy: dict[str, str] | None = None, skip_auth_verification: bool = False) -> None:
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
+        self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
         self.request_session = requests.Session()
 
         if proxy is not None: self.request_session.proxies.update(proxy)
 
         self.guest = Guest(proxy=proxy)
-        self.request_session.cookies.set("sessionid", session_id)
 
-        refresh_csrf_token(self)
+        decoded_session_data: dict = json.loads(base64.b64decode(session_data))
+
+        self.user_id = decoded_session_data.get("user_id")
+
+        self.request_session.cookies.set("sessionid", decoded_session_data.get("session_id"))
+        self.request_session.cookies.set("rur", decoded_session_data.get("rur"))
+        self.request_session.cookies.set("mid", decoded_session_data.get("mid"))
+        self.request_session.cookies.set("ds_user_id", decoded_session_data.get("user_id"))
+        self.request_session.cookies.set("ig_did", decoded_session_data.get("ig_did"))
+        self.request_session.cookies.set("csrftoken", self.csrf_token)
 
         if not skip_auth_verification and not self.authenticated():
-            raise SessionError("Invalid login details.")
+            raise SessionError("SessionID expired. If you used a saved session, delete ensta-session.txt file and try again")
 
     def authenticated(self) -> bool:
         request_headers = {
@@ -85,7 +96,7 @@ class BaseHost:
         http_response = self.request_session.get("https://www.instagram.com/api/v1/accounts/edit/web_form_data/", headers=request_headers)
 
         try:
-            self.own_username = str(http_response.json()["form_data"]["username"])
+            http_response.json()
             return True
         except JSONDecodeError:
             return False
@@ -875,13 +886,11 @@ class BaseHost:
         upload_id = arg_upload_id if arg_upload_id is not None else str(int(time.time()) * 1000)
         upload_name = f"{upload_id}_0_{random.randint(1000000000, 9999999999)}"
 
-        own_uid = self.profile(self.own_username).user_id
-
         rupload_params = {
             "is_clips_video": "1",
             "retry_context": "{\"num_step_auto_retry\": 0, \"num_reupload\": 0, \"num_step_manual_retry\": 0}",
             "media_type": "2",
-            "xsharing_user_ids": json.dumps([own_uid]),
+            "xsharing_user_ids": json.dumps([self.user_id]),
             "upload_id": upload_id,
             "upload_media_duration_ms": str(int(video_editor.duration * 1000)),
             "upload_media_width": str(video_editor.size[0]),

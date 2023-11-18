@@ -23,20 +23,12 @@ You can do a lot with ensta, here's some code:
 
 <details>
 
-<summary>Username, Password & SessionID Login</summary><br>
+<summary>Username Password Login</summary><br>
 
-**Login using Username & Password:**
 ```python
 from ensta import Host
 
 host = Host(username, password)
-```
-
-**Login using SessionID:**
-```python
-from ensta import BaseHost
-
-host = BaseHost(session_id)
 ```
 
 </details>
