@@ -2,7 +2,6 @@ from .PostUser import PostUser
 from .Liker import Liker
 from .Likers import Likers
 from dataclasses import dataclass, field
-from ensta.lib.Commons import refresh_csrf_token
 from json import JSONDecodeError
 
 
@@ -50,7 +49,6 @@ class Post:
     def _like_action(self, action: str = "like") -> bool:
         if self.unique_key == "": return False
 
-        refresh_csrf_token(self.instance)
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -93,7 +91,6 @@ class Post:
         return self._like_action("unlike")
     
     def likers(self) -> Likers | None:
-        refresh_csrf_token(self.instance)
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",

@@ -1,11 +1,3 @@
-import random
-import string
-
-
-def refresh_csrf_token(self) -> None:
-    self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
-
-
 def format_username(username: str) -> str:
     return username.replace(" ", "").lower()
 

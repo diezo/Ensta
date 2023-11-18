@@ -28,12 +28,6 @@ class AuthenticationError(Exception):
         super().__init__(message)
 
 
-class ChallengeError(Exception):
-
-    def __init__(self, message):
-        super().__init__(message)
-
-
 class APIError(Exception):
 
     def __init__(self, message: str | None = None):

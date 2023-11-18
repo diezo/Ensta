@@ -1,10 +1,11 @@
 from json import JSONDecodeError
 import requests
 from .lib.Commons import (
-    refresh_csrf_token,
     format_username,
     format_uid
 )
+import string
+import random
 from .lib.Exceptions import APIError, NetworkError
 from .containers.Profile import Profile
 from .containers.ProfileHost import ProfileHost
@@ -22,11 +23,13 @@ class Guest:
 
     def __init__(self, proxy: dict[str, str] | None = None) -> None:
         self.request_session = requests.Session()
+        self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
+        self.request_session.cookies.set("csrftoken", self.csrf_token)
+
         if proxy is not None: self.request_session.proxies.update(proxy)
 
     def username_availability(self, username: str) -> bool | None:
         username = format_username(username)
-        refresh_csrf_token(self)
 
         body_json = {
             "email": f"{username}@{self.csrf_token}.com",
@@ -69,7 +72,6 @@ class Guest:
 
     def profile(self, username: str, __session__: requests.Session | None = None) -> Profile | ProfileHost | None:
         username: str = format_username(username)
-        refresh_csrf_token(self)
 
         request_headers: dict = {
             "accept": "*/*",
@@ -178,7 +180,6 @@ class Guest:
 
     def get_username(self, uid: str | int, __session__: requests.Session | None = None) -> str | None:
         uid = format_uid(uid)
-        refresh_csrf_token(self)
         request_headers = {
             "User-Agent": "Instagram 76.0.0.15.395 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G930F; herolte; samsungexynos8890; en_US; 138226743)"
         }
