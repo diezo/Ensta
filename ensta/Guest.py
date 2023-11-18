@@ -1,10 +1,6 @@
 from json import JSONDecodeError
-import random
 import requests
 from .lib.Commons import (
-    update_session,
-    update_homepage_source,
-    update_app_id,
     refresh_csrf_token,
     format_username,
     format_uid
@@ -19,19 +15,13 @@ from fake_useragent import UserAgent
 class Guest:
     request_session: requests.Session = None
     homepage_source: str = None
-    insta_app_id: str = None
+    insta_app_id: str = "936619743392459"
+    preferred_color_scheme: str = "dark"
     csrf_token: str = None
 
-    def __init__(self, homepage_source: str = None, app_id: str | int = None, proxy: dict[str, str] | None = None) -> None:
-        update_session(self)
-
+    def __init__(self, proxy: dict[str, str] | None = None) -> None:
+        self.request_session = requests.Session()
         if proxy is not None: self.request_session.proxies.update(proxy)
-
-        if homepage_source is not None: self.homepage_source = homepage_source
-        else: update_homepage_source(self)
-
-        if app_id is not None: self.insta_app_id = str(app_id)
-        else: update_app_id(self)
 
     def username_availability(self, username: str) -> bool | None:
         username = format_username(username)
@@ -47,7 +37,7 @@ class Guest:
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "content-type": "application/x-www-form-urlencoded",
-            "sec-ch-prefers-color-scheme": random.choice(["light", "dark"]),
+            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
             "sec-ch-ua": ua,
             "sec-ch-ua-full-version-list": ua,
             "sec-ch-ua-mobile": "?0",
@@ -83,7 +73,7 @@ class Guest:
         request_headers: dict = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
-            "sec-ch-prefers-color-scheme": random.choice(["light", "dark"]),
+            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
             "sec-ch-ua": ua,
             "sec-ch-ua-full-version-list": ua,
             "sec-ch-ua-mobile": "?0",

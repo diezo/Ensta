@@ -2,7 +2,7 @@ from distutils.core import setup
 from pathlib import Path
 
 long_description = (Path(__file__).parent / "README.md").read_text(encoding="utf-8")
-version = "5.0.1"
+version = "5.0.2"
 
 setup(
     name="ensta",

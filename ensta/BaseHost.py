@@ -10,9 +10,6 @@ from json import JSONDecodeError
 from collections.abc import Generator
 from .lib.Commons import (
     refresh_csrf_token,
-    update_app_id,
-    update_homepage_source,
-    update_session,
     format_identifier,
     format_url,
     format_username
@@ -40,7 +37,7 @@ UID = 1
 class BaseHost:
     request_session: requests.Session = None
     homepage_source: str = None
-    insta_app_id: str = None
+    insta_app_id: str = "936619743392459"
     preferred_color_scheme: str = "dark"
     x_ig_www_claim: str = None
     csrf_token: str = None
@@ -49,31 +46,15 @@ class BaseHost:
 
     def __init__(self, session_id: str, proxy: dict[str, str] | None = None) -> None:
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
-        update_session(self)
+        self.request_session = requests.Session()
 
         if proxy is not None: self.request_session.proxies.update(proxy)
 
-        update_homepage_source(self)
-        update_app_id(self)
-
-        self.guest = Guest(
-            homepage_source=self.homepage_source,
-            app_id=self.insta_app_id,
-            proxy=proxy
-        )
-
+        self.guest = Guest(proxy=proxy)
         self.request_session.cookies.set("sessionid", session_id)
 
         if not self.authenticated():
             raise SessionError("SessionID is incorrect or expired.")
-
-    def update_homepage_source(self) -> None:
-        temp_homepage_source = self.request_session.get("https://www.instagram.com/").text.strip()
-
-        if temp_homepage_source == "":
-            raise NetworkError("Couldn't load instagram homepage.")
-
-        self.homepage_source = temp_homepage_source
 
     def authenticated(self) -> bool:
         refresh_csrf_token(self)
