@@ -55,11 +55,12 @@ class BaseHost:
         self.guest = Guest(proxy=proxy)
         self.request_session.cookies.set("sessionid", session_id)
 
+        refresh_csrf_token(self)
+
         if not skip_auth_verification and not self.authenticated():
             raise SessionError("Invalid login details.")
 
     def authenticated(self) -> bool:
-        refresh_csrf_token(self)
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -94,7 +95,6 @@ class BaseHost:
         if not conversion_success: raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
-        refresh_csrf_token(self)
         body_json = {
             "container_module": "profile",
             "nav_chain": f"PolarisProfileNestedContentRoot:profilePage:1:via_cold_start",
@@ -153,7 +153,6 @@ class BaseHost:
         if not conversion_success: raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
-        refresh_csrf_token(self)
         body_json = {
             "container_module": "profile",
             "nav_chain": f"PolarisProfileRoot:profilePage:1:via_cold_start",
@@ -211,7 +210,6 @@ class BaseHost:
             raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
-        refresh_csrf_token(self)
         request_headers: dict = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -297,7 +295,6 @@ class BaseHost:
             raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
-        refresh_csrf_token(self)
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -420,7 +417,6 @@ class BaseHost:
         if privacy != "private" and privacy != "public":
             raise DevelopmentError("_set_account_privacy")
 
-        refresh_csrf_token(self)
         body_json = {
             "is_private": is_private
         }
@@ -480,7 +476,6 @@ class BaseHost:
     def posts(self, username: str, count: int = 0) -> Generator[Post, None, None]:
         username = format_username(username)
 
-        refresh_csrf_token(self)
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -677,7 +672,6 @@ class BaseHost:
         )
 
     def private_info(self) -> PrivateInfo:
-        refresh_csrf_token(self)
         request_headers = {
             "accept": "*/*",
             "dpr": "1.30208",
@@ -737,7 +731,6 @@ class BaseHost:
     def change_bio(self, biography: str) -> bool:
         private_info = self.private_info()
 
-        refresh_csrf_token(self)
         request_headers = {
             "accept": "*/*",
             "content-type": "application/x-www-form-urlencoded",
@@ -784,7 +777,6 @@ class BaseHost:
     def change_display_name(self, display_name: str) -> bool:
         private_info = self.private_info()
 
-        refresh_csrf_token(self)
         request_headers = {
             "accept": "*/*",
             "content-type": "application/x-www-form-urlencoded",
@@ -829,7 +821,6 @@ class BaseHost:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
     def __upload_photo(self, path: str, arg_upload_id: str | None = None) -> str:
-        refresh_csrf_token(self)
         path: Path = Path(path)
 
         if path.suffix not in (".jpg", ".jpeg"): raise FileTypeError("Only jpg and jpeg image types are allowed to post.")
@@ -876,7 +867,6 @@ class BaseHost:
             raise NetworkError("Response not a valid json.")
 
     def __upload_video(self, path: str, arg_upload_id: str | None = None) -> tuple[bool, any, any, any]:
-        refresh_csrf_token(self)
         video_editor = moviepy.editor.VideoFileClip(path)
 
         path: Path = Path(path)
@@ -934,7 +924,6 @@ class BaseHost:
             raise NetworkError("Response not a valid json.")
 
     def upload_post(self, photo_path: str, caption: str = "", archive_only: bool = False, disable_comments: bool = False, like_and_view_counts_disabled: bool = False, video_subtitles_enabled: bool = False) -> bool:  # TODO: Implement Return Value
-        refresh_csrf_token(self)
         upload_id = self.__upload_photo(photo_path)
 
         request_headers: dict = {
@@ -996,7 +985,6 @@ class BaseHost:
         if not video_success: return False
         if not self.__upload_photo(thumbnail_path, upload_id): return False
 
-        refresh_csrf_token(self)
         request_headers: dict = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
