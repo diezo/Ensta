@@ -538,7 +538,7 @@ class SessionHost:
                 for each_item in response_json["items"]:
                     if generated_count < count or count == 0:
 
-                        yield self._process_post_data(each_item)
+                        yield self.__process_post_data(each_item)
                         generated_count += 1
 
                 if (generated_count < count or count == 0) and "next_max_id" in response_json:
@@ -549,7 +549,7 @@ class SessionHost:
                 yield None
                 raise NetworkError("HTTP Response is not a valid JSON.")
 
-    def post(self, share_url: str) -> Post | None:
+    def post(self, share_url: str) -> Post | None:  # TODO: Method not working. Find a new implementation
         share_url: str = format_url(share_url)
         request_headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -595,12 +595,12 @@ class SessionHost:
                         selected_post: dict = items_data[len(items_data) - 1]
 
                         if selected_post is not None:
-                            return self._process_post_data(selected_post)
+                            return self.__process_post_data(selected_post)
 
         except JSONDecodeError:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
-    def _process_post_data(self, data: dict) -> Post:
+    def __process_post_data(self, data: dict) -> Post:
 
         caption: dict = data.get("caption", None)
 
