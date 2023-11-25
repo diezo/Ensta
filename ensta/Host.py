@@ -57,7 +57,7 @@ class Host(SessionHost):
 
                 else:
                     try:
-                        if json.loads(base64.b64decode(session_data))["username"] != self.username: raise Exception()
+                        if json.loads(session_data)["username"] != self.username: raise Exception()
                         super().__init__(session_data, self.proxy)
                     except Exception: return self.new_session()
 

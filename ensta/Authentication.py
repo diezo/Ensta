@@ -1,17 +1,19 @@
-from requests import Response
-from .lib.Exceptions import (AuthenticationError, NetworkError)
-import requests
 import json
-from json import JSONDecodeError
-import string
-import base64
 import random
+import string
+from json import JSONDecodeError
+
+import requests
+from requests import Response
 from requests import Session
+
 from .PasswordEncryption import PasswordEncryption
+from .lib.Exceptions import (AuthenticationError, NetworkError)
 
 
 def new_session_id(username: str, password: str, proxy: dict[str, str] | None = None) -> str:
     request_session: Session = requests.Session()
+
     if proxy is not None: request_session.proxies.update(proxy)
 
     encryption = PasswordEncryption(request_session)
@@ -71,14 +73,15 @@ def new_session_id(username: str, password: str, proxy: dict[str, str] | None = 
 
         if session_id == "" or user_id == "": raise AuthenticationError("Unable to login.")
 
-        return base64.b64encode(json.dumps({
+        return json.dumps({
             "session_id": session_id,
             "rur": rur,
             "mid": mid,
             "user_id": user_id,
             "ig_did": ig_did,
             "username": username
-        }).encode("utf-8")).decode("utf-8")
+        })
 
     except JSONDecodeError:
-        raise NetworkError("Response got while logging in was not a valid json. Are you able to visit Instagram on the web?")
+        raise NetworkError("Response got while logging in was not a valid "
+                           "json. Are you able to visit Instagram on the web?")

@@ -1,4 +1,3 @@
-import base64
 import json
 import random
 import string
@@ -32,23 +31,27 @@ from .lib.Commons import (
     format_username
 )
 
-USERNAME = 0
-UID = 1
+USERNAME, UID = 0, 1
 
 
 class SessionHost:
-    request_session: requests.Session = None
-    homepage_source: str = None
+    request_session: requests.Session
     insta_app_id: str = "936619743392459"
     preferred_color_scheme: str = "dark"
-    x_ig_www_claim: str = None
-    csrf_token: str = None
-    guest: Guest = None
-    user_id: str = None
+    x_ig_www_claim: str
+    csrf_token: str
+    guest: Guest
+    user_id: str
     user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
                       "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 
-    def __init__(self, session_data: str, proxy: dict[str, str] | None = None, skip_auth_verification: bool = False) -> None:
+    def __init__(
+            self,
+            session_data: str,
+            proxy: dict[str, str] | None = None,
+            skip_auth_verification: bool = False
+    ) -> None:
+
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
         self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
         self.request_session = requests.Session()
@@ -57,15 +60,14 @@ class SessionHost:
 
         self.guest = Guest(proxy=proxy)
 
-        decoded_session_data: dict = json.loads(base64.b64decode(session_data))
+        session_data_json: dict = json.loads(session_data)
+        self.user_id = session_data_json.get("user_id")
 
-        self.user_id = decoded_session_data.get("user_id")
-
-        self.request_session.cookies.set("sessionid", decoded_session_data.get("session_id"))
-        self.request_session.cookies.set("rur", decoded_session_data.get("rur"))
-        self.request_session.cookies.set("mid", decoded_session_data.get("mid"))
-        self.request_session.cookies.set("ds_user_id", decoded_session_data.get("user_id"))
-        self.request_session.cookies.set("ig_did", decoded_session_data.get("ig_did"))
+        self.request_session.cookies.set("sessionid", session_data_json.get("session_id"))
+        self.request_session.cookies.set("rur", session_data_json.get("rur"))
+        self.request_session.cookies.set("mid", session_data_json.get("mid"))
+        self.request_session.cookies.set("ds_user_id", session_data_json.get("user_id"))
+        self.request_session.cookies.set("ig_did", session_data_json.get("ig_did"))
         self.request_session.cookies.set("csrftoken", self.csrf_token)
 
         if not skip_auth_verification and not self.authenticated():
