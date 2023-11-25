@@ -292,8 +292,5 @@ Want this project to keep running? Please consider donating here:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
-## 🧑‍💻 Contribute
-Are you a developer and want to contribute code to ensta? Please write me an email at: sonniiii@outlook.com
-
 ## 👮 Legal
 This is a third-party library and not associated with Instagram. We are strictly against any activity that may violate [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/) or [Terms of use](https://help.instagram.com/581066165581870). You are the only one liable for such actions.
