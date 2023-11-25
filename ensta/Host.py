@@ -1,9 +1,8 @@
 import os
+import json
 from .SessionHost import SessionHost
 from .lib.Exceptions import SessionError
 from .Authentication import new_session_id
-import json
-import base64
 
 
 # noinspection PyMissingConstructor
@@ -56,6 +55,7 @@ class Host(SessionHost):
                 if (session_data := reading.read().strip()) == "": return self.new_session()
 
                 else:
+                    # noinspection PyBroadException
                     try:
                         if json.loads(session_data)["username"] != self.username: raise Exception()
                         super().__init__(session_data, self.proxy)

@@ -1,9 +1,9 @@
 import time
-from Cryptodome.Random import get_random_bytes
+import base64
+from requests import Session
 from Cryptodome.PublicKey import RSA
 from Cryptodome.Cipher import AES, PKCS1_v1_5
-from requests import Session
-import base64
+from Cryptodome.Random import get_random_bytes
 
 
 class PasswordEncryption:

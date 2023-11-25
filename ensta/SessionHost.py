@@ -1,21 +1,19 @@
+import time
 import json
 import random
 import string
-import time
-from collections.abc import Generator
-from json import JSONDecodeError
-from pathlib import Path
-from uuid import uuid4
-
-import moviepy.editor
 import requests
-
+import moviepy.editor
+from uuid import uuid4
 from .Guest import Guest
-from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
+from pathlib import Path
+from json import JSONDecodeError
 from .containers.Post import Post
+from collections.abc import Generator
 from .containers.PostUser import PostUser
-from .containers.PrivateInfo import PrivateInfo
 from .containers.ProfileHost import ProfileHost
+from .containers.PrivateInfo import PrivateInfo
+from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
 from .lib import (
     SessionError,
     NetworkError,
@@ -46,10 +44,10 @@ class SessionHost:
                       "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 
     def __init__(
-            self,
-            session_data: str,
-            proxy: dict[str, str] | None = None,
-            skip_auth_verification: bool = False
+        self,
+        session_data: str,
+        proxy: dict[str, str] | None = None,
+        skip_auth_verification: bool = False
     ) -> None:
 
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
@@ -71,7 +69,9 @@ class SessionHost:
         self.request_session.cookies.set("csrftoken", self.csrf_token)
 
         if not skip_auth_verification and not self.authenticated():
-            raise SessionError("SessionID expired. If you used a saved session, delete ensta-session.txt file and try again")
+            raise SessionError(
+                "SessionID expired. If you used a saved session, delete ensta-session.txt file and try again"
+            )
 
     def authenticated(self) -> bool:
         request_headers = {
@@ -95,7 +95,10 @@ class SessionHost:
             "Referer": "https://www.instagram.com/accounts/edit/",
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
-        http_response = self.request_session.get("https://www.instagram.com/api/v1/accounts/edit/web_form_data/", headers=request_headers)
+        http_response = self.request_session.get(
+            "https://www.instagram.com/api/v1/accounts/edit/web_form_data/",
+            headers=request_headers
+        )
 
         try:
             http_response.json()
@@ -138,7 +141,11 @@ class SessionHost:
         }
 
         try:
-            http_response = self.request_session.post(f"https://www.instagram.com/api/v1/friendships/create/{identifier}/", headers=request_headers, data=body_json)
+            http_response = self.request_session.post(
+                f"https://www.instagram.com/api/v1/friendships/create/{identifier}/",
+                headers=request_headers,
+                data=body_json
+            )
             response_json = http_response.json()
 
             if "status" in response_json:
@@ -196,7 +203,11 @@ class SessionHost:
         }
 
         try:
-            http_response = self.request_session.post(f"https://www.instagram.com/api/v1/friendships/destroy/{identifier}/", headers=request_headers, data=body_json)
+            http_response = self.request_session.post(
+                f"https://www.instagram.com/api/v1/friendships/destroy/{identifier}/",
+                headers=request_headers,
+                data=body_json
+            )
             response_json = http_response.json()
 
             if "status" in response_json:
@@ -204,8 +215,13 @@ class SessionHost:
                     if "following" in response_json["friendship_status"] \
                             and "outgoing_request" in response_json["friendship_status"] \
                             and "followed_by" in response_json["friendship_status"]:
+
                         return UnfollowedStatus(
-                            unfollowed=not response_json["friendship_status"]["following"] and not response_json["friendship_status"]["outgoing_request"],
+                            unfollowed=not (
+                                    response_json["friendship_status"]["following"] or
+                                    response_json["friendship_status"]["outgoing_request"]
+                            ),
+
                             is_my_follower=response_json["friendship_status"]["followed_by"]
                         )
                 else:
@@ -260,7 +276,11 @@ class SessionHost:
                 if count < 35:
                     count_text = count
 
-                http_response = self.request_session.get(f"https://www.instagram.com/api/v1/friendships/{identifier}/followers/?count={str(count_text)}{current_max_id_text}&search_surface=follow_list_page", headers=request_headers)
+                http_response = self.request_session.get(
+                    f"https://www.instagram.com/api/v1/friendships/{identifier}/followers/?count={str(count_text)}"
+                    f"{current_max_id_text}&search_surface=follow_list_page",
+                    headers=request_headers
+                )
                 response_json = http_response.json()
 
                 if "status" not in response_json or "users" not in response_json:
@@ -346,7 +366,8 @@ class SessionHost:
                     count_text = count
 
                 http_response = self.request_session.get(
-                    f"https://www.instagram.com/api/v1/friendships/{identifier}/following/?count={str(count_text)}{current_max_id_text}",
+                    f"https://www.instagram.com/api/v1/friendships/{identifier}/following/?count={str(count_text)}"
+                    f"{current_max_id_text}",
                     headers=request_headers)
                 response_json = http_response.json()
 
@@ -458,7 +479,11 @@ class SessionHost:
         }
 
         try:
-            http_response = self.request_session.post("https://www.instagram.com/api/v1/web/accounts/set_private/", headers=request_headers, data=body_json)
+            http_response = self.request_session.post(
+                "https://www.instagram.com/api/v1/web/accounts/set_private/",
+                headers=request_headers,
+                data=body_json
+            )
             response_json = http_response.json()
 
             if "status" not in response_json:
@@ -526,7 +551,11 @@ class SessionHost:
                 if count < 35:
                     count_text = count
 
-                http_response = self.request_session.get(f"https://www.instagram.com/api/v1/feed/user/{username}/username/?count={count_text}{current_max_id_text}", headers=request_headers)
+                http_response = self.request_session.get(
+                    f"https://www.instagram.com/api/v1/feed/user/{username}/username/?count={count_text}"
+                    f"{current_max_id_text}",
+                    headers=request_headers
+                )
                 response_json = http_response.json()
 
                 if "status" not in response_json or "items" not in response_json:
@@ -554,7 +583,8 @@ class SessionHost:
     def post(self, share_url: str) -> Post | None:  # TODO: Method not working. Find a new implementation
         share_url: str = format_url(share_url)
         request_headers = {
-            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif"
+                      ",image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "accept-language": "en-US,en;q=0.9",
             "cache-control": "max-age=0",
             "sec-ch-prefers-color-scheme": "dark",
@@ -705,7 +735,10 @@ class SessionHost:
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        http_response = self.request_session.get(f"https://www.instagram.com/api/v1/accounts/edit/web_form_data/", headers=request_headers)
+        http_response = self.request_session.get(
+            f"https://www.instagram.com/api/v1/accounts/edit/web_form_data/",
+            headers=request_headers
+        )
 
         try:
             response_json: dict = http_response.json()
@@ -776,12 +809,18 @@ class SessionHost:
             "username": private_info.username
         }
 
-        http_response = self.request_session.post(f"https://www.instagram.com/api/v1/web/accounts/edit/", headers=request_headers, data=body_json)
+        http_response = self.request_session.post(
+            f"https://www.instagram.com/api/v1/web/accounts/edit/",
+            headers=request_headers,
+            data=body_json
+        )
 
         try:
             response_json: dict = http_response.json()
 
-            if "status" not in response_json: raise NetworkError("Key 'status' not in response json. Possibly it's a fault from your side.")
+            if "status" not in response_json: raise NetworkError(
+                "Key 'status' not in response json. Possibly it's a fault from your side."
+            )
             return response_json.get("status") == "ok"
 
         except JSONDecodeError:
@@ -822,12 +861,19 @@ class SessionHost:
             "username": private_info.username
         }
 
-        http_response = self.request_session.post(f"https://www.instagram.com/api/v1/web/accounts/edit/", headers=request_headers, data=body_json)
+        http_response = self.request_session.post(
+            f"https://www.instagram.com/api/v1/web/accounts/edit/",
+            headers=request_headers,
+            data=body_json
+        )
 
         try:
             response_json: dict = http_response.json()
 
-            if "status" not in response_json: raise NetworkError("Key 'status' not in response json. Possibly it's a fault from your side.")
+            if "status" not in response_json: raise NetworkError(
+                "Key 'status' not in response json. Possibly it's a fault from your side."
+            )
+
             return response_json.get("status") == "ok"
 
         except JSONDecodeError:
@@ -836,7 +882,9 @@ class SessionHost:
     def __upload_photo(self, path: str, arg_upload_id: str | None = None) -> str:
         path: Path = Path(path)
 
-        if path.suffix not in (".jpg", ".jpeg"): raise FileTypeError("Only jpg and jpeg image types are allowed to post.")
+        if path.suffix not in (".jpg", ".jpeg"): raise FileTypeError(
+            "Only jpg and jpeg image types are allowed to post."
+        )
 
         upload_id = arg_upload_id if arg_upload_id is not None else str(int(time.time()) * 1000)
         waterfall_id = str(uuid4())
@@ -866,13 +914,19 @@ class SessionHost:
             "content-length": photo_length
         }
 
-        http_response = self.request_session.post(f"https://i.instagram.com/rupload_igphoto/{upload_name}", data=photo_data, headers=request_headers)
+        http_response = self.request_session.post(
+            f"https://i.instagram.com/rupload_igphoto/{upload_name}",
+            data=photo_data,
+            headers=request_headers
+        )
 
         try:
             response_json: dict = http_response.json()
 
             if response_json.get("status", "") != "ok": raise NetworkError("Response json key 'status' not ok.")
-            if response_json.get("upload_id", "") == "": raise NetworkError("Key 'upload_id' in response json doesn't exist or is invalid.")
+            if response_json.get("upload_id", "") == "": raise NetworkError(
+                "Key 'upload_id' in response json doesn't exist or is invalid."
+            )
 
             return str(response_json.get("upload_id"))
 
@@ -906,8 +960,14 @@ class SessionHost:
             "x-entity-type": "video/mp4"
         }
 
-        http_response__get = self.request_session.get(f"https://i.instagram.com/rupload_igvideo/{upload_name}", headers=request_headers__get)
-        if http_response__get.status_code != 200: raise NetworkError("Video Upload 'GET' Request failed. Status code not 200.")
+        http_response__get = self.request_session.get(
+            f"https://i.instagram.com/rupload_igvideo/{upload_name}",
+            headers=request_headers__get
+        )
+
+        if http_response__get.status_code != 200: raise NetworkError(
+            "Video Upload 'GET' Request failed. Status code not 200."
+        )
 
         # POST Request
 
@@ -924,17 +984,33 @@ class SessionHost:
             **request_headers__get
         }
 
-        http_response = self.request_session.post(f"https://i.instagram.com/rupload_igvideo/{upload_name}", data=video_data, headers=request_headers)
+        http_response = self.request_session.post(
+            f"https://i.instagram.com/rupload_igvideo/{upload_name}",
+            data=video_data,
+            headers=request_headers
+        )
 
         try:
             response_json: dict = http_response.json()
 
-            return response_json.get("status", "") == "ok", video_editor.duration, video_editor.size[0], video_editor.size[1]
+            return response_json.get("status", "") == "ok",\
+                video_editor.duration,\
+                video_editor.size[0],\
+                video_editor.size[1]
 
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
-    def upload_post(self, photo_path: str, caption: str = "", archive_only: bool = False, disable_comments: bool = False, like_and_view_counts_disabled: bool = False, video_subtitles_enabled: bool = False) -> bool:  # TODO: Implement Return Value
+    def upload_post(
+        self,
+        photo_path: str,
+        caption: str = "",
+        archive_only: bool = False,
+        disable_comments: bool = False,
+        like_and_view_counts_disabled: bool = False,
+        video_subtitles_enabled: bool = False
+    ) -> bool:  # TODO: Implement Return Value
+
         upload_id = self.__upload_photo(photo_path)
 
         request_headers: dict = {
@@ -978,7 +1054,11 @@ class SessionHost:
             "video_subtitles_enabled": "1" if video_subtitles_enabled else "0"
         }
 
-        http_response = self.request_session.post("https://www.instagram.com/api/v1/media/configure/", headers=request_headers, data=body_json)
+        http_response = self.request_session.post(
+            "https://www.instagram.com/api/v1/media/configure/",
+            headers=request_headers,
+            data=body_json
+        )
 
         try:
             response_json: dict = http_response.json()
@@ -988,7 +1068,17 @@ class SessionHost:
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
-    def upload_reel(self, video_path: str, thumbnail_path: str, caption: str = "", archive_only: bool = False, disable_comments: bool = False, like_and_view_counts_disabled: bool = False, video_subtitles_enabled: bool = False) -> bool:  # TODO: Implement Return Value
+    def upload_reel(
+        self,
+        video_path: str,
+        thumbnail_path: str,
+        caption: str = "",
+        archive_only: bool = False,
+        disable_comments: bool = False,
+        like_and_view_counts_disabled: bool = False,
+        video_subtitles_enabled: bool = False
+    ) -> bool:  # TODO: Implement Return Value
+
         upload_id = str(int(time.time()) * 1000)
 
         video_success, video_duration, video_width, video_height = self.__upload_video(video_path, upload_id)
@@ -1037,7 +1127,11 @@ class SessionHost:
             "video_subtitles_enabled": "1" if video_subtitles_enabled else "0"
         }
 
-        http_response = self.request_session.post("https://www.instagram.com/api/v1/media/configure_to_clips/", headers=request_headers, data=body_json)
+        http_response = self.request_session.post(
+            "https://www.instagram.com/api/v1/media/configure_to_clips/",
+            headers=request_headers,
+            data=body_json
+        )
 
         try:
             response_json: dict = http_response.json()

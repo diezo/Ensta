@@ -55,7 +55,8 @@ class Post:
             "content-type": "application/x-www-form-urlencoded",
             "sec-ch-prefers-color-scheme": self.instance.preferred_color_scheme,
             "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.110\", \"Google Chrome\";v=\"114.0.5735.110\"",
+            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.110\", "
+                                           "\"Google Chrome\";v=\"114.0.5735.110\"",
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -74,7 +75,11 @@ class Post:
         }
 
         try:
-            http_response = self.instance.request_session.post(f"https://www.instagram.com/api/v1/web/likes/{self.unique_key}/{action}/", headers=request_headers)
+            http_response = self.instance.request_session.post(
+                f"https://www.instagram.com/api/v1/web/likes/{self.unique_key}/{action}/",
+                headers=request_headers
+            )
+
             response_json = http_response.json()
 
             if "status" in response_json:
@@ -96,7 +101,8 @@ class Post:
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.instance.preferred_color_scheme,
             "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.134\", \"Google Chrome\";v=\"114.0.5735.134\"",
+            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.134\", "
+                                           "\"Google Chrome\";v=\"114.0.5735.134\"",
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -114,7 +120,11 @@ class Post:
         }
 
         try:
-            http_response = self.instance.request_session.get(f"https://www.instagram.com/api/v1/media/{self.unique_key}/likers/", headers=request_headers)
+            http_response = self.instance.request_session.get(
+                f"https://www.instagram.com/api/v1/media/{self.unique_key}/likers/",
+                headers=request_headers
+            )
+
             response_json: dict = http_response.json()
 
             if "status" not in response_json or "users" not in response_json:
@@ -152,7 +162,8 @@ class Post:
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.instance.preferred_color_scheme,
             "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.134\", \"Google Chrome\";v=\"114.0.5735.134\"",
+            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.134\", "
+                                           "\"Google Chrome\";v=\"114.0.5735.134\"",
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "\"Windows\"",
             "sec-ch-ua-platform-version": "\"15.0.0\"",
@@ -170,7 +181,11 @@ class Post:
         }
 
         try:
-            http_response = self.instance.request_session.get(f"https://www.instagram.com/api/v1/media/{self.unique_key}/likers/", headers=request_headers)
+            http_response = self.instance.request_session.get(
+                f"https://www.instagram.com/api/v1/media/{self.unique_key}/likers/",
+                headers=request_headers
+            )
+
             response_json: dict = http_response.json()
 
             if "status" not in response_json or "users" not in response_json:

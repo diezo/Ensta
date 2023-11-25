@@ -1,15 +1,12 @@
-from json import JSONDecodeError
-import requests
-from .lib.Commons import (
-    format_username,
-    format_uid
-)
 import string
 import random
-from .lib.Exceptions import APIError, NetworkError
+import requests
+import dataclasses
+from json import JSONDecodeError
 from .containers.Profile import Profile
 from .containers.ProfileHost import ProfileHost
-import dataclasses
+from .lib.Exceptions import APIError, NetworkError
+from .lib.Commons import (format_username, format_uid)
 
 
 class Guest:
@@ -62,7 +59,11 @@ class Guest:
         }
 
         try:
-            http_response = self.request_session.post("https://www.instagram.com/api/v1/web/accounts/web_create_ajax/attempt/", headers=request_headers, data=body_json)
+            http_response = self.request_session.post(
+                "https://www.instagram.com/api/v1/web/accounts/web_create_ajax/attempt/",
+                headers=request_headers,
+                data=body_json
+            )
             response_json = http_response.json()
 
             if "errors" in response_json:
@@ -181,7 +182,8 @@ class Guest:
     def get_username(self, uid: str | int, __session__: requests.Session | None = None) -> str | None:
         uid = format_uid(uid)
         request_headers = {
-            "User-Agent": "Instagram 76.0.0.15.395 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G930F; herolte; samsungexynos8890; en_US; 138226743)"
+            "User-Agent": "Instagram 76.0.0.15.395 Android (24/7.0; 640dpi; 1440x2560; "
+                          "samsung; SM-G930F; herolte; samsungexynos8890; en_US; 138226743)"
         }
 
         try:
@@ -191,7 +193,11 @@ class Guest:
             http_response = session.get(f"https://i.instagram.com/api/v1/users/{uid}/info/", headers=request_headers)
             response_json = http_response.json()
 
-            if "status" in response_json and response_json["status"] == "ok" and "user" in response_json and "username" in response_json["user"]:
+            if "status" in response_json \
+                    and response_json["status"] == "ok" \
+                    and "user" in response_json \
+                    and "username" in response_json["user"]:
+
                 return format_username(response_json["user"]["username"])
 
         except JSONDecodeError:
