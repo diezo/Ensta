@@ -6,9 +6,9 @@
 
 <!-- <img style="border-radius: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/logo.png"/> -->
 
-Ensta uses Instagram's Internal Web API for data scraping which makes it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always remains up-to-date.
+Ensta uses Instagram's Internal Web API for data scraping which makes it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always stays up-to-date.
 
-Two type of classes are supported - ***Guest & Host***.
+Both authenticated & anonymous requests are supported.
 
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
@@ -263,36 +263,37 @@ print(me.birthday)
 
 Any missing feature? Raise an issue.
 
-## Host Mode
-Requires login through Username/Password or SessionId. Can fetch data that requires login. Can update your profile info.
+## Host Mode (Recommended)
+Requires login through username & password.
 
 ```python
 from ensta import Host
 
 host = Host(username, password)
+profile = host.profile("leomessi")
 
-print(host.profile("leomessi"))
-print(host.follow("leomessi"))
-print(host.change_bio("hello"))
+print(profile.biography)
 ```
 
 ## Guest Mode
-Doesn't require login but is limited to certain actions.
+Doesn't require login but has very limited features. Doesn't always work, so Host Mode is recommended.
 
 ```python
 from ensta import Guest
 
 guest = Guest()
+profile = guest.profile("leomessi")
 
-print(guest.profile("leomessi"))
-print(guest.get_uid("leomessi"))
-print(guest.username_availability("nevergiveup"))
+print(profile.biography)
 ```
 
 ## ❤️ Donate
-Want to keep this project going? Please consider donating:
+Want this project to keep running? Please consider donating here:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
-## Legal
-This is a third-party package, and not associated with Instagram. It doesn't promote activities that violate [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/) such as spamming users, misusing data etc. You are solely responsible for all the actions you take using this package.
+## 🧑‍💻 Contribute
+Are you a developer and want to contribute code to ensta? Please write me an email at: sonniiii@outlook.com
+
+## 👮 Legal
+This is a third-party library and not associated with Instagram. We are strictly against any activity that may violate [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/) or [Terms of use](https://help.instagram.com/581066165581870). You are the only one liable for such actions.
