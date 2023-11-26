@@ -879,10 +879,10 @@ class SessionHost:
         except JSONDecodeError:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
-    def __upload_photo(self, path: str, arg_upload_id: str | None = None) -> str:
-        path: Path = Path(path)
+    def get_upload_id(self, media_path: str, arg_upload_id: str | None = None) -> str:
+        media_path: Path = Path(media_path)
 
-        if path.suffix not in (".jpg", ".jpeg"): raise FileTypeError(
+        if media_path.suffix not in (".jpg", ".jpeg"): raise FileTypeError(
             "Only jpg and jpeg image types are allowed to post."
         )
 
@@ -898,7 +898,7 @@ class SessionHost:
             "image_compression": json.dumps({"lib_name": "moz", "lib_version": "3.1.m", "quality": 80})
         }
 
-        with open(path, "rb") as file:
+        with open(media_path, "rb") as file:
             photo_data = file.read()
             photo_length = str(len(photo_data))
 
@@ -1001,17 +1001,15 @@ class SessionHost:
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
-    def upload_post(
+    def upload_photo(
         self,
-        photo_path: str,
+        upload_id: str,
         caption: str = "",
         archive_only: bool = False,
         disable_comments: bool = False,
         like_and_view_counts_disabled: bool = False,
         video_subtitles_enabled: bool = False
     ) -> bool:  # TODO: Implement Return Value
-
-        upload_id = self.__upload_photo(photo_path)
 
         request_headers: dict = {
             "accept": "*/*",
@@ -1068,6 +1066,65 @@ class SessionHost:
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
+    def upload_photos(
+        self,
+        upload_ids: list[str],
+        caption: str = "",
+        archive_only: bool = False,
+        disable_comments: bool = False,
+        like_and_view_counts_disabled: bool = False,
+    ) -> bool:  # TODO: Implement Return Value
+
+        request_headers: dict = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "content-type": "application/x-www-form-urlencoded",
+            "dpr": "1.30208",
+            "sec-ch-prefers-color-scheme": "dark",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-model": "\"\"",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-instagram-ajax": "1009848613",
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": "https://www.instagram.com/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        body_json = {
+            "archive_only": archive_only,
+            "caption": caption,
+            "children_metadata": [{"upload_id": upload_id} for upload_id in upload_ids],
+            "client_sidecar_id": str(int(time.time()) * 1000),
+            "disable_comments": "1" if disable_comments else "0",
+            "like_and_view_counts_disabled": "1" if like_and_view_counts_disabled else "0",
+            "source_type": "library"
+        }
+
+        http_response = self.request_session.post(
+            "https://www.instagram.com/api/v1/media/configure_sidecar/",
+            headers=request_headers,
+            data=json.dumps(body_json)
+        )
+
+        try:
+            response_json: dict = http_response.json()
+
+            return response_json.get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError("Response not a valid json.")
+
     def upload_reel(
         self,
         video_path: str,
@@ -1084,7 +1141,11 @@ class SessionHost:
         video_success, video_duration, video_width, video_height = self.__upload_video(video_path, upload_id)
 
         if not video_success: return False
-        if not self.__upload_photo(thumbnail_path, upload_id): return False
+        if not self.get_upload_id(
+                media_path=thumbnail_path,
+                arg_upload_id=upload_id
+        ):
+            return False
 
         request_headers: dict = {
             "accept": "*/*",
