@@ -74,6 +74,12 @@ class SessionHost:
             )
 
     def authenticated(self) -> bool:
+        """
+        Returns whether user is logged in or not.
+        That is, if the provided username-password combination or session-id is correct.
+        :return: Boolean (True / False)
+        """
+
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -107,6 +113,12 @@ class SessionHost:
             return False
 
     def follow(self, identifier: str | int) -> FollowedStatus | None:
+        """
+        Follows the target user.
+        :param identifier: Target user's Username or UserID
+        :return: Object with the followed info
+        """
+
         conversion_success, identifier = self._identifier(identifier, UID)
         if not conversion_success: raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
@@ -169,6 +181,12 @@ class SessionHost:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
     def unfollow(self, identifier: str | int) -> UnfollowedStatus | None:
+        """
+        Unfollows the target user.
+        :param identifier: Target user's Username or UserID
+        :return: Object with the unfollowed info
+        """
+
         conversion_success, identifier = self._identifier(identifier, UID)
         if not conversion_success: raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
@@ -233,6 +251,13 @@ class SessionHost:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
     def followers(self, identifier: str | int, count: int = 0) -> Generator[FollowPerson, None, None]:
+        """
+        Generates a list of target's followers of specified size.
+        :param identifier: Target's Username or UserID
+        :param count: Amount of followers to fetch
+        :return: Generator which yields each user's details
+        """
+
         conversion_success, identifier = self._identifier(identifier, UID)
         if not conversion_success:
             yield None
@@ -322,6 +347,13 @@ class SessionHost:
                 raise NetworkError("HTTP Response is not a valid JSON.")
 
     def followings(self, identifier: str | int, count: int = 0) -> Generator[FollowPerson, None, None]:
+        """
+        Generates a list of users which the target follows, of specified size.
+        :param identifier: Target's Username or UserID
+        :param count: Amount of followings to fetch
+        :return: Generator which yields each user's details
+        """
+
         conversion_success, identifier = self._identifier(identifier, UID)
         if not conversion_success:
             yield None
@@ -443,13 +475,13 @@ class SessionHost:
             return True, identifier
 
         else:
-            raise DevelopmentError("Identifier Conversion (Else Block)")
+            raise DevelopmentError()
 
     def _set_account_privacy(self, privacy: str) -> bool:
         is_private = (privacy == "private")
 
         if privacy != "private" and privacy != "public":
-            raise DevelopmentError("_set_account_privacy")
+            raise DevelopmentError()
 
         body_json = {
             "is_private": is_private
@@ -497,21 +529,56 @@ class SessionHost:
             return False
 
     def switch_to_private_account(self) -> bool:
+        """
+        Switches your account type to 'Private'. This means, only your followers can see your posts, stories & highlights.
+        :return: Boolean (Whether your account type was successfully switched to private)
+        """
+
         return self._set_account_privacy("private")
 
     def switch_to_public_account(self) -> bool:
+        """
+        Switches your account type to 'Public'. This means, anyone can see your posts, stories & highlights.
+        :return: Boolean (Whether your account type was successfully switched to public)
+        """
+
         return self._set_account_privacy("public")
 
     def profile(self, username: str) -> ProfileHost | None:
+        """
+        Returns profile data of the target user. Including name, profile picture, follower_count, following_count, etc.
+        :param username: Username of the target
+        :return: Profile object which contains all the data
+        """
+
         return self.guest.profile(username, __session__=self.request_session)
 
     def get_username(self, uid: str | int) -> str | None:
+        """
+        Returns the username of the target user, when given their userid.
+        :param uid: Target's UserID
+        :return: Target's Username
+        """
+
         return self.guest.get_username(uid, __session__=self.request_session)
 
     def get_uid(self, username: str) -> str | None:
+        """
+        Returns the userid of the target user, when given their username.
+        :param username: Target's Username
+        :return: Target's UserID
+        """
+
         return self.guest.get_uid(username, __session__=self.request_session)
 
     def posts(self, username: str, count: int = 0) -> Generator[Post, None, None]:
+        """
+        Generates a list of target's posts of specified size.
+        :param username: Target's Username
+        :param count: Amount of posts to fetch
+        :return: Generator which yields each post's data
+        """
+
         username = format_username(username)
 
         request_headers = {
@@ -581,6 +648,12 @@ class SessionHost:
                 raise NetworkError("HTTP Response is not a valid JSON.")
 
     def post(self, share_url: str) -> Post | None:  # TODO: Method not working. Find a new implementation
+        """
+        Returns data of specific post, given its share_url.
+        :param share_url: Share URL of post. e.g. - https://www.instagram.com/p/Czr2yLmroCQ/
+        :return: Object which contains data of that post
+        """
+
         share_url: str = format_url(share_url)
         request_headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif"
@@ -715,6 +788,11 @@ class SessionHost:
         )
 
     def private_info(self) -> PrivateInfo:
+        """
+        Returns your own (logged-in user's) private info which only you can access. Such as gender, birthday, email, phone number, etc.
+        :return: Object which contains your private info
+        """
+
         request_headers = {
             "accept": "*/*",
             "dpr": "1.30208",
@@ -775,6 +853,12 @@ class SessionHost:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
     def change_bio(self, biography: str) -> bool:
+        """
+        Updates your (logged-in user's) biography to the newly given text.
+        :param biography: New Biography
+        :return: Boolean (Whether your biography was successfully updated or not)
+        """
+
         private_info = self.private_info()
 
         request_headers = {
@@ -827,6 +911,12 @@ class SessionHost:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
     def change_display_name(self, display_name: str) -> bool:
+        """
+        Updates your (logged-in user's) display name on Instagram.
+        :param display_name: New name
+        :return: Boolean (Whether your name was successfully updated or not)
+        """
+
         private_info = self.private_info()
 
         request_headers = {
@@ -880,6 +970,13 @@ class SessionHost:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
     def get_upload_id(self, media_path: str, arg_upload_id: str | None = None) -> str:
+        """
+        Uploads the given media to Instagram's server and returns its unique ID which you can later use to configure single or multiple posts.
+        :param media_path: Path to the media file (only jpg & jpeg)
+        :param arg_upload_id: Custom upload_id (for advanced users)
+        :return: Upload ID of uploaded file
+        """
+
         media_path: Path = Path(media_path)
 
         if media_path.suffix not in (".jpg", ".jpeg"): raise FileTypeError(
@@ -1008,8 +1105,17 @@ class SessionHost:
         archive_only: bool = False,
         disable_comments: bool = False,
         like_and_view_counts_disabled: bool = False,
-        video_subtitles_enabled: bool = False
     ) -> bool:  # TODO: Implement Return Value
+
+        """
+        Creates a single photo post on your account.
+        :param upload_id: Upload ID of file already uploaded using get_upload_id() method
+        :param caption: Optional caption text for current post
+        :param archive_only: Boolean (Should this post be directly archived)
+        :param disable_comments: Boolean (Should comments on this post be disabled)
+        :param like_and_view_counts_disabled: Boolean (Shouldn't people be able to see how many users liked & viewed this post)
+        :return: Boolean (Whether post was successfully created or not)
+        """
 
         request_headers: dict = {
             "accept": "*/*",
@@ -1049,7 +1155,7 @@ class SessionHost:
             "like_and_view_counts_disabled": "1" if like_and_view_counts_disabled else "0",
             "source_type": "library",
             "upload_id": upload_id,
-            "video_subtitles_enabled": "1" if video_subtitles_enabled else "0"
+            "video_subtitles_enabled": "0"
         }
 
         http_response = self.request_session.post(
@@ -1074,6 +1180,16 @@ class SessionHost:
         disable_comments: bool = False,
         like_and_view_counts_disabled: bool = False,
     ) -> bool:  # TODO: Implement Return Value
+
+        """
+        Creates a single post with multiple photos on your account.
+        :param upload_ids: List (Upload IDs of files already uploaded using get_upload_id() method)
+        :param caption: Optional caption text for current post
+        :param archive_only: Boolean (Should this post be directly archived)
+        :param disable_comments: Boolean (Should comments on this post be disabled)
+        :param like_and_view_counts_disabled: Boolean (Shouldn't people be able to see how many users liked & viewed this post)
+        :return: Boolean (Whether post was successfully created or not)
+        """
 
         request_headers: dict = {
             "accept": "*/*",
@@ -1135,6 +1251,18 @@ class SessionHost:
         like_and_view_counts_disabled: bool = False,
         video_subtitles_enabled: bool = False
     ) -> bool:  # TODO: Implement Return Value
+
+        """
+        Uploads a reel on your account.
+        :param video_path: Path of the video file
+        :param thumbnail_path: Path of the image to be used as the thumbnail of current reel
+        :param caption: Optional caption text for current reel
+        :param archive_only: Boolean (Should this reel be directly archived)
+        :param disable_comments: Boolean (Should comments on this reel be disabled)
+        :param like_and_view_counts_disabled: Boolean (Shouldn't people be able to see how many users liked & viewed this reel)
+        :param video_subtitles_enabled: Boolean (Should subtitles be enabled on this reel)
+        :return: Boolean (Whether reel was successfully uploaded or not)
+        """
 
         upload_id = str(int(time.time()) * 1000)
 

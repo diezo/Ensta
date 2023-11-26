@@ -21,7 +21,7 @@ class DevelopmentError(Exception):
     def __init__(self):
         super().__init__(
             f"There was an error while executing this function, maybe caused due to a bug in the "
-            "code. Please submit this as an issue on GitHub.\nFound in: {location}"
+            "code. Please raise an issue on GitHub"
         )
 
 
