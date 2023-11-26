@@ -47,24 +47,41 @@ host = Host(username, password)
 
 <details>
 
-<summary>Upload Posts</summary><br>
+<summary>Upload Photo</summary><br>
 
 ```python
 from ensta import Host
 
 host = Host(username, password)
 
-host.upload_post(
-    photo_path="Picture.jpg",
-    caption="Travelling 🌆",
-)
+upload = host.get_upload_id("Picture.jpg")
+
+host.upload_photo(upload, caption="Travelling 🌆")
 ```
 
 </details>
 
 <details>
 
-<summary>Upload Reels</summary><br>
+<summary>Upload Multiple Photos (Single Post)</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+upload1 = host.get_upload_id("First.jpg")
+upload2 = host.get_upload_id("Second.jpg")
+upload3 = host.get_upload_id("Third.jpg")
+
+host.upload_photos([upload1, upload2, upload3], caption="Travelling 🌆")
+```
+
+</details>
+
+<details>
+
+<summary>Upload Reel</summary><br>
 
 ```python
 from ensta import Host
