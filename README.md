@@ -236,6 +236,7 @@ post.unlike()
 from ensta import Host
 
 host = Host(username, password)
+post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
 
 host.comment("Looks great!", post_id)
 ```

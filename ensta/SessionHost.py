@@ -25,7 +25,6 @@ from .lib import (
 )
 from .lib.Commons import (
     format_identifier,
-    format_url,
     format_username
 )
 
@@ -647,14 +646,15 @@ class SessionHost:
                 yield None
                 raise NetworkError("HTTP Response is not a valid JSON.")
 
-    def post(self, share_url: str) -> Post | None:  # TODO: Method not working. Find a new implementation
+    def __post(self, share_url: str) -> Post | None:  # TODO: Method not working. Find a new implementation
         """
         Returns data of specific post, given its share_url.
         :param share_url: Share URL of post. e.g. - https://www.instagram.com/p/Czr2yLmroCQ/
         :return: Object which contains data of that post
         """
 
-        share_url: str = format_url(share_url)
+        share_url: str = share_url.strip()
+
         request_headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif"
                       ",image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -703,7 +703,51 @@ class SessionHost:
                             return self.__process_post_data(selected_post)
 
         except JSONDecodeError:
-            raise NetworkError("HTTP Response is not a valid JSON.")
+            raise NetworkError("Not a valid JSON.")
+
+    def get_post_id(self, share_url: str) -> str:
+        """
+        Returns post_id of specific post, given its share_url, which can further be used to like or add comment to that post.
+        :param share_url: Share URL of post. e.g. - https://www.instagram.com/p/Czr2yLmroCQ/
+        :return: PostID in text format
+        """
+
+        share_url: str = share_url.strip()
+
+        request_headers = {
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif"
+                      ",image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "accept-language": "en-US,en;q=0.9",
+            "cache-control": "max-age=0",
+            "sec-ch-prefers-color-scheme": "dark",
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+            "viewport-width": "1475",
+            "referrerPolicy": "strict-origin-when-cross-origin"
+        }
+
+        http_response = self.request_session.get(share_url, headers=request_headers)
+        response_text = http_response.text
+
+        required_text = "instagram://media?id="
+
+        initial_index = response_text.find(required_text)
+        if initial_index == -1: raise APIError()
+
+        rest_text = response_text[initial_index + len(required_text): initial_index + len(required_text) + 25]
+
+        end_index = rest_text.find('"')
+        if end_index == -1: raise APIError()
+
+        return rest_text[:end_index]
 
     def __process_post_data(self, data: dict) -> Post:
 
