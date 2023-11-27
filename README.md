@@ -208,9 +208,7 @@ posts = host.posts("leomessi", 100)  # Want full list? Set count to '0'
 
 for post in posts:
     print(post.caption_text)
-    print(post.like_count)
-    
-    ...
+    print(post.like_count)    
 ```
 
 </details>
