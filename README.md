@@ -217,28 +217,52 @@ for post in posts:
 
 <details>
 
-<summary>Like/Unlike Posts</summary><br>
-
-```python
-...
-
-post.like()
-post.unlike()
-```
-
-</details>
-
-<details>
-
 <summary>Add Comment on Posts</summary><br>
 
 ```python
 from ensta import Host
 
 host = Host(username, password)
+
 post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
 
 host.comment("Looks great!", post_id)
+```
+
+</details>
+
+<details>
+
+<summary>Like/Unlike Posts</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
+
+host.like(post_id)
+host.unlike(post_id)
+```
+
+</details>
+
+<details>
+
+<summary>Fetch Post's Likers</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
+likers = host.likers(post_id)
+
+for user in likers.users:
+    print(user.username)
+    print(user.profile_picture_url)
 ```
 
 </details>

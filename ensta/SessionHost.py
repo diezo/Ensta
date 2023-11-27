@@ -8,6 +8,8 @@ from uuid import uuid4
 from .Guest import Guest
 from pathlib import Path
 from json import JSONDecodeError
+from .containers.Liker import Liker
+from .containers.Likers import Likers
 from .containers.Post import Post
 from collections.abc import Generator
 from .containers.PostUser import PostUser
@@ -791,7 +793,6 @@ class SessionHost:
             )
 
         return Post(
-            instance=self,
             share_url=f"https://www.instagram.com/p/{data.get('code', '')}",
             taken_at=data.get("taken_at", 0),
             post_id=data.get("pk", ""),
@@ -1378,7 +1379,7 @@ class SessionHost:
         """
         Adds a comment on target post.
         :param text: Comment text
-        :param post_id: ID of target post (e.g. 3236921700141400208)
+        :param post_id: ID of target post, fetch using get_post_id() method
         :return: Boolean (Whether comment was successfully added or not)
         """
 
@@ -1420,3 +1421,130 @@ class SessionHost:
 
         except JSONDecodeError:
             return False
+
+    def __like_action(self, post_id: str, action: str = "like") -> bool:
+
+        request_headers = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "content-type": "application/x-www-form-urlencoded",
+            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.110\", "
+                                           "\"Google Chrome\";v=\"114.0.5735.110\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-instagram-ajax": "1007670408",
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": f"https://www.instagram.com/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        try:
+            http_response = self.request_session.post(
+                f"https://www.instagram.com/api/v1/web/likes/{post_id}/{action}/",
+                headers=request_headers
+            )
+
+            response_json = http_response.json()
+
+            if "status" in response_json:
+                return response_json["status"] == "ok"
+            else:
+                return False
+        except JSONDecodeError:
+            return False
+
+    def like(self, post_id: str) -> bool:
+        """
+        Likes the target post.
+        :param post_id: ID of target post, fetch using get_post_id() method
+        :return: Boolean (Whether target post was liked successfully or not)
+        """
+
+        return self.__like_action(post_id, "like")
+
+    def unlike(self, post_id: str) -> bool:
+        """
+        Unlikes the target post.
+        :param post_id: ID of target post, fetch using get_post_id() method
+        :return: Boolean (Whether target post was unliked successfully or not)
+        """
+
+        return self.__like_action(post_id, "unlike")
+
+    def likers(self, post_id: str) -> Likers | None:
+        """
+        Generates a list of users who liked the target post of specified size.
+        :param post_id: ID of target post, fetch using get_post_id() method
+        :return: Generator which yields each user's data
+        """
+
+        request_headers = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.134\", "
+                                           "\"Google Chrome\";v=\"114.0.5735.134\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": f"https://www.instagram.com/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        try:
+            http_response = self.request_session.get(
+                f"https://www.instagram.com/api/v1/media/{post_id}/likers/",
+                headers=request_headers
+            )
+
+            response_json: dict = http_response.json()
+
+            if "status" not in response_json or "users" not in response_json:
+                return None
+
+            if response_json["status"] != "ok":
+                return None
+
+            likers_list = []
+            for user in response_json["users"]:
+                user: dict
+                liker = Liker(
+                    user_id=user.get("pk", ""),
+                    username=user.get("username", ""),
+                    full_name=user.get("full_name", ""),
+                    is_private=user.get("is_private", False),
+                    badges=user.get("account_badges", []),
+                    is_verified=user.get("is_verified", False),
+                    profile_picture_id=user.get("profile_pic_id", ""),
+                    profile_picture_url=user.get("pprofile_pic_url", ""),
+                    latest_reel_media=user.get("latest_reel_media", 0)
+                )
+                likers_list.append(liker)
+
+            return Likers(
+                user_count=response_json.get("user_count", 0),
+                users=likers_list
+            )
+        except JSONDecodeError:
+            return None
