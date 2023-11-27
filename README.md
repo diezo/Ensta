@@ -217,24 +217,6 @@ for post in posts:
 
 <details>
 
-<summary>Fetch Data of Individual Post</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-post = host.post("https://www.instagram.com/p/Czgyw07t_c3/")
-
-print(post.caption_text)
-print(post.like_count)
-
-...
-```
-
-</details>
-
-<details>
-
 <summary>Like/Unlike Posts</summary><br>
 
 ```python
@@ -242,6 +224,20 @@ print(post.like_count)
 
 post.like()
 post.unlike()
+```
+
+</details>
+
+<details>
+
+<summary>Add Comment on Posts</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+host.comment("Looks great!", post_id)
 ```
 
 </details>

@@ -750,7 +750,7 @@ class SessionHost:
             instance=self,
             share_url=f"https://www.instagram.com/p/{data.get('code', '')}",
             taken_at=data.get("taken_at", 0),
-            unique_key=data.get("pk", ""),
+            post_id=data.get("pk", ""),
             media_type=data.get("media_type", 0),
             code=data.get("code", ""),
             caption_is_edited=data.get("caption_is_edited", False),
@@ -1329,3 +1329,50 @@ class SessionHost:
 
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
+
+    def comment(self, text: str, post_id: str) -> bool:
+        """
+        Adds a comment on target post.
+        :param text: Comment text
+        :param post_id: ID of target post (e.g. 3236921700141400208)
+        :return: Boolean (Whether comment was successfully added or not)
+        """
+
+        request_headers: json = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.134\", "
+                                           "\"Google Chrome\";v=\"114.0.5735.134\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": f"https://www.instagram.com/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        body_json: json = {"comment_text": text}
+
+        http_response = self.request_session.post(
+            f"https://www.instagram.com/api/v1/web/comments/{post_id}/add/",
+            headers=request_headers,
+            data=body_json
+        )
+
+        try:
+            response_json: dict = http_response.json()
+
+            return response_json.get("status", "") == "ok"
+
+        except JSONDecodeError:
+            return False
