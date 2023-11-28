@@ -1147,15 +1147,17 @@ class SessionHost:
         self,
         upload_id: str,
         caption: str = "",
+        alt_text: str = "",
         archive_only: bool = False,
         disable_comments: bool = False,
-        like_and_view_counts_disabled: bool = False,
+        like_and_view_counts_disabled: bool = False
     ) -> bool:  # TODO: Implement Return Value
 
         """
         Creates a single photo post on your account.
         :param upload_id: Upload ID of file already uploaded using get_upload_id() method
         :param caption: Optional caption text for current post
+        :param alt_text: Optional custom accessibility caption for this photo
         :param archive_only: Boolean (Should this post be directly archived)
         :param disable_comments: Boolean (Should comments on this post be disabled)
         :param like_and_view_counts_disabled: Boolean (Shouldn't people be able to see how many users liked & viewed this post)
@@ -1202,6 +1204,8 @@ class SessionHost:
             "upload_id": upload_id,
             "video_subtitles_enabled": "0"
         }
+
+        if alt_text != "": body_json["custom_accessibility_caption"] = alt_text
 
         http_response = self.request_session.post(
             "https://www.instagram.com/api/v1/media/configure/",
@@ -1291,6 +1295,7 @@ class SessionHost:
         video_path: str,
         thumbnail_path: str,
         caption: str = "",
+        alt_text: str = "",
         archive_only: bool = False,
         disable_comments: bool = False,
         like_and_view_counts_disabled: bool = False,
@@ -1302,6 +1307,7 @@ class SessionHost:
         :param video_path: Path of the video file
         :param thumbnail_path: Path of the image to be used as the thumbnail of current reel
         :param caption: Optional caption text for current reel
+        :param alt_text: Optional custom accessibility caption for this reel
         :param archive_only: Boolean (Should this reel be directly archived)
         :param disable_comments: Boolean (Should comments on this reel be disabled)
         :param like_and_view_counts_disabled: Boolean (Shouldn't people be able to see how many users liked & viewed this reel)
@@ -1360,6 +1366,8 @@ class SessionHost:
             "upload_id": upload_id,
             "video_subtitles_enabled": "1" if video_subtitles_enabled else "0"
         }
+
+        if alt_text != "": body_json["custom_accessibility_caption"] = alt_text
 
         http_response = self.request_session.post(
             "https://www.instagram.com/api/v1/media/configure_to_clips/",
