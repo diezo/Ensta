@@ -323,8 +323,8 @@ profile = guest.profile("leomessi")
 print(profile.biography)
 ```
 
-## ❤️ Donate
-Want this project to keep running? Please consider donating here:
+## ❤️ Support Me
+Help support ensta's development by making a donation! Your contribution ensures continuous improvement and maintenance. Thank you for being a part of the Ensta community.
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
