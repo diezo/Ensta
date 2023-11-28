@@ -324,7 +324,7 @@ print(profile.biography)
 ```
 
 ## ❤️ Support Me
-Help support ensta's development by making a donation! Your contribution ensures continuous improvement and maintenance. Thank you for being a part of the Ensta community.
+Support ensta's development by making a donation! Your donation ensures continuous improvements in ensta.
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
