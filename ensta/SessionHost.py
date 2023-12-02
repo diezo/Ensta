@@ -34,6 +34,7 @@ USERNAME, UID = 0, 1
 
 
 class SessionHost:
+    session_data: str
     request_session: requests.Session
     insta_app_id: str = "936619743392459"
     preferred_color_scheme: str = "dark"
@@ -51,6 +52,7 @@ class SessionHost:
         skip_auth_verification: bool = False
     ) -> None:
 
+        self.session_data = session_data
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
         self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
         self.request_session = requests.Session()
