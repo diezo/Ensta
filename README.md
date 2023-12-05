@@ -299,7 +299,7 @@ print(me.birthday)
 
 Any missing feature? Raise an issue.
 
-## Host Mode (Recommended)
+## 🙋 Host Mode
 Requires login through username & password.
 
 ```python
@@ -311,7 +311,7 @@ profile = host.profile("leomessi")
 print(profile.biography)
 ```
 
-## Guest Mode
+## 🥷 Guest Mode
 Doesn't require login but has very limited features. Doesn't always work, so Host Mode is recommended.
 
 ```python
@@ -323,8 +323,8 @@ profile = guest.profile("leomessi")
 print(profile.biography)
 ```
 
-## ❤️ Support Me
-Support ensta's development by making a donation. Your donation ensures continuous improvement in ensta.
+## ❤️ Donate
+Want this project to keep running? Please consider donating here:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
