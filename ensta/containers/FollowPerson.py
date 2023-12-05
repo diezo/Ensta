@@ -13,4 +13,3 @@ class FollowPerson:
     profile_picture_url: str = None
     badges: list = None
     third_party_downloads_enabled: bool = None
-    is_possible_scammer: bool = None

@@ -256,6 +256,7 @@ class SessionHost:
     def followers(self, identifier: str | int, count: int = 0) -> Generator[FollowPerson, None, None]:
         """
         Generates a list of target's followers of specified size.
+
         :param identifier: Target's Username or UserID
         :param count: Amount of followers to fetch
         :return: Generator which yields each user's details
@@ -332,8 +333,7 @@ class SessionHost:
                                 is_verified=each_item["is_verified"],
                                 profile_picture_url=each_item["profile_pic_url"],
                                 badges=each_item["account_badges"],
-                                third_party_downloads_enabled=each_item["third_party_downloads_enabled"],
-                                is_possible_scammer=each_item["is_possible_scammer"]
+                                third_party_downloads_enabled=each_item["third_party_downloads_enabled"]
                             )
 
                         except KeyError:
@@ -425,8 +425,7 @@ class SessionHost:
                                 full_name=each_item["full_name"],
                                 is_private=each_item["is_private"],
                                 is_verified=each_item["is_verified"],
-                                profile_picture_url=each_item["profile_pic_url"],
-                                is_possible_scammer=each_item["is_possible_scammer"]
+                                profile_picture_url=each_item["profile_pic_url"]
                             )
 
                         except KeyError:
