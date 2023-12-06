@@ -12,6 +12,9 @@ Both authenticated & anonymous requests are supported.
 
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
+## 🌟 Star It!
+We've just started and require continuous support from developers like you to fuel ensta's growth. Your **1 star** helps promote this repository to more developers.
+
 ## Installation
 Run this command:
 ```shell
