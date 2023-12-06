@@ -16,13 +16,12 @@ Both authenticated & anonymous requests are supported.
 Ensta is still in it's early stages and requires continuous support from the community. Your **1 star** can go a long way in helping us. Thankyou!
 
 ## Installation
-Run this command:
 ```shell
-$ pip install ensta --upgrade
+$ pip install ensta
 ```
 
 ## Supported Actions
-You can do a lot with ensta, here's some code:
+Features supported till now:
 
 <details>
 
@@ -315,7 +314,7 @@ print(profile.biography)
 ```
 
 ## 🥷 Guest Mode
-Doesn't require login but has very limited features. Doesn't always work, so Host Mode is recommended.
+Doesn't require login, but has limited features.
 
 ```python
 from ensta import Guest
@@ -327,9 +326,9 @@ print(profile.biography)
 ```
 
 ## ❤️ Donate
-Want this project to keep running? Please consider donating here:
+Want this project to keep running? Please consider donating:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
-## 👮 Legal
-This is a third-party library and not associated with Instagram. We are strictly against any activity that may violate [Instagram's Community Guidelines](https://help.instagram.com/477434105621119/) or [Terms of use](https://help.instagram.com/581066165581870). You are the only one liable for such actions.
+## Legal
+This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
