@@ -9,3 +9,7 @@ from .Liker import Liker
 from .Likers import Likers
 from .PrivateInfo import PrivateInfo
 from .PostUpload import PostUpload
+from .Inbox import Inbox
+from .DirectThread import DirectThread
+from .DirectThreadInviter import DirectThreadInviter
+from .DirectThreadLastPermanentItem import DirectThreadLastPermanentItem

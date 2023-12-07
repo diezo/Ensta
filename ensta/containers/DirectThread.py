@@ -1,0 +1,75 @@
+from dataclasses import dataclass
+from .DirectThreadInviter import DirectThreadInviter
+from .DirectThreadLastPermanentItem import DirectThreadLastPermanentItem
+
+
+@dataclass(frozen=False)
+class DirectThread:
+
+    raw: dict = None
+    thread_title: str = None
+    inviter: DirectThreadInviter = None
+    # last_permanent_item: DirectThreadLastPermanentItem = None
+    has_older: bool = None
+    has_newer: bool = None
+    pending: bool = None
+    canonical: bool = None
+    thread_id: str = None
+    thread_v2_id: str = None
+    viewer_id: str = None
+    last_activity_at: int = None
+    muted: bool = None
+    vc_muted: bool = None
+    approval_required_for_new_members: bool = None
+    archived: bool = None
+    thread_has_audio_only_call: bool = None
+    is_group: bool = None
+    is_translation_enabled: bool = None
+    folder: int = None
+    e2ee_cutover_status: int = None
+    last_non_sender_item_at: int = None
+    marked_as_unread: bool = None
+    input_mode: int = None
+    assigned_admin_id: str = None
+    mentions_muted: bool = None
+    is_appointment_booking_enabled: bool = None
+    is_creator_subscriber_thread: bool = None
+    business_thread_folder: int = None
+    read_state: int = None
+    translation_banner_impression_count: int = None
+    thread_subtype: int = None
+    thread_type: str = None
+    is_xac_thread: bool = None
+    named: bool = None
+    bc_partnership: bool = None
+    relevancy_score: int = None
+    relevancy_score_expr: int = None
+    oldest_cursor: str = None
+    newest_cursor: str = None
+    next_cursor: str = None
+    previous_cursor: str = None
+    thread_has_drop_in: bool = None
+    shh_transport_mode: int = None
+    shh_mode_enabled: bool = None
+    shh_toggler_userid: int = None
+    theme_id: str = None
+    theme_type: int = None
+    theme_name: str = None
+    is_close_friend_thread: bool = None
+    has_groups_xac_ineligible_user: bool = None
+    system_folder: int = None
+    is_fanclub_subscriber_thread: bool = None
+    joinable_group_link: str = None
+    group_link_joinable_mode: int = None
+    has_reached_message_request_limit: bool = None
+    should_upsell_nudge: bool = None
+    is_creator_thread: bool = None
+    is_business_thread: bool = None
+    is_sender_possible_business_impersonator: bool = None
+    is_xac_readonly: bool = None
+    will_xac_be_readonly: bool = None
+    creator_agent_enabled: bool = None
+    is_pin: bool = None
+    is_spam: bool = None
+    spam: bool = None
+    is_3p_api_user: bool = None

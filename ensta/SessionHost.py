@@ -7,6 +7,7 @@ import moviepy.editor
 from uuid import uuid4
 from .Guest import Guest
 from pathlib import Path
+from .Direct import Direct
 from json import JSONDecodeError
 from .containers.Liker import Liker
 from .containers.Likers import Likers
@@ -48,7 +49,7 @@ class SessionHost:
     def __init__(
         self,
         session_data: str,
-        proxy: dict[str, str] | None = None,
+        proxy: dict[str, str] = None,
         skip_auth_verification: bool = False
     ) -> None:
 
@@ -1557,3 +1558,12 @@ class SessionHost:
             )
         except JSONDecodeError:
             return None
+
+    def direct(self) -> Direct:
+        """
+        Lets you use the direct messaging feature
+
+        :return: Direct() class with all the supported methods
+        """
+
+        return Direct(self.session_data)
