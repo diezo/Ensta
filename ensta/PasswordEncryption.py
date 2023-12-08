@@ -1,13 +1,12 @@
 import time
 import base64
 from requests import Session
-from Cryptodome.PublicKey import RSA
-from Cryptodome.Cipher import AES, PKCS1_v1_5
-from Cryptodome.Random import get_random_bytes
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES, PKCS1_v1_5
+from Crypto.Random import get_random_bytes
 
 
 class PasswordEncryption:
-
     request_session: Session = None
 
     def __init__(self, request_session: Session):
@@ -27,15 +26,19 @@ class PasswordEncryption:
         aes_encrypted, tag = cipher_aes.encrypt_and_digest(password.encode("utf8"))
         size_buffer = len(rsa_encrypted).to_bytes(2, byteorder="little")
 
-        payload = base64.b64encode(b"".join([
-            b"\x01",
-            public_key_id.to_bytes(1, byteorder="big"),
-            iv,
-            size_buffer,
-            rsa_encrypted,
-            tag,
-            aes_encrypted
-        ]))
+        payload = base64.b64encode(
+            b"".join(
+                [
+                    b"\x01",
+                    public_key_id.to_bytes(1, byteorder="big"),
+                    iv,
+                    size_buffer,
+                    rsa_encrypted,
+                    tag,
+                    aes_encrypted,
+                ]
+            )
+        )
 
         return f"#PWD_INSTAGRAM:4:{timestamp}:{payload.decode()}"
 
@@ -43,6 +46,8 @@ class PasswordEncryption:
         response = self.request_session.get("https://i.instagram.com/api/v1/qe/sync/")
 
         public_key: str = response.headers.get("ig-set-password-encryption-pub-key")
-        public_key_id: int = int(response.headers.get("ig-set-password-encryption-key-id"))
+        public_key_id: int = int(
+            response.headers.get("ig-set-password-encryption-key-id")
+        )
 
         return public_key, public_key_id
