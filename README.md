@@ -12,8 +12,8 @@ Both authenticated & anonymous requests are supported.
 
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
-## 🌟 Your support matters!
-Ensta is still in it's early stages and requires continuous support from the community. Your **1 star** can go a long way in helping us. Thankyou!
+## 🌟 Just a min!
+Ensta is still in it's early stages and requires your support. Don't forget to give a star. Thank you!
 
 ## Installation
 ```shell
@@ -21,7 +21,7 @@ $ pip install ensta
 ```
 
 ## Supported Actions
-Features supported till now:
+Tap on the headings to view code:
 
 <details>
 
@@ -49,7 +49,7 @@ host = Host(username, password)
 
 <details>
 
-<summary>Upload Photo</summary><br>
+<summary>Upload Photo (Single Post)</summary><br>
 
 ```python
 from ensta import Host
@@ -132,7 +132,7 @@ print(profile.follower_count)
 
 <details>
 
-<summary>Convert Username to UID, and vice versa.</summary><br>
+<summary>Username to UID / UID to Username</summary><br>
 
 ```python
 from ensta import Host
@@ -200,7 +200,7 @@ print(host.switch_to_private_account())
 
 <details>
 
-<summary>Fetch Someone's Posts</summary><br>
+<summary>Fetch Someone's Feed</summary><br>
 
 ```python
 from ensta import Host
