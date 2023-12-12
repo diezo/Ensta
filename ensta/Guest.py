@@ -207,3 +207,165 @@ class Guest:
 
         except JSONDecodeError:
             raise NetworkError("HTTP Response is not a valid JSON.")
+
+    def posts(self, username: str, count: int = 0, __session__: requests.Session | None = None) -> Generator[Post, None, None]:
+        """
+        Generates a list of target's posts of specified size.
+        :param username: Target's Username
+        :param count: Amount of posts to fetch
+        :param __session__: (Optional) Custom request session object
+        :return: Generator which yields each post's data
+        """
+
+        username = username.replace(" ", "").lower()
+
+        request_headers = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": f"https://www.instagram.com/{username}/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        current_max_id = ""
+        generated_count = 0
+
+        while True:
+            current_max_id_text = ""
+
+            if current_max_id != "":
+                current_max_id_text = f"&max_id={current_max_id}"
+
+            try:
+                count_text = 35
+
+                if count < 35:
+                    count_text = count
+
+                session: requests.Session = __session__
+                if __session__ is None: session: requests.Session = self.request_session
+
+                http_response = session.get(
+                    f"https://www.instagram.com/api/v1/feed/user/{username}/username/?count={count_text}"
+                    f"{current_max_id_text}",
+                    headers=request_headers
+                )
+                response_json = http_response.json()
+
+                if "status" not in response_json or "items" not in response_json:
+                    yield None
+                    raise NetworkError("HTTP response doesn't include 'status' or 'items' node.")
+
+                if response_json["status"] != "ok":
+                    yield None
+                    raise NetworkError("HTTP response status not 'ok'.")
+
+                for each_item in response_json["items"]:
+                    if generated_count < count or count == 0:
+
+                        yield self.__process_post_data(each_item)
+                        generated_count += 1
+
+                if (generated_count < count or count == 0) and "next_max_id" in response_json:
+                    current_max_id = response_json["next_max_id"]
+                else:
+                    return None
+            except JSONDecodeError:
+                yield None
+                raise NetworkError("HTTP Response is not a valid JSON.")
+
+    @staticmethod
+    def __process_post_data(data: dict) -> Post:
+
+        caption: dict = data.get("caption", None)
+
+        caption_text = ""
+        is_caption_covered = False
+        caption_created_at = 0
+        caption_share_enabled = False
+        caption_did_report_as_spam = False
+
+        if caption is not None:
+            caption_text = caption.get("text", "")
+            is_caption_covered = caption.get("is_covered", False)
+            caption_created_at = caption.get("created_at", 0)
+            caption_share_enabled = caption.get("share_enabled", False)
+            caption_did_report_as_spam = caption.get("did_report_as_spam", False)
+
+        user: PostUser = PostUser()
+        user_data: dict = data.get("user", None)
+
+        if user_data is not None:
+            user: PostUser = PostUser(
+                has_anonymous_profile_picture=user_data.get("has_anonymous_profile_picture", False),
+                fbid_v2=user_data.get("fbid_v2", ""),
+                transparency_product_enabled=user_data.get("transparency_product_enabled", False),
+                is_favorite=user_data.get("is_favorite", False),
+                is_unpublished=user_data.get("is_unpublished", False),
+                uid=user_data.get("pk", ""),
+                username=user_data.get("username", ""),
+                full_name=user_data.get("full_name", ""),
+                is_private=user_data.get("is_private", False),
+                is_verified=user_data.get("is_verified", False),
+                profile_picture_id=user_data.get("profile_pic_id", ""),
+                profile_picture_url=user_data.get("profile_pic_url", ""),
+                account_badges=user_data.get("account_badges", []),
+                feed_post_reshare_disabled=user_data.get("feed_post_reshare_disabled", False),
+                show_account_transparency_details=user_data.get("show_account_transparency_details", False),
+                third_party_downloads_enabled=user_data.get("third_party_downloads_enabled", 0),
+                latest_reel_media=user_data.get("latest_reel_media", 0)
+            )
+
+        return Post(
+            share_url=f"https://www.instagram.com/p/{data.get('code', '')}",
+            taken_at=data.get("taken_at", 0),
+            post_id=data.get("pk", ""),
+            media_type=data.get("media_type", 0),
+            code=data.get("code", ""),
+            caption_is_edited=data.get("caption_is_edited", False),
+            original_media_has_visual_reply_media=data.get("original_media_has_visual_reply_media", False),
+            like_and_view_counts_disabled=data.get("like_and_view_counts_disabled", False),
+            can_viewer_save=data.get("can_viewer_save", False),
+            profile_grid_control_enabled=data.get("profile_grid_control_enabled", False),
+            is_comments_gif_composer_enabled=data.get("is_comments_gif_composer_enabled", False),
+            comment_threading_enabled=data.get("comment_threading_enabled", False),
+            comment_count=data.get("comment_count", 0),
+            has_liked=data.get("has_liked", False),
+            user=user,
+            can_viewer_reshare=data.get("can_viewer_reshare", False),
+            like_count=data.get("like_count", 0),
+            top_likers=data.get("top_likers", []),
+            caption_text=caption_text,
+            is_caption_covered=is_caption_covered,
+            caption_created_at=caption_created_at,
+            caption_share_enabled=caption_share_enabled,
+            caption_did_report_as_spam=caption_did_report_as_spam,
+            is_paid_partnership=data.get("is_paid_partnership", False),
+            show_shop_entrypoint=data.get("show_shop_entrypoint", False),
+            deleted_reason=data.get("deleted_reason", 0),
+            integrity_review_decision=data.get("integrity_review_decision", ""),
+            ig_media_sharing_disabled=data.get("ig_media_sharing_disabled", False),
+            has_shared_to_fb=data.get("has_shared_to_fb", False),
+            is_unified_video=data.get("is_unified_video", False),
+            should_request_ads=data.get("should_request_ads", False),
+            is_visual_reply_commenter_notice_enabled=data.get("is_visual_reply_commenter_notice_enabled", False),
+            commerciality_status=data.get("commerciality_status", ""),
+            explore_hide_comments=data.get("explore_hide_comments", False),
+            has_delayed_metadata=data.get("has_delayed_metadata", False),
+            location_latitude=data.get("lat", 0),
+            location_longitude=data.get("lng", 0)
+        )
