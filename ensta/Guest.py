@@ -6,7 +6,9 @@ from json import JSONDecodeError
 from .containers.Profile import Profile
 from .containers.ProfileHost import ProfileHost
 from .lib.Exceptions import APIError, NetworkError
-from .lib.Commons import (format_username, format_uid)
+from collections.abc import Generator
+from .containers.Post import Post
+from .containers.PostUser import PostUser
 
 
 class Guest:
@@ -14,19 +16,21 @@ class Guest:
     homepage_source: str = None
     insta_app_id: str = "936619743392459"
     preferred_color_scheme: str = "dark"
+    x_ig_www_claim: str
     csrf_token: str = None
     user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
                       "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 
     def __init__(self, proxy: dict[str, str] | None = None) -> None:
         self.request_session = requests.Session()
+        self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
         self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
         self.request_session.cookies.set("csrftoken", self.csrf_token)
 
         if proxy is not None: self.request_session.proxies.update(proxy)
 
     def username_availability(self, username: str) -> bool | None:
-        username = format_username(username)
+        username = username.replace(" ", "").lower()
 
         body_json = {
             "email": f"{username}@{self.csrf_token}.com",
@@ -72,7 +76,7 @@ class Guest:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
     def profile(self, username: str, __session__: requests.Session | None = None) -> Profile | ProfileHost | None:
-        username: str = format_username(username)
+        username: str = username.replace(" ", "").lower()
 
         request_headers: dict = {
             "accept": "*/*",
@@ -177,10 +181,11 @@ class Guest:
         response: Profile | None = self.profile(username, __session__)
 
         if response.user_id is not None:
-            return format_uid(response.user_id)
+            return response.user_id.replace(" ", "")
 
     def get_username(self, uid: str | int, __session__: requests.Session | None = None) -> str | None:
-        uid = format_uid(uid)
+        uid = uid.replace(" ", "")
+
         request_headers = {
             "User-Agent": "Instagram 76.0.0.15.395 Android (24/7.0; 640dpi; 1440x2560; "
                           "samsung; SM-G930F; herolte; samsungexynos8890; en_US; 138226743)"
@@ -198,7 +203,7 @@ class Guest:
                     and "user" in response_json \
                     and "username" in response_json["user"]:
 
-                return format_username(response_json["user"]["username"])
+                return response_json["user"]["username"].replace(" ", "").lower()
 
         except JSONDecodeError:
             raise NetworkError("HTTP Response is not a valid JSON.")

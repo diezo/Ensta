@@ -1,4 +1,3 @@
 requests
-selenium
 moviepy
 pycryptodome

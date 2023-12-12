@@ -40,7 +40,6 @@ setup(
     ],
     install_requires=[
         "requests",
-        "selenium",
         "moviepy",
         "pycryptodome"
     ],

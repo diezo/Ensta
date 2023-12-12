@@ -13,7 +13,6 @@ from .containers.Liker import Liker
 from .containers.Likers import Likers
 from .containers.Post import Post
 from collections.abc import Generator
-from .containers.PostUser import PostUser
 from .containers.ProfileHost import ProfileHost
 from .containers.PrivateInfo import PrivateInfo
 from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
@@ -25,10 +24,6 @@ from .lib import (
     APIError,
     ConversionError,
     FileTypeError
-)
-from .lib.Commons import (
-    format_identifier,
-    format_username
 )
 
 USERNAME, UID = 0, 1
@@ -443,7 +438,7 @@ class SessionHost:
                 raise NetworkError("HTTP Response is not a valid JSON.")
 
     def _identifier(self, identifier: str | int, required: str | int):
-        identifier = format_identifier(identifier)
+        identifier = str(identifier).lower().replace(" ", "")
 
         if len(identifier) <= 0:
             raise IdentifierError("No identifier was given. Please pass either UserId or Username as an argument.")
