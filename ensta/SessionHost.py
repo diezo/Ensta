@@ -52,6 +52,7 @@ class SessionHost:
         self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
         self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
         self.request_session = requests.Session()
+        self.request_session.headers["user-agent"] = self.user_agent
 
         if proxy is not None: self.request_session.proxies.update(proxy)
 

@@ -11,6 +11,8 @@ from .lib.Exceptions import (AuthenticationError, NetworkError)
 
 def new_session_id(username: str, password: str, proxy: dict[str, str] | None = None) -> str:
     request_session: Session = requests.Session()
+    request_session.headers["user-agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
+                                            "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 
     if proxy is not None: request_session.proxies.update(proxy)
 
