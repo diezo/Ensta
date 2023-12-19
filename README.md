@@ -12,7 +12,7 @@ Both authenticated & anonymous requests are supported.
 
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
-## 🌟 Just a min!
+## 🌟 Just a minute!
 Ensta is still in it's early stages and requires your support. Don't forget to give a star. Thank you!
 
 ## Installation
@@ -132,7 +132,7 @@ print(profile.follower_count)
 
 <details>
 
-<summary>Username to UID / UID to Username</summary><br>
+<summary>Username to UserID, and vice versa.</summary><br>
 
 ```python
 from ensta import Host
@@ -301,7 +301,7 @@ print(me.birthday)
 
 Any missing feature? Raise an issue.
 
-## 🙋 Host Mode
+## Host Mode
 Requires login through username & password.
 
 ```python
@@ -313,7 +313,7 @@ profile = host.profile("leomessi")
 print(profile.biography)
 ```
 
-## 🥷 Guest Mode
+## Guest Mode
 Doesn't require login, but has limited features.
 
 ```python
@@ -329,6 +329,8 @@ print(profile.biography)
 Want this project to keep running? Please consider donating:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
+
+**ETH:** [**0xd4C4fc30570F434973e44dB3ed98854FA3adcCaf**]()
 
 ## Legal
 This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
