@@ -330,7 +330,5 @@ Want this project to keep running? Please consider donating:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/diezo)
 
-**ETH:** [**0xd4C4fc30570F434973e44dB3ed98854FA3adcCaf**]()
-
 ## Legal
 This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
