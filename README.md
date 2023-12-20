@@ -12,9 +12,6 @@ Both authenticated & anonymous requests are supported.
 
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
-## 🌟 Just a minute!
-Ensta is still in it's early stages and requires your support. Don't forget to give a star. Thank you!
-
 ## Installation
 ```shell
 $ pip install ensta
@@ -324,6 +321,11 @@ profile = guest.profile("leomessi")
 
 print(profile.biography)
 ```
+
+## Discord Community
+Ask questions, discuss upcoming features and meet other developers.
+
+[<img src="https://i.ibb.co/VTWCvVS/image.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
 ## ❤️ Donate
 Want this project to keep running? Please consider donating:
