@@ -12,6 +12,9 @@ Both authenticated & anonymous requests are supported.
 
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
+## 🌟 Just a minute!
+Ensta is still in it's early stages and requires your support. Don't forget to give a star. Thank you!
+
 ## Installation
 ```shell
 $ pip install ensta
