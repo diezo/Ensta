@@ -68,7 +68,7 @@ def new_session_id(username: str, password: str, proxy: dict[str, str] | None = 
     try:
         response_json: dict = http_response.json()
 
-        if response_json.get("status", "") != "ok": raise AuthenticationError("User doesn't exist.")
+        if response_json.get("status", "") != "ok": raise AuthenticationError("Either user doesn't exist, or you have 2FA enabled (then disable it), or your password is too weak (change it to a stronger one).")
 
         if response_json.get("user", False) is False or response_json.get("authenticated", False) is False:
             raise AuthenticationError("Invalid password.")
