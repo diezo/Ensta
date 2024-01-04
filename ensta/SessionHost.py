@@ -173,8 +173,13 @@ class SessionHost:
                             previous_following=response_json["previous_following"]
                         )
                 else:
-                    if response_json["status"] != "ok": raise NetworkError("Response \"Status\" not ok.")
-                    else: raise NetworkError("'friendship_status' attribute not in response json.")
+                    if response_json["status"] != "ok":
+                        if response_json.get("spam", False) == True:
+                            raise NetworkError("Spam Detected: Your actions are being limited by Instagram. Please slow down.")
+                        
+                        raise NetworkError("Response \"Status\" not ok.")
+                    
+                    raise NetworkError("'friendship_status' attribute not in response json.")
             else:
                 raise NetworkError("'status' attribute not in response json.")
         except JSONDecodeError:
