@@ -328,7 +328,7 @@ print(profile.biography)
 ## Discord Community
 Ask questions, discuss upcoming features and meet other developers.
 
-[<img src="https://i.ibb.co/VTWCvVS/image.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
+[<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
 ## ❤️ Donate
 Want this project to keep running? Please consider donating:
