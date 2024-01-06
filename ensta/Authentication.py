@@ -2,6 +2,8 @@ import json
 import random
 import string
 import requests
+import pyotp
+import ntplib
 from requests import Session
 from requests import Response
 from json import JSONDecodeError
@@ -9,7 +11,7 @@ from .PasswordEncryption import PasswordEncryption
 from .lib.Exceptions import (AuthenticationError, NetworkError)
 
 
-def new_session_id(username: str, password: str, proxy: dict[str, str] | None = None) -> str:
+def new_session_id(username: str, password: str, proxy: dict[str, str],totp_token: str | None = None) -> str:
     request_session: Session = requests.Session()
     request_session.headers["user-agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
                                             "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
@@ -64,11 +66,103 @@ def new_session_id(username: str, password: str, proxy: dict[str, str] | None = 
         data=data,
         headers=headers
     )
-
+    #print(http_response.text)
     try:
         response_json: dict = http_response.json()
 
+        fa_seed = " HTHI SX37 NAS5 7UBP JGBK ISSE DZ4K UFW2"
+
+        if response_json.get("two_factor_required", "") == 1: 
+            
+            if response_json.get("two_factor_info", {}).get("sms_two_factor_on")== 1: raise AuthenticationError("SMS confirmation needed")
+            if response_json.get("two_factor_info", {}).get("whatsapp_two_factor_on") == 1: raise AuthenticationError("whatsapp confirmation needed")
+            if response_json.get("two_factor_info", {}).get("totp_two_factor_on") == 1: 
+
+                 if totp_token is None:raise AuthenticationError("Two-factor required. Please provide the totp_token while logging in." )
+                 else:
+                    data2: dict = {
+                            "queryParams": '{"next":"/"}',
+                            "trust_signal": True,
+                            "identifier": response_json.get("two_factor_info", {}).get("two_factor_identifier"),
+                            "verification_method": "3",
+                            "username": username,
+                            "verificationCode":pyotp.TOTP(totp_token).at(int(ntplib.NTPClient().request("time.google.com",version=3).tx_time))
+                        }
+                    headers2 = {
+                        "sec-ch-prefers-color-scheme": "dark",
+                        "sec-ch-ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                                    "Chrome/119.0.0.0 Safari/537.36",
+                        "sec-ch-ua-full-version-list": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                                                    "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+                        "sec-ch-ua-mobile": "?0",
+                        "sec-ch-ua-model": "\"\"",
+                        "sec-ch-ua-platform": "\"Windows\"",
+                        "sec-ch-ua-platform-version": "\"15.0.0\"",
+                        "sec-fetch-dest": "empty",
+                        "sec-fetch-mode": "cors",
+                        "sec-fetch-site": "same-origin",
+                        'Accept': '*/*',
+                        'Accept-Language': 'en-US,en;q=0.5',
+                        'X-Mid':response_json.get("two_factor_info", {}).get("device_id") ,
+                        'X-CSRFToken': csrf_token,
+                        "x-instagram-ajax": "1009977574",
+                        "x-ig-app-id": "936619743392459",
+                        'X-ASBD-ID': '129477',
+                        'X-IG-WWW-Claim': '0',
+                        "x-web-device-id": "25532C62-8BBC-4927-B6C5-02631D6E05BF",
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Origin': 'https://www.instagram.com',
+                        'DNT': '1',
+                        'Sec-GPC': '1',
+                        'Connection': 'keep-alive',
+                        'Referer': 'https://www.instagram.com/accounts/login/two_factor?next=%2F',
+                        'Sec-Fetch-Dest': 'empty',
+                        'Sec-Fetch-Mode': 'cors',
+                        'Sec-Fetch-Site': 'same-origin',
+                    }
+
+                    cookies = {'ig_did': response_json.get("ig_did", ""),'mid': response_json.get("two_factor_info", {}).get("device_id"),'csrftoken':csrf_token}
+                    http_response2: Response = request_session.post(
+                        "https://www.instagram.com/api/v1/web/accounts/login/ajax/two_factor/",
+                        data=data2,
+                        headers=headers2,
+                        cookies=cookies
+                        )
+                    #print(http_response2.text)
+                    if  "Oops, an error occurred." in http_response2.text: raise AuthenticationError("IP temp banned or account login acces to frequently")
+                    
+                    response_json2: dict = http_response2.json()
+                    if response_json2.get("status", "")  != "ok" or response_json2.get("authenticated", "") is False: raise AuthenticationError("2FA login error")
+                        
+                    
+                    
+                    session_id: str = http_response2.cookies.get("sessionid", "")
+                    rur: str = http_response2.cookies.get("rur", "")
+                    mid: str = response_json.get("two_factor_info", {}).get("device_id")
+                    user_id: str = response_json2.get("userId", "")
+                    ig_did: str = http_response2.cookies.get("rur", "")
+
+                    if session_id == "" or user_id == "": raise AuthenticationError("Unable to login.")
+
+                    return json.dumps({
+                        "session_id": session_id,
+                        "rur": rur,
+                        "mid": mid,
+                        "userId": user_id,
+                        "ig_did": ig_did,
+                        "username": username
+                    })
+
+
+
+
+            raise AuthenticationError("2FA general error")
+
         if response_json.get("status", "") != "ok": raise AuthenticationError("Either user doesn't exist, or you have 2FA enabled (then disable it), or your password is too weak (change it to a stronger one).")
+
+        
+
 
         if response_json.get("user", False) is False or response_json.get("authenticated", False) is False:
             raise AuthenticationError("Invalid password.")
