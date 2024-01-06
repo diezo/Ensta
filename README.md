@@ -49,6 +49,18 @@ host = Host(username, password)
 
 <details>
 
+<summary>2FA Login  (TOTP)</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password, totp_token=token)
+```
+
+</details>
+
+<details>
+
 <summary>Upload Photo (Single Post)</summary><br>
 
 ```python
