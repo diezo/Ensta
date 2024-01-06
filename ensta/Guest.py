@@ -264,7 +264,9 @@ class Guest:
                     f"{current_max_id_text}",
                     headers=request_headers
                 )
+                #print(http_response.text)
                 response_json = http_response.json()
+                if response_json.get("message", "") == "checkpoint_required" :raise AuthenticationError("account locked")
 
                 if "status" not in response_json or "items" not in response_json:
                     yield None
