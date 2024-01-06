@@ -48,6 +48,7 @@ class Direct:
         except JSONDecodeError: mid: str = ""
 
         return {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
             "X-IG-App-Locale": "en_US",
             "X-IG-Device-Locale": "en_US",
             "X-IG-Mapped-Locale": "en_US",
