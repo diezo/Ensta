@@ -20,8 +20,16 @@ class Host(SessionHost):
     proxy: dict[str, str] = None
     totp_token: str = None
 
-    def __init__(self, username: str, password: str, file: str = None, save: any = None,
-                 load: any = None, proxy: dict[str, str] = None,totp_token: str = None) -> None:
+    def __init__(
+        self,
+        username: str,
+        password: str,
+        file: str = None,
+        save: any = None,
+        load: any = None,
+        proxy: dict[str, str] = None,
+        totp_token: str = None
+    ) -> None:
 
         self.username: str = username
         self.password: str = password
@@ -64,7 +72,13 @@ class Host(SessionHost):
                     except Exception: return self.new_session()
 
     def new_session(self) -> None:
-        session_data: str = new_session_id(self.username, self.password, self.proxy,  totp_token=self.totp_token,)
+        session_data: str = new_session_id(
+            username=self.username,
+            password=self.password,
+            proxy=self.proxy,
+            totp_token=self.totp_token
+        )
+        
         if self.save: self.save(session_data)
 
         if self.file:
