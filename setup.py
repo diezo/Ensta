@@ -41,7 +41,9 @@ setup(
     install_requires=[
         "requests",
         "moviepy",
-        "pycryptodome"
+        "pycryptodome",
+        "pyotp",
+        "ntplib"
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",

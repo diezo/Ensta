@@ -78,9 +78,14 @@ def new_session_id(
 
         if response_json.get("status", "") != "ok":
 
-            if response_json.get("two_factor_required", False) == True:
+            if response_json.get("two_factor_required", False) is True:
             
-                if response_json.get("two_factor_info", {}).get("totp_two_factor_on", False) == False: raise AuthenticationError("Some other 2FA method is enabled. Only TOTP-based (Authenticator App) two factor is supported.")
+                if response_json.get("two_factor_info", {}).get("totp_two_factor_on", False) is False:
+
+                    raise AuthenticationError(
+                        "Some other 2FA method is enabled. Only TOTP-based"
+                        " (Authenticator App) two factor is supported."
+                    )
     
                 if totp_token is None:
                     raise AuthenticationError("Two-factor is enabled. Please provide the totp_token while logging in.")
@@ -107,10 +112,12 @@ def new_session_id(
                         data=tf_data,
                         headers={
                             "sec-ch-prefers-color-scheme": "dark",
-                            "sec-ch-ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                                        "Chrome/119.0.0.0 Safari/537.36",
-                            "sec-ch-ua-full-version-list": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                                                        "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+                            "sec-ch-ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                                         "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                         "Chrome/119.0.0.0 Safari/537.36",
+                            "sec-ch-ua-full-version-list": "Mozilla/5.0 (Windows NT 10.0; Win64;"
+                                                           " x64) AppleWebKit/537.36 "
+                                                           "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
                             "sec-ch-ua-mobile": "?0",
                             "sec-ch-ua-model": "\"\"",
                             "sec-ch-ua-platform": "\"Windows\"",
@@ -146,12 +153,18 @@ def new_session_id(
                     )
                      
                     if "Oops, an error occurred." in tf_response.text:
-                        raise AuthenticationError("IP temporarily banned most probably due to too many login requests. Please try again later or use proxies.")
+
+                        raise AuthenticationError(
+                            "IP temporarily banned most probably due to too many login requests."
+                            " Please try again later or use proxies."
+                        )
                     
                     try:
                         tf_response_json: dict = tf_response.json()
                     
-                        if tf_response_json.get("status", "") != "ok" or tf_response_json.get("authenticated", False) is False:
+                        if tf_response_json.get("status", "") != "ok" \
+                                or tf_response_json.get("authenticated", False) is False:
+
                             raise AuthenticationError("Couldn't log in through 2FA.")
                         
                         session_id: str = tf_response.cookies.get("sessionid", "")
@@ -161,7 +174,10 @@ def new_session_id(
                         ig_did: str = tf_response.cookies.get("ig_did", "")
     
                         if session_id == "" or user_id == "":
-                            raise AuthenticationError("2FA authentication response didn't return a valid session_id or user_id.")
+
+                            raise AuthenticationError(
+                                "2FA authentication response didn't return a valid session_id or user_id."
+                            )
     
                         return json.dumps({
                             "session_id": session_id,
@@ -178,7 +194,9 @@ def new_session_id(
                             "json. Are you able to visit Instagram on the web?"
                         )
             
-            raise AuthenticationError("Either user doesn't exist or your password is too weak (change it to a stronger one).")
+            raise AuthenticationError(
+                "Either user doesn't exist or your password is too weak (change it to a stronger one)."
+            )
 
         if response_json.get("user", False) is False or response_json.get("authenticated", False) is False:
             raise AuthenticationError("Invalid password.")
