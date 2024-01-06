@@ -165,7 +165,9 @@ def new_session_id(
                         if tf_response_json.get("status", "") != "ok" \
                                 or tf_response_json.get("authenticated", False) is False:
 
-                            raise AuthenticationError("Couldn't log in through 2FA.")
+                            raise AuthenticationError(
+                                "Couldn't log in through 2FA. Most probably your totp_token is incorrect."
+                            )
                         
                         session_id: str = tf_response.cookies.get("sessionid", "")
                         rur: str = tf_response.cookies.get("rur", "")
