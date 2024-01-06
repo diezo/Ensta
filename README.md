@@ -342,5 +342,10 @@ Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
+## Contributors
+<a href="https://github.com/diezo/ensta/graphs/contributors">
+    <img src="https://contrib.rocks/image?anon=1&repo=diezo/ensta" />
+</a>
+
 ## Legal
 This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
