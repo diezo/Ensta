@@ -318,7 +318,12 @@ Any missing feature? Raise an issue.
 2. Fetch & Post Stories
 3. Register New Accounts
 
-## Host Mode
+## Basic Usage
+
+<details>
+
+<summary><b>Host Class</b> (Authenticated)</summary>
+
 Requires login through username & password.
 
 ```python
@@ -330,7 +335,12 @@ profile = host.profile("leomessi")
 print(profile.biography)
 ```
 
-## Guest Mode
+</details>
+
+<details>
+
+<summary><b>Guest Class</b> (Non-Authenticated)</summary>
+
 Doesn't require login, but has limited features.
 
 ```python
@@ -341,6 +351,8 @@ profile = guest.profile("leomessi")
 
 print(profile.biography)
 ```
+
+</details>
 
 ## Discord Community
 Ask questions, discuss upcoming features and meet other developers.
