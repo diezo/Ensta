@@ -13,7 +13,7 @@ Both authenticated & anonymous requests are supported.
 [<img src="https://i.ibb.co/G0SSVfc/IMG-20240107-144717-modified.png" width="120"/>](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
 
 ## 🌟 Just a minute!
-Ensta is still in it's early stages and requires your support. Don't forget to give a star. Thank you!
+Ensta is still in it's early stages and needs your support. Please do give this repository a star. Thank you!
 
 ## Installation
 ```shell
