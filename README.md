@@ -354,6 +354,8 @@ print(profile.biography)
 
 </details>
 
+[Learn to use ensta](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)
+
 ## Discord Community
 Ask questions, discuss upcoming features and meet other developers.
 
