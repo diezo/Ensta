@@ -1,23 +1,25 @@
 import json
 import random
 import string
-import requests
-import pyotp
-import ntplib
-from requests import Session
-from requests import Response
 from json import JSONDecodeError
+
+import ntplib
+import pyotp
+import requests
+from requests import Response
+from requests import Session
+
 from .PasswordEncryption import PasswordEncryption
 from .lib.Exceptions import (AuthenticationError, NetworkError)
 
 
 def new_session_id(
-    username: str,
-    password: str,
-    proxy: dict[str, str],
-    totp_token: str = None
+        username: str,
+        password: str,
+        proxy: dict[str, str],
+        totp_token: str = None,
+        totp_code: str = None
 ) -> str:
-    
     request_session: Session = requests.Session()
     request_session.headers["user-agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
                                             "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
@@ -79,25 +81,20 @@ def new_session_id(
         if response_json.get("status", "") != "ok":
 
             if response_json.get("two_factor_required", False) is True:
-            
-                if response_json.get("two_factor_info", {}).get("totp_two_factor_on", False) is False:
 
+                if response_json.get("two_factor_info", {}).get("totp_two_factor_on", False) is False:
                     raise AuthenticationError(
                         "Some other 2FA method is enabled. Only TOTP-based"
                         " (Authenticator App) two factor is supported."
                     )
-    
-                if totp_token is None:
-                    raise AuthenticationError("Two-factor is enabled. Please provide the totp_token while logging in.")
+
+                if totp_token is None and totp_code is None:
+                    raise AuthenticationError("Two-factor is enabled. Please provide the totp_token or totp_code "
+                                              "while logging in.")
 
                 else:
-                    tf_data: dict = {
-                        "queryParams": '{"next":"/"}',
-                        "trust_signal": True,
-                        "identifier": response_json.get("two_factor_info", {}).get("two_factor_identifier"),
-                        "verification_method": "3",
-                        "username": username,
-                        "verificationCode": pyotp.TOTP(totp_token).at(
+                    if totp_token:
+                        totp_code = pyotp.TOTP(totp_token).at(
                             int(
                                 ntplib.NTPClient().request(
                                     "time.google.com",
@@ -105,6 +102,13 @@ def new_session_id(
                                 ).tx_time
                             )
                         )
+                    tf_data: dict = {
+                        "queryParams": '{"next":"/"}',
+                        "trust_signal": True,
+                        "identifier": response_json.get("two_factor_info", {}).get("two_factor_identifier"),
+                        "verification_method": "3",
+                        "username": username,
+                        "verificationCode": totp_code
                     }
 
                     tf_response: Response = request_session.post(
@@ -151,36 +155,33 @@ def new_session_id(
                             "csrftoken": csrf_token
                         }
                     )
-                     
-                    if "Oops, an error occurred." in tf_response.text:
 
+                    if "Oops, an error occurred." in tf_response.text:
                         raise AuthenticationError(
                             "IP temporarily banned most probably due to too many login requests."
                             " Please try again later or use proxies."
                         )
-                    
+
                     try:
                         tf_response_json: dict = tf_response.json()
-                    
+
                         if tf_response_json.get("status", "") != "ok" \
                                 or tf_response_json.get("authenticated", False) is False:
-
                             raise AuthenticationError(
                                 "Couldn't log in through 2FA. Most probably your totp_token is incorrect."
                             )
-                        
+
                         session_id: str = tf_response.cookies.get("sessionid", "")
                         rur: str = tf_response.cookies.get("rur", "")
                         mid: str = response_json.get("two_factor_info", {}).get("device_id")
                         user_id: str = tf_response_json.get("userId", "")
                         ig_did: str = tf_response.cookies.get("ig_did", "")
-    
-                        if session_id == "" or user_id == "":
 
+                        if session_id == "" or user_id == "":
                             raise AuthenticationError(
                                 "2FA authentication response didn't return a valid session_id or user_id."
                             )
-    
+
                         return json.dumps({
                             "session_id": session_id,
                             "rur": rur,
@@ -195,7 +196,7 @@ def new_session_id(
                             "Response got while logging in was not a valid "
                             "json. Are you able to visit Instagram on the web?"
                         )
-            
+
             raise AuthenticationError(
                 "Either user doesn't exist or your password is too weak (change it to a stronger one)."
             )
