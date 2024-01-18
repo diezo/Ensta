@@ -41,7 +41,7 @@ setup(
     install_requires=[
         "requests",
         "moviepy",
-        "pycryptodome",
+        "cryptography",
         "pyotp",
         "ntplib"
     ],
