@@ -10,10 +10,8 @@ Ensta uses a combination of Instagram's Web API & Mobile API making it a reliabl
 
 Both authenticated & anonymous requests are supported.
 
-[<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
-
 ## 🌟 Just a minute!
-Ensta is still in it's early stages and requires your support. Don't forget to give a star. Thank you!
+Ensta is still in it's early stages and needs your support. Please do give this repository a star. Thank you!
 
 ## Installation
 ```shell
@@ -313,7 +311,17 @@ print(me.birthday)
 
 Any missing feature? Raise an issue.
 
-## Host Mode
+## 🕰️ Upcoming Features
+1. Direct Messaging
+2. Fetch & Post Stories
+3. Register New Accounts
+
+## Basic Usage
+
+<details>
+
+<summary><b>Host Class</b> (Authenticated)</summary>
+
 Requires login through username & password.
 
 ```python
@@ -325,7 +333,12 @@ profile = host.profile("leomessi")
 print(profile.biography)
 ```
 
-## Guest Mode
+</details>
+
+<details>
+
+<summary><b>Guest Class</b> (Non-Authenticated)</summary>
+
 Doesn't require login, but has limited features.
 
 ```python
@@ -337,10 +350,19 @@ profile = guest.profile("leomessi")
 print(profile.biography)
 ```
 
+</details>
+
+[Learn to use ensta](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)
+
 ## Discord Community
 Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
+
+## Contributors
+<a href="https://github.com/diezo/ensta/graphs/contributors">
+    <img src="https://contrib.rocks/image?anon=1&repo=diezo/ensta" />
+</a>
 
 ## Legal
 This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
