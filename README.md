@@ -10,6 +10,16 @@ Ensta uses a combination of Instagram's Web API & Mobile API making it a reliabl
 
 Both authenticated & anonymous requests are supported.
 
+<details>
+
+<summary><b>🔗 Become a sponsor</b></summary>
+
+<br>
+
+**To become a sponsor and display your website's link on the top section of ensta's readme page, please message me on discord: [@gitdiezo](https://discordapp.com/users/1183040947035062382)**
+
+</details>
+
 ## 🌟 Just a minute!
 Ensta is still in it's early stages and needs your support. Please do give this repository a star. Thank you!
 
