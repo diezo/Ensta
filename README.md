@@ -7,7 +7,7 @@ Ensta uses a combination of Instagram's Web API & Mobile API making it a reliabl
 
 Both authenticated & non-authenticated requests are supported.
 
-[<img width="150" src="https://i.ibb.co/wYDJPzb/IMG-20240120-120033-modified.png"/>](https://www.patreon.com/bePatron?u=106983687)
+[<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Installation
 ```shell
