@@ -309,11 +309,6 @@ print(me.birthday)
 
 Any missing feature? Raise an issue.
 
-## 🕰️ Upcoming Features
-1. Direct Messaging
-2. Fetch & Post Stories
-3. Register New Accounts
-
 ## Basic Usage
 
 <details>
