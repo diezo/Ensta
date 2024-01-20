@@ -8,6 +8,8 @@ Ensta uses a combination of Instagram's Web API & Mobile API making it a reliabl
 
 Both authenticated & non-authenticated requests are supported.
 
+[<img width="180" src="https://i.ibb.co/L9fy4jJ/DC4gj-LRUMAAy-Q92-modified.png"/>](https://www.patreon.com/bePatron?u=106983687)
+
 ## Installation
 ```shell
 $ pip install ensta
