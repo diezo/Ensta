@@ -4,21 +4,9 @@
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 [![Twitter Share](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
 
-<!-- <img style="border-radius: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/logo.png"/> -->
-
 Ensta uses a combination of Instagram's Web API & Mobile API making it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always stays up-to-date.
 
 Both authenticated & anonymous requests are supported.
-
-<details>
-
-<summary><b>🔗 Become a sponsor</b></summary>
-
-<br>
-
-**To become a sponsor and display your website's link on the top section of ensta's readme page, please message me on discord: [@gitdiezo](https://discordapp.com/users/1183040947035062382)**
-
-</details>
 
 ## 🌟 Just a minute!
 Ensta is still in it's early stages and needs your support. Please do give this repository a star. Thank you!
