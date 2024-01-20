@@ -8,9 +8,6 @@ Ensta uses a combination of Instagram's Web API & Mobile API making it a reliabl
 
 Both authenticated & anonymous requests are supported.
 
-## 🌟 Just a minute!
-Ensta is still in it's early stages and needs your support. Please do give this repository a star. Thank you!
-
 ## Installation
 ```shell
 $ pip install ensta
