@@ -2,7 +2,6 @@
 [![PyPI](https://img.shields.io/pypi/v/ensta)](https://pypi.org/project/ensta)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
-[![Twitter Share](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
 
 Ensta uses a combination of Instagram's Web API & Mobile API making it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always stays up-to-date.
 
