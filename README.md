@@ -6,7 +6,7 @@
 
 Ensta uses a combination of Instagram's Web API & Mobile API making it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always stays up-to-date.
 
-Both authenticated & anonymous requests are supported.
+Both authenticated & non-authenticated requests are supported.
 
 ## Installation
 ```shell
