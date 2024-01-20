@@ -304,7 +304,7 @@ print(me.birthday)
 
 </details>
 
-Any missing feature? Raise an issue.
+Any missing feature? pl Please raise an issue.
 
 ## Basic Usage
 
