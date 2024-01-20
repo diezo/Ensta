@@ -350,6 +350,11 @@ Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
+## Support Ensta
+To support ensta's development, please consider buying a coffee here:
+
+[<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
+
 ## Contributors
 <a href="https://github.com/diezo/ensta/graphs/contributors">
     <img src="https://contrib.rocks/image?anon=1&repo=diezo/ensta" />
