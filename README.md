@@ -2,16 +2,12 @@
 [![PyPI](https://img.shields.io/pypi/v/ensta)](https://pypi.org/project/ensta)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
-[![Twitter Share](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fdiezo%2Fensta)
-
-<!-- <img style="border-radius: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/logo.png"/> -->
 
 Ensta uses a combination of Instagram's Web API & Mobile API making it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always stays up-to-date.
 
-Both authenticated & anonymous requests are supported.
+Both authenticated & non-authenticated requests are supported.
 
-## 🌟 Just a minute!
-Ensta is still in it's early stages and needs your support. Please do give this repository a star. Thank you!
+[<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Installation
 ```shell
@@ -309,12 +305,7 @@ print(me.birthday)
 
 </details>
 
-Any missing feature? Raise an issue.
-
-## 🕰️ Upcoming Features
-1. Direct Messaging
-2. Fetch & Post Stories
-3. Register New Accounts
+Any missing feature? Please raise an issue.
 
 ## Basic Usage
 
@@ -358,6 +349,11 @@ print(profile.biography)
 Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
+
+## Support Ensta
+To support ensta's development, please consider buying a coffee here:
+
+[<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Contributors
 <a href="https://github.com/diezo/ensta/graphs/contributors">
