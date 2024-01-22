@@ -43,13 +43,15 @@ host = Host(username, password)
 
 <details>
 
-<summary>2FA Login  (TOTP)</summary><br>
+<summary>2FA Login</summary><br>
 
 ```python
 from ensta import Host
 
 host = Host(username, password, totp_token=token)
 ```
+
+If you've enabled SMS 2FA, you'll be automatically prompted for OTP when you run your code.
 
 </details>
 
