@@ -91,7 +91,7 @@ def new_session_id(
                             " (Authenticator App) and SMS-based two factor is supported."
                         )
 
-                    verification_code: int = int(input("SMS 2FA is enabled. Enter OTP: "))
+                    verification_code: int = int(input("SMS 2FA enabled. Enter OTP: "))
     
                 if totp_token is None and verification_code is None:
                     raise AuthenticationError("Two-factor is enabled. Please provide the totp_token while logging in.")
