@@ -314,10 +314,6 @@ class SessionHost:
                 )
                 response_json = http_response.json()
 
-                if response_json.get("message", "")  != "checkpoint_required" : 
-                    yield None
-                    raise NetworkError("IP rate limited or account banned/locked.")
-
                 if "status" not in response_json or "users" not in response_json:
                     yield None
                     raise NetworkError("HTTP response doesn't include 'status' or 'users' node.")
