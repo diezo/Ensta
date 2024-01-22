@@ -45,13 +45,24 @@ host = Host(username, password)
 
 <summary>2FA Login</summary><br>
 
+**Authenticator App**
+
 ```python
 from ensta import Host
 
-host = Host(username, password, totp_token=token)
+# The key you got from Instagram when setting up your Authenticator App
+key = "R65I7XTTHNHTQ2NKMQL36NCWKNUPBSDG"
+
+host = Host(
+    username,
+    password,
+    totp_token=key
+)
 ```
 
-If you've enabled SMS 2FA, you'll be automatically prompted for OTP when you run your code.
+**SMS Based**
+
+No need to configure anything. Ensta will automatically ask for SMS OTP in the runtime.
 
 </details>
 
