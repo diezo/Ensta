@@ -3,6 +3,8 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 
+<img src="https://i.ibb.co/pbrWDM5/20240122-010244-0000-modified.png"/>
+
 Ensta uses a combination of Instagram's Web API & Mobile API making it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always stays up-to-date.
 
 Both authenticated & non-authenticated requests are supported.
