@@ -78,16 +78,22 @@ def new_session_id(
 
         if response_json.get("status", "") != "ok":
 
+            verification_code: int | None = None
+
             if response_json.get("two_factor_required", False) is True:
             
                 if response_json.get("two_factor_info", {}).get("totp_two_factor_on", False) is False:
 
-                    raise AuthenticationError(
-                        "Some other 2FA method is enabled. Only TOTP-based"
-                        " (Authenticator App) two factor is supported."
-                    )
+                    if response_json.get("two_factor_info", {}).get("sms_two_factor_on", False) is False:
+
+                        raise AuthenticationError(
+                            "Some other 2FA method is enabled. Only TOTP-based"
+                            " (Authenticator App) and SMS-based two factor is supported."
+                        )
+
+                    verification_code: int = int(input("SMS 2FA enabled. Enter OTP: "))
     
-                if totp_token is None:
+                if totp_token is None and verification_code is None:
                     raise AuthenticationError("Two-factor is enabled. Please provide the totp_token while logging in.")
 
                 else:
@@ -95,9 +101,9 @@ def new_session_id(
                         "queryParams": '{"next":"/"}',
                         "trust_signal": True,
                         "identifier": response_json.get("two_factor_info", {}).get("two_factor_identifier"),
-                        "verification_method": "3",
+                        "verification_method": "1",
                         "username": username,
-                        "verificationCode": pyotp.TOTP(totp_token).at(
+                        "verificationCode": verification_code if verification_code is not None else pyotp.TOTP(totp_token).at(
                             int(
                                 ntplib.NTPClient().request(
                                     "time.google.com",
