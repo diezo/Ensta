@@ -3,4 +3,3 @@ moviepy
 cryptography
 pyotp
 ntplib
-ffmpeg-python

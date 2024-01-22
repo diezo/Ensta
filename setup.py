@@ -43,8 +43,7 @@ setup(
         "moviepy",
         "cryptography",
         "pyotp",
-        "ntplib",
-        "ffmpeg-python"
+        "ntplib"
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
