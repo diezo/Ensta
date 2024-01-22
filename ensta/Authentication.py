@@ -79,7 +79,106 @@ def new_session_id(
         if response_json.get("status", "") != "ok":
 
             if response_json.get("two_factor_required", False) is True:
-            
+                
+                if response_json.get("two_factor_info", {}).get("sms_two_factor_on")== 1:
+                    tf_data: dict = {
+                        "queryParams": '{"next":"/"}',
+                        "trust_signal": True,
+                        "identifier": response_json.get("two_factor_info", {}).get("two_factor_identifier"),
+                        "verification_method": "1",
+                        "username": username,
+                        "verificationCode": input("SMS CODE")
+                    }
+
+                    tf_response: Response = request_session.post(
+                        url="https://www.instagram.com/api/v1/web/accounts/login/ajax/two_factor/",
+                        data=tf_data,
+                        headers={
+                            "sec-ch-prefers-color-scheme": "dark",
+                            "sec-ch-ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                                         "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                         "Chrome/119.0.0.0 Safari/537.36",
+                            "sec-ch-ua-full-version-list": "Mozilla/5.0 (Windows NT 10.0; Win64;"
+                                                           " x64) AppleWebKit/537.36 "
+                                                           "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+                            "sec-ch-ua-mobile": "?0",
+                            "sec-ch-ua-model": "\"\"",
+                            "sec-ch-ua-platform": "\"Windows\"",
+                            "sec-ch-ua-platform-version": "\"15.0.0\"",
+                            "sec-fetch-dest": "empty",
+                            "sec-fetch-mode": "cors",
+                            "sec-fetch-site": "same-origin",
+                            'Accept': '*/*',
+                            'Accept-Language': 'en-US,en;q=0.5',
+                            'X-Mid': response_json.get("two_factor_info", {}).get("device_id"),
+                            'X-CSRFToken': csrf_token,
+                            "x-instagram-ajax": "1009977574",
+                            "x-ig-app-id": "936619743392459",
+                            'X-ASBD-ID': '129477',
+                            'X-IG-WWW-Claim': '0',
+                            "x-web-device-id": "25532C62-8BBC-4927-B6C5-02631D6E05BF",
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Origin': 'https://www.instagram.com',
+                            'DNT': '1',
+                            'Sec-GPC': '1',
+                            'Connection': 'keep-alive',
+                            'Referer': 'https://www.instagram.com/accounts/login/two_factor?next=%2F',
+                            'Sec-Fetch-Dest': 'empty',
+                            'Sec-Fetch-Mode': 'cors',
+                            'Sec-Fetch-Site': 'same-origin',
+                        },
+                        cookies={
+                            "ig_did": response_json.get("ig_did", ""),
+                            "mid": response_json.get("two_factor_info", {}).get("device_id"),
+                            "csrftoken": csrf_token
+                        }
+                    )
+                     
+                    if "Oops, an error occurred." in tf_response.text:
+
+                        raise AuthenticationError(
+                            "IP temporarily banned most probably due to too many login requests."
+                            " Please try again later or use proxies."
+                        )
+                    
+                    try:
+                        tf_response_json: dict = tf_response.json()
+                    
+                        if tf_response_json.get("status", "") != "ok" \
+                                or tf_response_json.get("authenticated", False) is False:
+
+                            raise AuthenticationError(
+                                "Couldn't log in through 2FA. Most probably your totp_token is incorrect."
+                            )
+                        
+                        session_id: str = tf_response.cookies.get("sessionid", "")
+                        rur: str = tf_response.cookies.get("rur", "")
+                        mid: str = response_json.get("two_factor_info", {}).get("device_id")
+                        user_id: str = tf_response_json.get("userId", "")
+                        ig_did: str = tf_response.cookies.get("ig_did", "")
+    
+                        if session_id == "" or user_id == "":
+
+                            raise AuthenticationError(
+                                "2FA authentication response didn't return a valid session_id or user_id."
+                            )
+    
+                        return json.dumps({
+                            "session_id": session_id,
+                            "rur": rur,
+                            "mid": mid,
+                            "userId": user_id,
+                            "ig_did": ig_did,
+                            "username": username
+                        })
+
+                    except JSONDecodeError:
+                        raise NetworkError(
+                            "Response got while logging in was not a valid "
+                            "json. Are you able to visit Instagram on the web?"
+                        )
+
                 if response_json.get("two_factor_info", {}).get("totp_two_factor_on", False) is False:
 
                     raise AuthenticationError(
