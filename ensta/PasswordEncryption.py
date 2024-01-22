@@ -1,9 +1,10 @@
+import os
 import time
 import base64
 from requests import Session
-from Cryptodome.PublicKey import RSA
-from Cryptodome.Cipher import AES, PKCS1_v1_5
-from Cryptodome.Random import get_random_bytes
+from cryptography.hazmat.primitives.serialization import load_pem_public_key
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 
 class PasswordEncryption:
@@ -15,16 +16,17 @@ class PasswordEncryption:
 
     def encrypt(self, password: str) -> str:
         public_key, public_key_id = self.__public_keys()
-        session_key = get_random_bytes(32)
-        iv = get_random_bytes(12)
+        session_key = os.urandom(32)
+        iv = os.urandom(12)
         timestamp = str(int(time.time()))
         decoded_public_key = base64.b64decode(public_key.encode())
-        recipient_key = RSA.importKey(decoded_public_key)
-        cipher_rsa = PKCS1_v1_5.new(recipient_key)
-        rsa_encrypted = cipher_rsa.encrypt(session_key)
-        cipher_aes = AES.new(session_key, AES.MODE_GCM, iv)
-        cipher_aes.update(timestamp.encode())
-        aes_encrypted, tag = cipher_aes.encrypt_and_digest(password.encode("utf8"))
+        recipient_key = load_pem_public_key(decoded_public_key)
+        rsa_encrypted = recipient_key.encrypt(session_key, padding.PKCS1v15())
+        cipher_aes = Cipher(algorithms.AES(session_key), modes.GCM(iv)).encryptor()
+        cipher_aes.authenticate_additional_data(timestamp.encode())
+        aes_encrypted = cipher_aes.update(password.encode("utf8"))
+        cipher_aes.finalize()
+        tag = cipher_aes.tag
         size_buffer = len(rsa_encrypted).to_bytes(2, byteorder="little")
 
         payload = base64.b64encode(b"".join([

@@ -1,7 +1,7 @@
 from distutils.core import setup
 from pathlib import Path
 
-version = "5.0.4.2"
+version = "5.0.5"
 long_description = (Path(__file__).parent / "README.md").read_text(encoding="utf-8")
 
 setup(
@@ -41,9 +41,10 @@ setup(
     install_requires=[
         "requests",
         "moviepy",
-        "pycryptodome",
+        "cryptography",
         "pyotp",
-        "ntplib"
+        "ntplib",
+        "ffmpeg-python"
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",

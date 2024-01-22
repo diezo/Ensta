@@ -1,5 +1,6 @@
 requests
 moviepy
-pycryptodome
+cryptography
 pyotp
 ntplib
+ffmpeg-python
