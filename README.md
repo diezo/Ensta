@@ -40,7 +40,7 @@ host = Host(username, password, proxy={"http": "http://1.2.3.4", "https": "https
 ```python
 from ensta import Host
 
-host = Host(username, password)
+host = Host(username, password)  # Email can also be used
 ```
 
 </details>
@@ -58,7 +58,7 @@ from ensta import Host
 key = "R65I7XTTHNHTQ2NKMQL36NCWKNUPBSDG"
 
 host = Host(
-    username,
+    username,  # or email
     password,
     totp_token=key
 )
