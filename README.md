@@ -9,7 +9,7 @@ Ensta uses a combination of Instagram's Web API & Mobile API making it a reliabl
 
 Both authenticated & non-authenticated requests are supported.
 
-[<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
+[<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Installation
 Python [**3.10**](https://www.python.org/downloads/) or later is required.
@@ -370,7 +370,7 @@ Ask questions, discuss upcoming features and meet other developers.
 ## Support Us
 Ensta is and will always be free to use, and that's a promise. If you wish to support it financially, please consider buying a coffee from here:
 
-[<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
+[<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Contributors
 <a href="https://github.com/diezo/ensta/graphs/contributors">
