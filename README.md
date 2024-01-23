@@ -12,7 +12,7 @@ Both authenticated & non-authenticated requests are supported.
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Installation
-Python [**3.10**](https://www.python.org/downloads/release/python-3100/) or later is required.
+Python [**3.10**](https://www.python.org/downloads/) or later is required.
 
 ```shell
 $ pip install ensta
