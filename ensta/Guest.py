@@ -5,7 +5,7 @@ import dataclasses
 from json import JSONDecodeError
 from .containers.Profile import Profile
 from .containers.ProfileHost import ProfileHost
-from .lib.Exceptions import APIError, NetworkError
+from .lib.Exceptions import APIError, NetworkError, RateLimitedError
 from collections.abc import Generator
 from .containers.Post import Post
 from .containers.PostUser import PostUser
@@ -100,14 +100,28 @@ class Guest:
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        try:
-            session: requests.Session = __session__
-            if __session__ is None: session: requests.Session = self.request_session
+        session: requests.Session = __session__
+        if __session__ is None: session: requests.Session = self.request_session
 
-            http_response: requests.Response = session.get(
-                f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
-                headers=request_headers,
+        http_response: requests.Response = session.get(
+            f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
+            headers=request_headers,
+            allow_redirects=False
+        )
+
+        if http_response.status_code == 302:
+            raise RateLimitedError(
+                "Your IP Address has been temporarily flagged, maybe because you made too many requests. "
+                "Please wait for some time, or switch to a different WiFi network, or use proxies. "
+                "And be careful next time."
+            ) if __session__ is None else RateLimitedError(
+                "Your actions are being temporarily limited, maybe because "
+                "Instagram suspected automated behaviour on your account. "
+                "Please wait for some time, or use a different account. "
+                "And be careful next time to avoid a permanent ban."
             )
+
+        try:
             response_json: dict = http_response.json()
 
             if "status" in response_json:
@@ -275,7 +289,10 @@ class Guest:
                     yield None
                     
                     if response_json.get("message", "") == "checkpoint_required":
-                        raise AuthenticationError("IP Restricted: Switch to a different WiFi or use proxies.")
+                        raise RateLimitedError(
+                            "IP Temporarily Flagged: Wait for some time, or switch "
+                            "to a different WiFi Network, or use proxies."
+                        )
 
                     raise NetworkError("Request failed.")
 
@@ -296,7 +313,7 @@ class Guest:
     @staticmethod
     def __process_post_data(data: dict) -> Post:
 
-        caption: dict = data.get("caption", None)
+        caption: dict | None = data.get("caption", None)
 
         caption_text = ""
         is_caption_covered = False
@@ -312,7 +329,7 @@ class Guest:
             caption_did_report_as_spam = caption.get("did_report_as_spam", False)
 
         user: PostUser = PostUser()
-        user_data: dict = data.get("user", None)
+        user_data: dict | None = data.get("user", None)
 
         if user_data is not None:
             user: PostUser = PostUser(

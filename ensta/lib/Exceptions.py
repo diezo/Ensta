@@ -53,3 +53,9 @@ class FileTypeError(Exception):
 
     def __init__(self, message):
         super().__init__(message)
+
+
+class RateLimitedError(Exception):
+
+    def __init__(self, message):
+        super().__init__(message)

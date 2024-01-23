@@ -6,5 +6,6 @@ from .Exceptions import (
     AuthenticationError,
     APIError,
     ConversionError,
-    FileTypeError
+    FileTypeError,
+    RateLimitedError
 )
