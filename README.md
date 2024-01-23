@@ -3,6 +3,8 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 
+![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)
+
 Ensta uses a combination of Instagram's Web API & Mobile API making it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always stays up-to-date.
 
 Both authenticated & non-authenticated requests are supported.
@@ -10,6 +12,8 @@ Both authenticated & non-authenticated requests are supported.
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Installation
+Python [**3.10**](https://www.python.org/downloads/) or later is required.
+
 ```shell
 $ pip install ensta
 ```
@@ -43,13 +47,26 @@ host = Host(username, password)
 
 <details>
 
-<summary>2FA Login  (TOTP)</summary><br>
+<summary>2FA Login</summary><br>
+
+**Authenticator App**
 
 ```python
 from ensta import Host
 
-host = Host(username, password, totp_token=token)
+# The key you got from Instagram when setting up your Authenticator App
+key = "R65I7XTTHNHTQ2NKMQL36NCWKNUPBSDG"
+
+host = Host(
+    username,
+    password,
+    totp_token=key
+)
 ```
+
+**SMS Based**
+
+No need to configure anything. Ensta will automatically ask for SMS OTP in the runtime.
 
 </details>
 
@@ -350,8 +367,8 @@ Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
-## Support Ensta
-To support ensta's development, please consider buying a coffee here:
+## Support Us
+Ensta is and will always be free to use, and that's a promise. If you wish to support it financially, please consider buying a coffee from here:
 
 [<img style="margin-top: 10px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
