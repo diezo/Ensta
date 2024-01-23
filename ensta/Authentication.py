@@ -9,10 +9,11 @@ from requests import Response
 from json import JSONDecodeError
 from .PasswordEncryption import PasswordEncryption
 from .lib.Exceptions import (AuthenticationError, NetworkError)
+from .SessionHost import SessionHost
 
 
 def new_session_id(
-    username: str,
+    user_identifier: str,  # Username or Email
     password: str,
     proxy: dict[str, str],
     totp_token: str = None
@@ -32,7 +33,7 @@ def new_session_id(
         "optIntoOneTap": False,
         "queryParams": "{}",
         "trustedDeviceRecords": "{}",
-        "username": username
+        "username": user_identifier  # Accepts email as well
     }
 
     csrf_token: str = "".join(random.choices(string.ascii_letters + string.digits, k=32))
@@ -102,7 +103,7 @@ def new_session_id(
                         "trust_signal": True,
                         "identifier": response_json.get("two_factor_info", {}).get("two_factor_identifier"),
                         "verification_method": "1",
-                        "username": username,
+                        "username": user_identifier,
                         "verificationCode": verification_code if verification_code is not None else pyotp.TOTP(totp_token).at(
                             int(
                                 ntplib.NTPClient().request(
@@ -186,14 +187,23 @@ def new_session_id(
                             raise AuthenticationError(
                                 "2FA authentication response didn't return a valid session_id or user_id."
                             )
-    
+
                         return json.dumps({
                             "session_id": session_id,
                             "rur": rur,
                             "mid": mid,
-                            "userId": user_id,
+                            "user_id": user_id,
                             "ig_did": ig_did,
-                            "username": username
+                            "identifier": user_identifier,
+                            "username": SessionHost(
+                                json.dumps({
+                                    "session_id": session_id,
+                                    "rur": rur,
+                                    "mid": mid,
+                                    "user_id": user_id,
+                                    "ig_did": ig_did,
+                                })
+                            ).private_info().username
                         })
 
                     except JSONDecodeError:
@@ -223,7 +233,16 @@ def new_session_id(
             "mid": mid,
             "user_id": user_id,
             "ig_did": ig_did,
-            "username": username
+            "identifier": user_identifier,
+            "username": SessionHost(
+                json.dumps({
+                    "session_id": session_id,
+                    "rur": rur,
+                    "mid": mid,
+                    "user_id": user_id,
+                    "ig_did": ig_did,
+                })
+            ).private_info().username
         })
 
     except JSONDecodeError:

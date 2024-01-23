@@ -30,6 +30,7 @@ USERNAME, UID = 0, 1
 
 
 class SessionHost:
+
     session_data: str
     request_session: requests.Session
     insta_app_id: str = "936619743392459"
@@ -38,8 +39,12 @@ class SessionHost:
     csrf_token: str
     guest: Guest
     user_id: str
+    username: str
+    identifier: str
     user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
                       "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+    private_user_agent: str = "Instagram 269.0.0.18.75 Android (26/8.0.0; 480dpi; 1080x1920; " \
+                              "OnePlus; 6T Dev; devitron; qcom; en_US; 314665256)"
 
     def __init__(
         self,
@@ -60,6 +65,8 @@ class SessionHost:
 
         session_data_json: dict = json.loads(session_data)
         self.user_id = session_data_json.get("user_id")
+        self.username = session_data_json.get("username")
+        self.identifier = session_data_json.get("identifier")
 
         self.request_session.cookies.set("sessionid", session_data_json.get("session_id"))
         self.request_session.cookies.set("rur", session_data_json.get("rur"))
