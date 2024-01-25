@@ -47,6 +47,20 @@ host = Host(username, password)  # Email can also be used
 
 <details>
 
+<summary>SessionData Login</summary><br>
+
+```python
+from ensta import SessionHost
+
+# "session_data" is stored in "ensta-session.txt" file by default.
+# you can also get it using "host.session_data"
+host = SessionHost(session_data)
+```
+
+</details>
+
+<details>
+
 <summary>2FA Login</summary><br>
 
 **Authenticator App**
