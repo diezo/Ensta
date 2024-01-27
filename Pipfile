@@ -14,3 +14,7 @@ ntplib = "*"
 
 [requires]
 python_version = "3.11"
+
+
+[scripts]
+test = "python -m unittest"
