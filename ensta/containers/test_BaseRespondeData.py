@@ -41,8 +41,6 @@ class BaseResponseDataTest(TestCase):
             'c': '1'
         }})
 
-        print(result)
-
         self.assertEqual(result, expected)
 
     def test_pase_with_response_data(self):
@@ -63,7 +61,5 @@ class BaseResponseDataTest(TestCase):
             'b': 1.,
             'c': '1'
         }})
-
-        print(result)
 
         self.assertEqual(result, expected)
