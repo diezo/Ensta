@@ -15,7 +15,7 @@ from .containers.Post import Post
 from collections.abc import Generator
 from .containers.ProfileHost import ProfileHost
 from .containers.PrivateInfo import PrivateInfo
-from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson)
+from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson, PostUpload, ReelUpload)
 from .lib import (
     SessionError,
     NetworkError,
@@ -955,8 +955,7 @@ class SessionHost:
         archive_only: bool = False,
         disable_comments: bool = False,
         like_and_view_counts_disabled: bool = False
-    ) -> bool:  # TODO: Implement Return Value
-
+    ) -> PostUpload:
         """
         Creates a single photo post on your account.
         :param upload_id: Upload ID of file already uploaded using get_upload_id() method
@@ -965,7 +964,7 @@ class SessionHost:
         :param archive_only: Boolean (Should this post be directly archived)
         :param disable_comments: Boolean (Should comments on this post be disabled)
         :param like_and_view_counts_disabled: Boolean (Shouldn't people be able to see how many users liked & viewed this post)
-        :return: Boolean (Whether post was successfully created or not)
+        :return: PostUpload
         """
 
         request_headers: dict = {
@@ -1019,9 +1018,7 @@ class SessionHost:
 
         try:
             response_json: dict = http_response.json()
-
-            return response_json.get("status", "") == "ok"
-
+            return PostUpload.from_response_data(response_json)
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
@@ -1104,8 +1101,7 @@ class SessionHost:
         disable_comments: bool = False,
         like_and_view_counts_disabled: bool = False,
         video_subtitles_enabled: bool = False
-    ) -> bool:  # TODO: Implement Return Value
-
+    ) -> ReelUpload:
         """
         Uploads a reel on your account.
         :param video_path: Path of the video file
@@ -1116,7 +1112,7 @@ class SessionHost:
         :param disable_comments: Boolean (Should comments on this reel be disabled)
         :param like_and_view_counts_disabled: Boolean (Shouldn't people be able to see how many users liked & viewed this reel)
         :param video_subtitles_enabled: Boolean (Should subtitles be enabled on this reel)
-        :return: Boolean (Whether reel was successfully uploaded or not)
+        :return: ReelUpload
         """
 
         upload_id = str(int(time.time()) * 1000)
@@ -1181,9 +1177,7 @@ class SessionHost:
 
         try:
             response_json: dict = http_response.json()
-
-            return response_json.get("status", "") == "ok"
-
+            return ReelUpload.from_response_data(response_json)
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
