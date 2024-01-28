@@ -12,7 +12,7 @@ class MediaAppreciationSettings(BaseResponseData):
 
 @dataclass(frozen=True)
 class ReelUpload(BaseResponseData):
-
+    raw: dict
     taken_at: int
     pk: str
     id: str

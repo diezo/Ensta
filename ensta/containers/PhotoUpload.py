@@ -5,7 +5,8 @@ from .BaseResponseData import BaseResponseData
 
 
 @dataclass(frozen=True)
-class PostUpload(BaseResponseData):
+class PhotoUpload(BaseResponseData):
+    raw: dict
     taken_at: int
     pk: str
     id: str
