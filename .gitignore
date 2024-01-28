@@ -1,3 +1,4 @@
 *.py[cod]
 /ensta-session.txt
 /test.py
+/sensitive

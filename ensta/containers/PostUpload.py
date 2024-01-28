@@ -1,11 +1,11 @@
 from typing import Any, List
-from .shared import CommentInformTreatment, SharingFrictionInfo
+from .Shared import CommentInformTreatment, SharingFrictionInfo
 from dataclasses import dataclass
-from .BaseRespondeData import BaseRespondeData
+from .BaseResponseData import BaseResponseData
 
 
 @dataclass(frozen=True)
-class PostUpload(BaseRespondeData):
+class PostUpload(BaseResponseData):
     taken_at: int
     pk: str
     id: str

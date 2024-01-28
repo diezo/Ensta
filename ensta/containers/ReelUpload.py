@@ -1,17 +1,17 @@
 from typing import Any, List
-from .shared import CommentInformTreatment, SharingFrictionInfo
-from .BaseRespondeData import BaseRespondeData
+from .Shared import CommentInformTreatment, SharingFrictionInfo
+from .BaseResponseData import BaseResponseData
 from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class MediaAppreciationSettings(BaseRespondeData):
+class MediaAppreciationSettings(BaseResponseData):
     media_gifting_state: str
     gift_count_visibility: str
 
 
 @dataclass(frozen=True)
-class ReelUpload(BaseRespondeData):
+class ReelUpload(BaseResponseData):
 
     taken_at: int
     pk: str

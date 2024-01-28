@@ -2,7 +2,7 @@ from typing import Self
 from dataclasses import fields, is_dataclass
 
 
-class BaseRespondeData:
+class BaseResponseData:
 
     @classmethod
     def from_data(cls, data):
@@ -17,7 +17,7 @@ class BaseRespondeData:
             elif not isinstance(field.type, type):
                 parsed_data[field.name] = raw_value
                 
-            elif issubclass(field.type, BaseRespondeData):
+            elif issubclass(field.type, BaseResponseData):
                 value = field.type.from_data(raw_value)
                 parsed_data[field.name] = value
                 
