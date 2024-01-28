@@ -624,7 +624,7 @@ class SessionHost:
         http_response = self.request_session.get(share_url, headers=request_headers)
         response_text = http_response.text
 
-        required_text = "instagram://media?id="
+        required_text = "instagram://images?id="
 
         initial_index = response_text.find(required_text)
         if initial_index == -1: raise APIError()
@@ -820,8 +820,8 @@ class SessionHost:
 
     def get_upload_id(self, media_path: str, arg_upload_id: str | None = None) -> str:
         """
-        Uploads the given media to Instagram's server and returns its unique ID which you can later use to configure single or multiple posts.
-        :param media_path: Path to the media file (only jpg & jpeg)
+        Uploads the given images to Instagram's server and returns its unique ID which you can later use to configure single or multiple posts.
+        :param media_path: Path to the images file (only jpg & jpeg)
         :param arg_upload_id: Custom upload_id (for advanced users)
         :return: Upload ID of uploaded file
         """
@@ -1018,7 +1018,7 @@ class SessionHost:
 
         try:
             response_json: dict = http_response.json()
-            return PostUpload.from_response_data(response_json)
+            return PostUpload.from_response_data(response_json, is_reel=False)
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
@@ -1119,12 +1119,19 @@ class SessionHost:
 
         video_success, video_duration, video_width, video_height = self.__upload_video(video_path, upload_id)
 
-        if not video_success: return False
+        if not video_success: raise NetworkError(
+            "Error while uploading video to Instagram. Please try with a "
+            "different video, and make sure it's an MP4 video."
+        )
+
         if not self.get_upload_id(
-                media_path=thumbnail_path,
-                arg_upload_id=upload_id
+            media_path=thumbnail_path,
+            arg_upload_id=upload_id
         ):
-            return False
+            raise NetworkError(
+                "Error while uploading thumbnail to Instagram. Please make "
+                "sure your image is JPG or try with a different one."
+            )
 
         request_headers: dict = {
             "accept": "*/*",
@@ -1177,7 +1184,8 @@ class SessionHost:
 
         try:
             response_json: dict = http_response.json()
-            return ReelUpload.from_response_data(response_json)
+            return ReelUpload.from_response_data(response_json, is_reel=True)
+
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 

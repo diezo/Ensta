@@ -31,11 +31,14 @@ class BaseResponseData:
         return cls(**parsed_data)
 
     @classmethod
-    def from_response_data(cls, response_data: dict) -> 'Self':
+    def from_response_data(cls, response_data: dict, is_reel: bool) -> 'Self':
         if response_data.get("status", "") != "ok":
-            raise Exception("Key 'status' not 'ok' in response JSON.")
+            raise Exception(
+                "Key 'status' not 'ok' in response JSON. "
+                "Please check the images or videos you supplied."
+            )
             
-        data = response_data.get("media", None)
+        data = response_data.get("media" if is_reel else "images", None)
         
         if data is None: raise Exception(
             "Either Instagram's Internal Server Error or this library needs to be updated."
