@@ -1018,7 +1018,8 @@ class SessionHost:
 
         try:
             response_json: dict = http_response.json()
-            return PostUpload.from_response_data(response_json, is_reel=False)
+            return PostUpload.from_response_data(response_json)
+
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
@@ -1184,7 +1185,7 @@ class SessionHost:
 
         try:
             response_json: dict = http_response.json()
-            return ReelUpload.from_response_data(response_json, is_reel=True)
+            return ReelUpload.from_response_data(response_json)
 
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
