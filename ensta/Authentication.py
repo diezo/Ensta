@@ -104,7 +104,9 @@ def new_session_id(
                         "identifier": response_json.get("two_factor_info", {}).get("two_factor_identifier"),
                         "verification_method": "1",
                         "username": user_identifier,
-                        "verificationCode": verification_code if verification_code is not None else pyotp.TOTP(totp_token).at(
+                        "verificationCode": verification_code if verification_code is not None else
+
+                        pyotp.TOTP(totp_token).at(
                             int(
                                 ntplib.NTPClient().request(
                                     "time.google.com",
