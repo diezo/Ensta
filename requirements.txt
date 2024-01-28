@@ -1,5 +1,0 @@
-requests
-moviepy
-cryptography
-pyotp
-ntplib
