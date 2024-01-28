@@ -10,6 +10,7 @@ class CommentInformTreatment(BaseRespondeData):
     url: Any  # @TODO
     action_type: Any  # @TODO
 
+
 @dataclass(frozen=True)
 class SharingFrictionInfo(BaseRespondeData):
     should_have_sharing_friction: bool
