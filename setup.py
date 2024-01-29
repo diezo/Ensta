@@ -50,7 +50,8 @@ setup(
         "moviepy",
         "cryptography",
         "pyotp",
-        "ntplib"
+        "pyquery",
+        "ntplib",
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
