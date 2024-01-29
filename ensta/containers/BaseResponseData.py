@@ -1,4 +1,3 @@
-from typing import Self
 from dataclasses import fields, is_dataclass
 
 
@@ -31,7 +30,7 @@ class BaseResponseData:
         return cls(**parsed_data)
 
     @classmethod
-    def from_response_data(cls, response_data: dict) -> 'Self':
+    def from_response_data(cls, response_data: dict):
         if response_data.get("status", "") != "ok":
             raise Exception(
                 "Key 'status' not 'ok' in response JSON. "
