@@ -386,6 +386,10 @@ If you wish to support my work, please consider visiting this link:
 
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
+## Used By
+#### <img width="14" src="https://github.com/diezo/Ensta/blob/master/assets/margot_profile_picture-modified.png" /> Margot Bot
+An Instagram Bot that changes it's biography every day to reflect the current weekday. (IST Timezone): [**Click here**](https://instagram.com/enstabott)
+
 ## Contributors
 [![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)
 
