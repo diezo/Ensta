@@ -3,7 +3,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 
-![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)
+<!-- ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)  -->
 
 Ensta uses a combination of Instagram's Web API & Mobile API making it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always stays up-to-date.
 
@@ -388,6 +388,10 @@ If you wish to support my work, please consider visiting this link:
 
 ## Contributors
 [![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)
+
+## Projects using Ensta
+- [**Margot Bot**](https://instagram.com/enstabott): An Instagram Bot that changes it's biography every day to reflect the current weekday. (IST Timezone)
+- [**Instagram REST API**](https://github.com/olgud/ensta-rest): A flask app that uses Ensta to deliver a third-party REST API for Instagram.
 
 ## Legal
 This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
