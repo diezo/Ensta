@@ -7,7 +7,7 @@ from requests import Response
 import moviepy.editor
 from uuid import uuid4
 from .Guest import Guest
-from .Mobile import Mobile
+from .MobileHost import MobileHost
 from pathlib import Path
 from .Direct import Direct
 from json import JSONDecodeError
@@ -40,7 +40,7 @@ class SessionHost:
     x_ig_www_claim: str
     csrf_token: str
     guest: Guest
-    mobile: Mobile
+    mobile: MobileHost
     user_id: str
     username: str
     identifier: str
@@ -67,7 +67,7 @@ class SessionHost:
         session_data_json: dict = json.loads(session_data)
 
         self.guest = Guest(proxy=proxy)
-        self.mobile = Mobile(user_id=session_data_json.get("user_id"), mobile_session_id=session_data_json.get("session_id"), proxy=proxy)  # TODO: Must use Mobile SessionID, Web SessionID not working!
+        self.mobile = MobileHost(user_id=session_data_json.get("user_id"), mobile_session_id=session_data_json.get("session_id"), proxy=proxy)  # TODO: Must use Mobile SessionID, Web SessionID not working!
 
         self.user_id = session_data_json.get("user_id")
         self.username = session_data_json.get("username")
@@ -1377,41 +1377,3 @@ class SessionHost:
         """
 
         return Direct(self.session_data)
-
-    def change_profile_picture(self, upload_id: str) -> bool:
-        """
-        Changes your profile picture to a new one.
-        :param upload_id: Returned by get_upload_id() method
-        :return: Boolean (Successfully changed or not)
-        """
-
-        headers: dict = self.mobile.basic_headers | {
-            "accept-encoding": "gzip",
-            "accept-language": "en-US",
-            "connection": "Keep-Alive",
-            "content-length": "115",  # TODO: May not work
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "priority": "u=3",
-            "x-bloks-is-layout-rtl": "false",
-            "x-bloks-is-prism-enabled": "false",
-            "x-bloks-version-id": "979a6b0480455edae83004a50ceae0a15cbe5e943d3786ec785eb85b693c5300",
-            "x-ig-app-id": "567067343352427"
-        }
-
-        try:
-            response: Response = self.request_session.post(
-                "https://i.instagram.com/api/v1/accounts/change_profile_picture/",
-                data={
-                    "_uuid": str(uuid4()),
-                    "use_fbuploader": False,
-                    "remove_birthday_selfie": False,
-                    "upload_id": upload_id
-                },
-                headers=headers
-            )
-
-            print(response.json())
-
-            return response.json().get("status", "") == "ok"
-        except JSONDecodeError:
-            return False

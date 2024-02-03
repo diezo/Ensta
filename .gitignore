@@ -1,5 +1,6 @@
 *.py[cod]
 /ensta-session.txt
+/ensta-mobile-session.txt
 /test.py
 /sensitive
 /test.[*]
