@@ -3,9 +3,11 @@ import json
 import random
 import string
 import requests
+from requests import Response
 import moviepy.editor
 from uuid import uuid4
 from .Guest import Guest
+from .Mobile import Mobile
 from pathlib import Path
 from .Direct import Direct
 from json import JSONDecodeError
@@ -38,6 +40,7 @@ class SessionHost:
     x_ig_www_claim: str
     csrf_token: str
     guest: Guest
+    mobile: Mobile
     user_id: str
     username: str
     identifier: str
@@ -61,9 +64,11 @@ class SessionHost:
 
         if proxy is not None: self.request_session.proxies.update(proxy)
 
-        self.guest = Guest(proxy=proxy)
-
         session_data_json: dict = json.loads(session_data)
+
+        self.guest = Guest(proxy=proxy)
+        self.mobile = Mobile(user_id=session_data_json.get("user_id"), mobile_session_id=session_data_json.get("session_id"), proxy=proxy)  # TODO: Must use Mobile SessionID, Web SessionID not working!
+
         self.user_id = session_data_json.get("user_id")
         self.username = session_data_json.get("username")
         self.identifier = session_data_json.get("identifier")
