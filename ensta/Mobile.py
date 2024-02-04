@@ -38,7 +38,8 @@ class Mobile:
         proxy: dict[str, str] = None,
         save_file: str = "ensta-mobile-session.txt",
         skip_authorization: bool = False,
-        logging: bool = False
+        logging: bool = False,
+        totp_token : str = None
     ) -> None:
 
         self.session = Session()
@@ -51,6 +52,7 @@ class Mobile:
             password=password,
             save_file=save_file,
             logging=logging,
+            totp_token=totp_token,
             skip_authorization=skip_authorization
         )
 
@@ -61,6 +63,7 @@ class Mobile:
         password: str,
         save_file: str,
         logging: bool,
+        totp_token: str,
         skip_authorization: bool
     ) -> None:
 
@@ -78,6 +81,7 @@ class Mobile:
             session=self.session,
             user_agent=self.user_agent,
             save_file=save_file,
+            totp_token=totp_token,
             logging=logging
         )
 
@@ -111,6 +115,7 @@ class Mobile:
                     password=password,
                     save_file=save_file,
                     logging=logging,
+                    totp_token=totp_token,
                     skip_authorization=skip_authorization
                 )
 
