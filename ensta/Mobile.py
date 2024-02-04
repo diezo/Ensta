@@ -8,6 +8,8 @@ import time
 import random
 import string
 import json
+from .parser.ProfileParser import parse_profile
+from .structures import Profile
 
 
 class Mobile:
@@ -218,7 +220,7 @@ class Mobile:
     def profile(
         self,
         identifier: str
-    ) -> tuple:
+    ) -> Profile:
         """
         Fetches profile information of specified Username or UserID, and returns a Profile Object.
         :param identifier: Username or UserID of target
@@ -243,8 +245,19 @@ class Mobile:
         )
 
         try:
-            # TODO: Returning 'Raw Data'; Return 'Profile Object' Instead
-            return tuple(json.loads(data) for data in response.text.strip().split("\n"))
+            # Response actually returns two JSON Objects with profile information,
+            # but we'll only use the 1st one for now.
+
+            information: dict = tuple(json.loads(data) for data in response.text.strip().split("\n"))[0]
+
+            if information.get("status", "") != "ok":
+                raise NetworkError(
+                    "Cannot fetch profile. Is the username correct? "
+                    "Maybe try logging in with a different account as "
+                    "this one may has been flagged."
+                )
+
+            return parse_profile(information)
 
         except JSONDecodeError:
             raise NetworkError(

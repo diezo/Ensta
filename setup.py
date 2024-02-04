@@ -7,7 +7,13 @@ long_description = (Path(__file__).parent / "README.md").read_text(encoding="utf
 setup(
     name="ensta",
     python_requires=">=3.10",
-    packages=["ensta", "ensta.lib", "ensta.containers"],
+    packages=[
+        "ensta",
+        "ensta.lib",
+        "ensta.containers",
+        "ensta.structures",
+        "ensta.parser"
+    ],
     version=version,
     license="MIT",
     description="🔥 Fastest & Simplest Python Package For Instagram Automation",
