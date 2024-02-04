@@ -9,7 +9,7 @@ import random
 import json
 
 
-class MobileHost:
+class Mobile:
 
     session: Session
     credentials: Credentials

@@ -8,7 +8,7 @@ from .Authentication import new_session_id
 # noinspection PyMissingConstructor
 class Host(SessionHost):
 
-    DEFAULT_FILE: str = "ensta-session.txt"
+    DEFAULT_FILE: str = "ensta-web-session.txt"
 
     identifier: str = None
     password: str = None
