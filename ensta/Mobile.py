@@ -6,6 +6,7 @@ from json import  JSONDecodeError
 from pathlib import Path
 import time
 import random
+import string
 import json
 
 
@@ -213,3 +214,51 @@ class Mobile:
             return response.json().get("status", "") == "ok"
 
         except JSONDecodeError: return False
+
+    def profile(
+        self,
+        identifier: str
+    ) -> tuple:
+        """
+        Fetches profile information of specified Username or UserID, and returns a Profile Object.
+        :param identifier: Username or UserID of target
+        :return: Profile Object
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/users/{identifier}/"
+                f"{'username' if self.is_username(identifier) else ''}info_stream/",
+            headers={
+                "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "accept-encoding": "gzip",
+                "accept-language": "en-US",
+                "connection": "Keep-Alive"
+            },
+            data={
+                "is_prefetch": False,
+                "entry_point": "profile",
+                "from_module": "search_typeahead",
+                "_uuid": str(uuid4())
+            }
+        )
+
+        try:
+            # TODO: Returning 'Raw Data'; Return 'Profile Object' Instead
+            return tuple(json.loads(data) for data in response.text.strip().split("\n"))
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Can't fetch profile info. Make sure username or user-id you supplied is correct. "
+                "If this issue persists, try using a different account as probably the current one has "
+                "been flagged."
+            )
+
+    @staticmethod
+    def is_username(identifier: str) -> bool:
+        """
+        Returns True if the given identifier is a Username, and False if it's a UserID.
+        :param identifier: Username or UserID
+        :return: Boolean
+        """
+
+        return False in tuple(x in string.digits for x in identifier)
