@@ -306,6 +306,20 @@ for user in likers.users:
 
 <details>
 
+<summary>Change Profile Picture</summary><br>
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)
+
+mobile.change_profile_picture("image.jpg")
+```
+
+</details>
+
+<details>
+
 <summary>Edit Biography, Display Name</summary><br>
 
 ```python
