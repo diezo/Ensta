@@ -40,6 +40,7 @@ class Credentials:
         session: Session,
         save_file: str,
         totp_token: str,
+        session_data: str,
         logging: bool = False
     ) -> None:
 
@@ -48,7 +49,9 @@ class Credentials:
         self.totp_token = totp_token
 
         # Existing Stored Credentials?
-        stored_dict: dict = self.fetch_stored_dict(save_file)
+        if session_data is not None: stored_dict: dict = json.loads(session_data)
+        else: stored_dict: dict = self.fetch_stored_dict(save_file)
+
         stored_dict_valid: bool = True
 
         # Validate StoredDict
@@ -193,6 +196,9 @@ class Credentials:
             raise AuthenticationError(
                 "Only TOTP-based 2FA is supported till now."
             )
+
+        # TODO: Remove when implemented
+        raise NotImplementedError("TOTP 2FA not implemented yet!")
 
         # TOTP Token Supplied? Take Input | Use That
         if self.totp_token is None: code: str = input("Enter TOTP Code: ")

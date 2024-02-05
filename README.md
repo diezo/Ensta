@@ -352,6 +352,43 @@ print(me.birthday)
 
 Any missing feature? Please raise an issue.
 
+### Direct Messaging
+Only supported on mobile devices, so **Mobile Class** should be used.
+
+<details>
+
+<summary>Send Text</summary>
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)  # Or use email
+direct = mobile.direct()
+
+direct.send_text("Hello", thread_id)
+```
+
+</details>
+
+<details>
+
+<summary>Send Photo</summary>
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)  # Or use email
+direct = mobile.direct()
+
+media_id = direct.fb_upload_image("image.jpg")
+
+direct.send_photo(media_id, thread_id)
+```
+
+</details>
+
+This feature is still under development, we'll implement more functionalities very soon.
+
 ## Basic Usage
 
 <details>

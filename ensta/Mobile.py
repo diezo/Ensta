@@ -10,6 +10,7 @@ import string
 import json
 from .parser.ProfileParser import parse_profile
 from .structures import Profile
+from .Direct import Direct
 
 
 class Mobile:
@@ -33,13 +34,14 @@ class Mobile:
 
     def __init__(
         self,
-        identifier: str,
-        password: str,
+        identifier: str = None,
+        password: str = None,
         proxy: dict[str, str] = None,
         save_file: str = "ensta-mobile-session.txt",
         skip_authorization: bool = False,
         logging: bool = False,
-        totp_token : str = None
+        totp_token : str = None,
+        session_data: str = None
     ) -> None:
 
         self.session = Session()
@@ -53,6 +55,7 @@ class Mobile:
             save_file=save_file,
             logging=logging,
             totp_token=totp_token,
+            session_data=session_data,
             skip_authorization=skip_authorization
         )
 
@@ -64,6 +67,7 @@ class Mobile:
         save_file: str,
         logging: bool,
         totp_token: str,
+        session_data: str,
         skip_authorization: bool
     ) -> None:
 
@@ -82,6 +86,7 @@ class Mobile:
             user_agent=self.user_agent,
             save_file=save_file,
             totp_token=totp_token,
+            session_data=session_data,
             logging=logging
         )
 
@@ -280,3 +285,14 @@ class Mobile:
         """
 
         return False in tuple(x in string.digits for x in identifier)
+
+    def direct(self) -> Direct:
+        """
+        Lets you use the direct messaging feature of Instagram
+        :return: Direct() class with all the supported methods
+        """
+
+        return Direct(
+            session=self.session,
+            device_id=self.device_id
+        )
