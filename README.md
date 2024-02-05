@@ -435,6 +435,8 @@ Ask questions, discuss upcoming features and meet other developers.
 ## Support Me
 If you wish to support my work, please consider visiting this link:
 
+**PayPal:** [@gitdiezo](https://www.paypal.com/paypalme/gitdiezo)
+
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Contributors
