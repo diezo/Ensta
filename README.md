@@ -387,7 +387,7 @@ direct.send_photo(media_id, thread_id)
 
 </details>
 
-This feature is still under development, we'll implement more functionalities very soon.
+We'll implement more features soon.
 
 ## Basic Usage
 
