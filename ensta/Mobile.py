@@ -121,6 +121,7 @@ class Mobile:
                     save_file=save_file,
                     logging=logging,
                     totp_token=totp_token,
+                    session_data=session_data,
                     skip_authorization=skip_authorization
                 )
 
@@ -296,3 +297,61 @@ class Mobile:
             session=self.session,
             device_id=self.device_id
         )
+
+    def follow(self, user_id: str) -> bool:
+        """
+        Follows a user by user_id
+        :param self: None
+        :param user_id: UserID of target user
+        :return: Boolean (Followed or not)
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/friendships/create/{user_id}/",
+            data="SIGNATURE." + json.dumps(
+                {
+                    "user_id": user_id,
+                    "radio_type": "wifi-none",
+                    "device_id": self.device_id,
+                    "_uuid": str(uuid4()),
+                    "container_module": "profile"
+                }
+            )
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to follow. Is the user_id correct? Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def unfollow(self, user_id: str) -> bool:
+        """
+        Unfollows a user by user_id
+        :param self: None
+        :param user_id: UserID of target user
+        :return: Boolean (Unfollowed or not)
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/friendships/destroy/{user_id}/",
+            data="SIGNATURE." + json.dumps(
+                {
+                    "user_id": user_id,
+                    "radio_type": "wifi-none",
+                    "device_id": self.device_id,
+                    "_uuid": str(uuid4()),
+                    "container_module": "profile"
+                }
+            )
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to follow. Is the user_id correct? Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
