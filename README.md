@@ -443,7 +443,7 @@ If you wish to support my work, please consider visiting this link:
 [![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)
 
 ## Ensta-Powered Projects
-1. [**Margot Bot**](https://instagram.com/enstabott): An Instagram account which automatically updates it's biography to reflect the current weekday. (IST Timezone)
+1. [**Mr. Tornado**](https://instagram.com/nado.meow): An Instagram account which automatically updates it's biography to reflect the current weekday. (IST Timezone)
 2. [**Olgu's Ensta REST API**](https://github.com/olgud/ensta-rest): An unofficial Instagram REST API.
 
 ## Legal
