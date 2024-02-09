@@ -350,6 +350,21 @@ print(me.birthday)
 
 </details>
 
+<details>
+
+<summary>Block/Unblock User</summary><br>
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)
+
+mobile.block(123456789)  # Use UserID
+mobile.unblock(123456789)  # Use UserID
+```
+
+</details>
+
 Any missing feature? Please raise an issue.
 
 ### Direct Messaging

@@ -355,3 +355,61 @@ class Mobile:
                 "Unable to follow. Is the user_id correct? Try using another account, switch "
                 "to a different network, or use reputed proxies."
             )
+
+    def block(self, user_id: str) -> bool:
+        """
+        Blocks a user by user_id
+        :param self: None
+        :param user_id: UserID of target user
+        :return: Boolean (Blocked or not)
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/friendships/block/{user_id}/",
+            data="SIGNATURE." + json.dumps(
+                {
+                    "surface": "profile",
+                    "is_auto_block_enabled": True,
+                    "user_id": user_id,
+                    "_uid": self.user_id,
+                    "_uuid": str(uuid4()),
+                    "container_module": "profile"
+                }
+            )
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to block. Is the user_id correct? Username should not be used. Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def unblock(self, user_id: str) -> bool:
+        """
+        Unblocks a user by user_id
+        :param self: None
+        :param user_id: UserID of target user
+        :return: Boolean (Unblocked or not)
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/friendships/unblock/{user_id}/",
+            data="SIGNATURE." + json.dumps(
+                {
+                    "user_id": user_id,
+                    "_uid": self.user_id,
+                    "_uuid": str(uuid4()),
+                    "container_module": "search_typeahead"
+                }
+            )
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to unblock. Is the user_id correct? Username should not be used. Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
