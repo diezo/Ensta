@@ -4,13 +4,12 @@ from .lib.Exceptions import AuthenticationError, FileTypeError, NetworkError
 from uuid import uuid4
 from json import  JSONDecodeError
 from pathlib import Path
-import random
 import string
 import json
 from .parser.ProfileParser import parse_profile
 from .structures import Profile
 from .Direct import Direct
-from ensta.Utils import time_id
+from ensta.Utils import time_id, fb_uploader
 
 class Mobile:
 
@@ -143,7 +142,7 @@ class Mobile:
             )
 
         upload_id = arg_upload_id if arg_upload_id is not None else time_id()
-        upload_name = f"{upload_id}_0_{random.randint(1000000000, 9999999999)}"
+        upload_name = fb_uploader(upload_id)
 
         rupload_params = {
             "retry_context": "{\"num_step_auto_retry\": 0, \"num_reupload\": 0, \"num_step_manual_retry\": 0}",

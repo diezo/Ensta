@@ -6,7 +6,8 @@ import random
 from .lib.Exceptions import FileTypeError, NetworkError
 from json import JSONDecodeError
 from pathlib import Path
-from ensta.Utils import time_id
+from ensta.Utils import fb_uploader
+
 
 class Direct:
 
@@ -56,9 +57,11 @@ class Direct:
             }
         )
 
-        try: return response.json().get("status", "") == "ok"
+        try:
+            return response.json().get("status", "") == "ok"
 
-        except JSONDecodeError: return False
+        except JSONDecodeError:
+            return False
 
     def fb_upload_image(self, media_path: str) -> int:
         """
@@ -77,7 +80,7 @@ class Direct:
         with open(media_path, "rb") as file:
             media_data: bytes = file.read()
 
-        upload_name: str = f"{time_id()}_0_{random.randint(1000000000, 9999999999)}"
+        upload_name: str = fb_uploader()
         media_length: str = str(len(media_data))
 
         response: Response = self.session.post(
@@ -95,7 +98,8 @@ class Direct:
             data=media_data
         )
 
-        try: return response.json().get("media_id")
+        try:
+            return response.json().get("media_id")
 
         except JSONDecodeError:
             raise NetworkError(
@@ -134,6 +138,8 @@ class Direct:
             }
         )
 
-        try: return response.json().get("status", "") == "ok"
+        try:
+            return response.json().get("status", "") == "ok"
 
-        except JSONDecodeError: return False
+        except JSONDecodeError:
+            return False
