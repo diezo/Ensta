@@ -1,3 +1,5 @@
+import time
+import mimetypes
 import json
 import random
 import string
@@ -828,9 +830,7 @@ class SessionHost:
 
         media_path: Path = Path(media_path)
 
-        if media_path.suffix not in (".jpg", ".jpeg"): raise FileTypeError(
-            "Only jpg and jpeg image types are allowed to post."
-        )
+        mimetype, _ = mimetypes.guess_type(media_path)
 
         upload_id = arg_upload_id if arg_upload_id is not None else time_id()
         waterfall_id = str(uuid4())
@@ -852,11 +852,11 @@ class SessionHost:
             "accept-encoding": "gzip",
             "x-instagram-rupload-params": json.dumps(rupload_params),
             "x_fb_photo_waterfall_id": waterfall_id,
-            "x-entity-type": "image/jpeg",
+            "x-entity-type": mimetype,
             "offset": "0",
             "x-entity-name": upload_name,
             "x-entity-length": photo_length,
-            "content-type": "application/octet-stream",
+            "content-type": mimetype,
             "content-length": photo_length
         }
 
