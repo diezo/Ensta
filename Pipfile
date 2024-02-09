@@ -11,9 +11,11 @@ pyotp = "*"
 ntplib = "*"
 
 [dev-packages]
+autopep8 = "*"
 
 [requires]
 python_version = "3.10"
 
 [scripts]
 test = "python -m unittest discover -s test_ensta/ -t ."
+format = "autopep8 --in-place --recursive ."
