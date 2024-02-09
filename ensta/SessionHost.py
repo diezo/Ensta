@@ -26,6 +26,7 @@ from .lib import (
     APIError,
     ConversionError
 )
+from PIL import Image
 from ensta.lib.Searcher import create_search_obj, search_comments
 from urllib.parse import urlparse, parse_qs
 from .Utils import time_id, fb_uploader
@@ -929,7 +930,7 @@ class SessionHost:
         except JSONDecodeError:
             raise NetworkError("Response not a valid json.")
 
-    def _upload_video(self, media: str, upload_id: str | None = None, thumbnail=None, **kwargs) -> str:
+    def _upload_video(self, media: str, upload_id: str | None = None, thumbnail=0, **kwargs) -> str:
         """
         https://i.instagram.com/rupload_igvideo/
         video requires and image as thumbnail
@@ -980,6 +981,11 @@ class SessionHost:
         if response_json.get("status", "") != "ok":
             raise Exception()
 
+        if isinstance(thumbnail, (int, float)):
+            thumbnail_frame = video_editor.get_frame(thumbnail)
+            with tempfile.NamedTemporaryFile(suffix='.jpg') as thumbnail_file:
+                Image.fromarray(thumbnail_frame).save(thumbnail_file.name)
+                return self.upload_image(media=thumbnail_file.name, upload_id=upload_id)
         return self.upload_image(media=thumbnail, upload_id=upload_id)
 
     def upload_media(self, media: str, upload_id: str | None = None, **kwargs) -> str:
