@@ -1,7 +1,9 @@
 # Ensta - Free Instagram API
 [![PyPI](https://img.shields.io/pypi/v/ensta)](https://pypi.org/project/ensta)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
-[![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
+[![Downloads](https://static.pepy.tech/badge/ensta/month)](https://pepy.tech/project/ensta)
+
+![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)
 
 <!-- ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)  -->
 
@@ -368,11 +370,11 @@ mobile.unblock(123456789)  # Use UserID
 Any missing feature? Please raise an issue.
 
 ### Direct Messaging
-Only supported on mobile devices, so **Mobile Class** should be used.
+Tap on the headings to view code:
 
 <details>
 
-<summary>Send Text</summary>
+<summary>Send Message (Text)</summary>
 
 ```python
 from ensta import Mobile
@@ -387,7 +389,7 @@ direct.send_text("Hello", thread_id)
 
 <details>
 
-<summary>Send Photo</summary>
+<summary>Send Message (Picture)</summary>
 
 ```python
 from ensta import Mobile
@@ -440,7 +442,7 @@ print(profile.biography)
 
 </details>
 
-[Learn to use ensta](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)
+[**Learn to use ensta**](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)
 
 ## Discord Community
 Ask questions, discuss upcoming features and meet other developers.
@@ -450,14 +452,16 @@ Ask questions, discuss upcoming features and meet other developers.
 ## Support Me
 If you wish to support my work, please consider visiting this link:
 
+**PayPal:** [**@gitdiezo**](https://www.paypal.com/paypalme/gitdiezo)
+
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="160"/>](https://buymeacoffee.com/diezo)
 
 ## Contributors
 [![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)
 
-## Projects using Ensta
-- [**Margot Bot**](https://instagram.com/enstabott): An Instagram Bot that changes it's biography every day to reflect the current weekday. (IST Timezone)
-- [**Instagram REST API**](https://github.com/olgud/ensta-rest): A flask app that uses Ensta to deliver a third-party REST API for Instagram.
+## Ensta-Powered Projects
+1. [**Mr. Tornado**](https://instagram.com/nado.meow): An Instagram account which automatically updates it's biography to reflect the current weekday. (IST Timezone)
+2. [**Olgu's Ensta REST API**](https://github.com/olgud/ensta-rest): An unofficial Instagram REST API.
 
 ## Legal
 This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
