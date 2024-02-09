@@ -49,27 +49,32 @@ class Credentials:
         self.totp_token = totp_token
 
         # Existing Stored Credentials?
-        if session_data is not None: stored_dict: dict = json.loads(session_data)
-        else: stored_dict: dict = self.fetch_stored_dict(save_file)
+        if session_data is not None:
+            stored_dict: dict = json.loads(session_data)
+        else:
+            stored_dict: dict = self.fetch_stored_dict(save_file)
 
         stored_dict_valid: bool = True
 
         # Validate StoredDict
         for key in ("bearer", "user_id", "username", "phone_id", "identifier", "device_id"):
-            if key not in stored_dict.keys(): stored_dict_valid: bool = False
+            if key not in stored_dict.keys():
+                stored_dict_valid: bool = False
 
         # Load From StoredDict
         if stored_dict_valid and stored_dict.get("identifier") == identifier:
-            if logging: print("Loading from stored file...")
+            if logging:
+                print("Loading from stored file...")
             self.bearer = stored_dict.get("bearer")
             self.user_id = stored_dict.get("user_id")
-            self.username= stored_dict.get("username")
+            self.username = stored_dict.get("username")
             self.phone_id = stored_dict.get("phone_id")
             self.stored_identifier = stored_dict.get("identifier")
 
         # Create New Session
         else:
-            if logging: print("Creating new session...")
+            if logging:
+                print("Creating new session...")
             self.login(identifier, password, save_file)
 
     @staticmethod
@@ -81,18 +86,20 @@ class Credentials:
         """
 
         # File Doesn't Exist
-        if not os.path.exists(save_file) or not os.path.isfile(save_file): return dict()
+        if not os.path.exists(save_file) or not os.path.isfile(save_file):
+            return dict()
 
         # Read File Content
         with open(save_file, "r") as file:
             content: str = file.read().strip()
 
         # Is Content A Valid JSON?
-        try: return json.loads(content)
+        try:
+            return json.loads(content)
 
         # File Content Not A Valid JSON
-        except JSONDecodeError: return dict()
-
+        except JSONDecodeError:
+            return dict()
 
     def login(self, identifier: str, password: str, save_file: str) -> None:
         """
@@ -153,10 +160,13 @@ class Credentials:
                 )
 
             # Request Succeeded: Collect Data
-            if user_info is None: user_info: dict = response_dict.get("logged_in_user", dict())
+            if user_info is None:
+                user_info: dict = response_dict.get("logged_in_user", dict())
 
-            if response_headers is None: self.bearer: str = response.headers.get("ig-set-authorization")
-            else: self.bearer: str = response_headers.get("ig-set-authorization")
+            if response_headers is None:
+                self.bearer: str = response.headers.get("ig-set-authorization")
+            else:
+                self.bearer: str = response_headers.get("ig-set-authorization")
 
             self.user_id: str = str(user_info.get("pk"))
             self.phone_id = phone_id
@@ -201,8 +211,10 @@ class Credentials:
         raise NotImplementedError("TOTP 2FA not implemented yet!")
 
         # TOTP Token Supplied? Take Input | Use That
-        if self.totp_token is None: code: str = input("Enter TOTP Code: ")
-        else: code: str = self.new_totp_code(self.totp_token)
+        if self.totp_token is None:
+            code: str = input("Enter TOTP Code: ")
+        else:
+            code: str = self.new_totp_code(self.totp_token)
 
         while True:
             user_info, response_headers = self.bypass_totp(
@@ -212,7 +224,8 @@ class Credentials:
                 guid=guid
             )
 
-            if user_info is not None and response_headers is not None: break
+            if user_info is not None and response_headers is not None:
+                break
 
             if self.totp_token is None:
                 code: str = input(

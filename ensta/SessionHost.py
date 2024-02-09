@@ -58,7 +58,8 @@ class SessionHost:
         self.request_session = requests.Session()
         self.request_session.headers["user-agent"] = self.user_agent
 
-        if proxy is not None: self.request_session.proxies.update(proxy)
+        if proxy is not None:
+            self.request_session.proxies.update(proxy)
 
         session_data_json: dict = json.loads(session_data)
 
@@ -127,7 +128,8 @@ class SessionHost:
         """
 
         conversion_success, identifier = self._identifier(identifier, UID)
-        if not conversion_success: raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
+        if not conversion_success:
+            raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
         body_json = {
@@ -181,11 +183,11 @@ class SessionHost:
                         )
                 else:
                     if response_json["status"] != "ok":
-                        if response_json.get("spam", False) == True:
+                        if response_json.get("spam", False):
                             raise NetworkError("Spam Detected: Your actions are being limited by Instagram. Please slow down.")
-                        
+
                         raise NetworkError("Response \"Status\" not ok.")
-                    
+
                     raise NetworkError("'friendship_status' attribute not in response json.")
             else:
                 raise NetworkError("'status' attribute not in response json.")
@@ -200,7 +202,8 @@ class SessionHost:
         """
 
         conversion_success, identifier = self._identifier(identifier, UID)
-        if not conversion_success: raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
+        if not conversion_success:
+            raise ConversionError(f"Can't convert identifier \"{identifier}\" into 'UID'.")
 
         # Actual Request
         body_json = {
@@ -248,15 +251,17 @@ class SessionHost:
 
                         return UnfollowedStatus(
                             unfollowed=not (
-                                    response_json["friendship_status"]["following"] or
-                                    response_json["friendship_status"]["outgoing_request"]
+                                response_json["friendship_status"]["following"] or
+                                response_json["friendship_status"]["outgoing_request"]
                             ),
 
                             is_my_follower=response_json["friendship_status"]["followed_by"]
                         )
                 else:
-                    if response_json["status"] != "ok": raise NetworkError("Response \"Status\" not ok.")
-                    else: raise NetworkError("'friendship_status' attribute not in response json.")
+                    if response_json["status"] != "ok":
+                        raise NetworkError("Response \"Status\" not ok.")
+                    else:
+                        raise NetworkError("'friendship_status' attribute not in response json.")
             else:
                 raise NetworkError("'status' attribute not in response json.")
         except JSONDecodeError:
@@ -627,12 +632,14 @@ class SessionHost:
         required_text = "instagram://images?id="
 
         initial_index = response_text.find(required_text)
-        if initial_index == -1: raise APIError()
+        if initial_index == -1:
+            raise APIError()
 
         rest_text = response_text[initial_index + len(required_text): initial_index + len(required_text) + 25]
 
         end_index = rest_text.find('"')
-        if end_index == -1: raise APIError()
+        if end_index == -1:
+            raise APIError()
 
         return rest_text[:end_index]
 
@@ -670,11 +677,14 @@ class SessionHost:
         try:
             response_json: dict = http_response.json()
 
-            if "status" not in response_json: raise NetworkError("Key 'status' not in response json.")
-            if response_json.get("status") != "ok": raise NetworkError("Key 'status' not 'ok' in response json.")
+            if "status" not in response_json:
+                raise NetworkError("Key 'status' not in response json.")
+            if response_json.get("status") != "ok":
+                raise NetworkError("Key 'status' not 'ok' in response json.")
 
             data: json = response_json.get("form_data", {})
-            if len(data.keys()) == 0: raise NetworkError("Form data doesn't contain any keys.")
+            if len(data.keys()) == 0:
+                raise NetworkError("Form data doesn't contain any keys.")
 
             return PrivateInfo(
                 first_name=data.get("first_name", ""),
@@ -751,9 +761,10 @@ class SessionHost:
         try:
             response_json: dict = http_response.json()
 
-            if "status" not in response_json: raise NetworkError(
-                "Key 'status' not in response json. Possibly it's a fault from your side."
-            )
+            if "status" not in response_json:
+                raise NetworkError(
+                    "Key 'status' not in response json. Possibly it's a fault from your side."
+                )
             return response_json.get("status") == "ok"
 
         except JSONDecodeError:
@@ -809,9 +820,10 @@ class SessionHost:
         try:
             response_json: dict = http_response.json()
 
-            if "status" not in response_json: raise NetworkError(
-                "Key 'status' not in response json. Possibly it's a fault from your side."
-            )
+            if "status" not in response_json:
+                raise NetworkError(
+                    "Key 'status' not in response json. Possibly it's a fault from your side."
+                )
 
             return response_json.get("status") == "ok"
 
@@ -828,9 +840,10 @@ class SessionHost:
 
         media_path: Path = Path(media_path)
 
-        if media_path.suffix not in (".jpg", ".jpeg"): raise FileTypeError(
-            "Only jpg and jpeg image types are allowed to post."
-        )
+        if media_path.suffix not in (".jpg", ".jpeg"):
+            raise FileTypeError(
+                "Only jpg and jpeg image types are allowed to post."
+            )
 
         upload_id = arg_upload_id if arg_upload_id is not None else time_id()
         waterfall_id = str(uuid4())
@@ -869,10 +882,12 @@ class SessionHost:
         try:
             response_json: dict = http_response.json()
 
-            if response_json.get("status", "") != "ok": raise NetworkError("Response json key 'status' not ok.")
-            if response_json.get("upload_id", "") == "": raise NetworkError(
-                "Key 'upload_id' in response json doesn't exist or is invalid."
-            )
+            if response_json.get("status", "") != "ok":
+                raise NetworkError("Response json key 'status' not ok.")
+            if response_json.get("upload_id", "") == "":
+                raise NetworkError(
+                    "Key 'upload_id' in response json doesn't exist or is invalid."
+                )
 
             return str(response_json.get("upload_id"))
 
@@ -911,9 +926,10 @@ class SessionHost:
             headers=request_headers__get
         )
 
-        if http_response__get.status_code != 200: raise NetworkError(
-            "Video Upload 'GET' Request failed. Status code not 200."
-        )
+        if http_response__get.status_code != 200:
+            raise NetworkError(
+                "Video Upload 'GET' Request failed. Status code not 200."
+            )
 
         # POST Request
 
@@ -1008,7 +1024,8 @@ class SessionHost:
             "video_subtitles_enabled": "0"
         }
 
-        if alt_text != "": body_json["custom_accessibility_caption"] = alt_text
+        if alt_text != "":
+            body_json["custom_accessibility_caption"] = alt_text
 
         http_response = self.request_session.post(
             "https://www.instagram.com/api/v1/media/configure/",
@@ -1031,7 +1048,6 @@ class SessionHost:
         disable_comments: bool = False,
         like_and_view_counts_disabled: bool = False,
     ) -> bool:  # TODO: Implement Return Value
-
         """
         Creates a single post with multiple photos on your account.
         :param upload_ids: List (Upload IDs of files already uploaded using get_upload_id() method)
@@ -1120,10 +1136,11 @@ class SessionHost:
 
         video_success, video_duration, video_width, video_height = self.__upload_video(video_path, upload_id)
 
-        if not video_success: raise NetworkError(
-            "Error while uploading video to Instagram. Please try with a "
-            "different video, and make sure it's an MP4 video."
-        )
+        if not video_success:
+            raise NetworkError(
+                "Error while uploading video to Instagram. Please try with a "
+                "different video, and make sure it's an MP4 video."
+            )
 
         if not self.get_upload_id(
             media_path=thumbnail_path,
@@ -1175,7 +1192,8 @@ class SessionHost:
             "video_subtitles_enabled": "1" if video_subtitles_enabled else "0"
         }
 
-        if alt_text != "": body_json["custom_accessibility_caption"] = alt_text
+        if alt_text != "":
+            body_json["custom_accessibility_caption"] = alt_text
 
         http_response = self.request_session.post(
             "https://www.instagram.com/api/v1/media/configure_to_clips/",

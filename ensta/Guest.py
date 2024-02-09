@@ -27,7 +27,8 @@ class Guest:
         self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
         self.request_session.cookies.set("csrftoken", self.csrf_token)
 
-        if proxy is not None: self.request_session.proxies.update(proxy)
+        if proxy is not None:
+            self.request_session.proxies.update(proxy)
 
     def username_availability(self, username: str) -> bool | None:
         username = username.replace(" ", "").lower()
@@ -101,7 +102,8 @@ class Guest:
         }
 
         session: requests.Session = __session__
-        if __session__ is None: session: requests.Session = self.request_session
+        if __session__ is None:
+            session: requests.Session = self.request_session
 
         http_response: requests.Response = session.get(
             f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
@@ -207,7 +209,8 @@ class Guest:
 
         try:
             session: requests.Session = __session__
-            if __session__ is None: session: requests.Session = self.request_session
+            if __session__ is None:
+                session: requests.Session = self.request_session
 
             http_response = session.get(f"https://i.instagram.com/api/v1/users/{uid}/info/", headers=request_headers)
             response_json = http_response.json()
@@ -271,14 +274,15 @@ class Guest:
                     count_text = count
 
                 session: requests.Session = __session__
-                if __session__ is None: session: requests.Session = self.request_session
+                if __session__ is None:
+                    session: requests.Session = self.request_session
 
                 http_response = session.get(
                     f"https://www.instagram.com/api/v1/feed/user/{username}/username/?count={count_text}"
                     f"{current_max_id_text}",
                     headers=request_headers
                 )
-                
+
                 response_json = http_response.json()
 
                 if "status" not in response_json or "items" not in response_json:
@@ -287,7 +291,7 @@ class Guest:
 
                 if response_json["status"] != "ok":
                     yield None
-                    
+
                     if response_json.get("message", "") == "checkpoint_required":
                         raise RateLimitedError(
                             "IP Temporarily Flagged: Wait for some time, or switch "

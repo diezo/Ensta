@@ -2,7 +2,7 @@ from requests import Session, Response
 from .Credentials import Credentials
 from .lib.Exceptions import AuthenticationError, FileTypeError, NetworkError
 from uuid import uuid4
-from json import  JSONDecodeError
+from json import JSONDecodeError
 from pathlib import Path
 import string
 import json
@@ -10,6 +10,7 @@ from .parser.ProfileParser import parse_profile
 from .structures import Profile
 from .Direct import Direct
 from ensta.Utils import time_id, fb_uploader
+
 
 class Mobile:
 
@@ -38,13 +39,14 @@ class Mobile:
         save_file: str = "ensta-mobile-session.txt",
         skip_authorization: bool = False,
         logging: bool = False,
-        totp_token : str = None,
+        totp_token: str = None,
         session_data: str = None
     ) -> None:
 
         self.session = Session()
 
-        if proxy: self.session.proxies.update(proxy)
+        if proxy:
+            self.session.proxies.update(proxy)
 
         self.refresh_credentials(
             cycle=1,
@@ -69,7 +71,8 @@ class Mobile:
         skip_authorization: bool
     ) -> None:
 
-        if logging: print(f"Login Attempt: {cycle} (Max: {self.credentials_refresh_max_cycle})")
+        if logging:
+            print(f"Login Attempt: {cycle} (Max: {self.credentials_refresh_max_cycle})")
 
         if cycle >= self.credentials_refresh_max_cycle:
             raise AuthenticationError(
@@ -177,7 +180,8 @@ class Mobile:
         try:
             response_dict: dict = http_response.json()
 
-            if response_dict.get("status", "") != "ok": raise NetworkError("Response json key 'status' not ok.")
+            if response_dict.get("status", "") != "ok":
+                raise NetworkError("Response json key 'status' not ok.")
             if response_dict.get("upload_id") is None:
                 raise NetworkError(
                     "Key 'upload_id' in response json doesn't exist. Make sure there's "
@@ -186,7 +190,8 @@ class Mobile:
 
             return str(response_dict.get("upload_id"))
 
-        except JSONDecodeError: raise NetworkError("Response not a valid json.")
+        except JSONDecodeError:
+            raise NetworkError("Response not a valid json.")
 
     def change_profile_picture(self, image_path: str) -> bool:
         """
@@ -224,7 +229,8 @@ class Mobile:
 
             return response.json().get("status", "") == "ok"
 
-        except JSONDecodeError: return False
+        except JSONDecodeError:
+            return False
 
     def profile(
         self,
@@ -317,7 +323,8 @@ class Mobile:
             )
         )
 
-        try: return response.json().get("status", "") == "ok"
+        try:
+            return response.json().get("status", "") == "ok"
 
         except JSONDecodeError:
             raise NetworkError(
@@ -346,7 +353,8 @@ class Mobile:
             )
         )
 
-        try: return response.json().get("status", "") == "ok"
+        try:
+            return response.json().get("status", "") == "ok"
 
         except JSONDecodeError:
             raise NetworkError(
@@ -376,7 +384,8 @@ class Mobile:
             )
         )
 
-        try: return response.json().get("status", "") == "ok"
+        try:
+            return response.json().get("status", "") == "ok"
 
         except JSONDecodeError:
             raise NetworkError(
@@ -404,7 +413,8 @@ class Mobile:
             )
         )
 
-        try: return response.json().get("status", "") == "ok"
+        try:
+            return response.json().get("status", "") == "ok"
 
         except JSONDecodeError:
             raise NetworkError(

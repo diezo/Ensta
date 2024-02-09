@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from .BiographyLink import BiographyLink
 
+
 @dataclass
 class Profile:
 
