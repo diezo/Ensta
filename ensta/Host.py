@@ -30,6 +30,7 @@ class Host(SessionHost):
         proxy: dict[str, str] = None,
         totp_token: str = None
     ) -> None:
+
         """
         Login using your username/email and password.
         :param identifier: Your Instagram Username or Email
@@ -49,8 +50,7 @@ class Host(SessionHost):
         self.proxy: dict[str, str] = proxy
         self.totp_token = totp_token
 
-        if self.file is None and self.load is None:
-            self.file: str = self.DEFAULT_FILE
+        if self.file is None and self.load is None: self.file: str = self.DEFAULT_FILE
         self.load_session()
 
     def load_session(self, sid: str = None) -> any:
@@ -58,38 +58,29 @@ class Host(SessionHost):
             raise Exception("Neither Load Function nor File Name was passed to load SessionId.")
 
         if sid:
-            try:
-                super().__init__(sid, self.proxy)
-            except SessionError:
-                return self.new_session()
+            try: super().__init__(sid, self.proxy)
+            except SessionError: return self.new_session()
 
         elif self.load:
             session_data: str = self.load().strip()
 
-            if session_data == "":
-                return self.new_session()
+            if session_data == "": return self.new_session()
             else:
-                try:
-                    super().__init__(session_data, self.proxy)
-                except SessionError:
-                    return self.new_session()
+                try: super().__init__(session_data, self.proxy)
+                except SessionError: return self.new_session()
 
         elif self.file:
-            if not os.path.exists(self.file):
-                return self.new_session()
+            if not os.path.exists(self.file): return self.new_session()
 
             with open(self.file, "r") as reading:
-                if (session_data := reading.read().strip()) == "":
-                    return self.new_session()
+                if (session_data := reading.read().strip()) == "": return self.new_session()
 
                 else:
                     # noinspection PyBroadException
                     try:
-                        if json.loads(session_data)["identifier"] != self.identifier:
-                            raise Exception()
+                        if json.loads(session_data)["identifier"] != self.identifier: raise Exception()
                         super().__init__(session_data, self.proxy)
-                    except Exception:
-                        return self.new_session()
+                    except Exception: return self.new_session()
 
     def new_session(self) -> None:
         session_data: str = new_session_id(
@@ -98,12 +89,10 @@ class Host(SessionHost):
             proxy=self.proxy,
             totp_token=self.totp_token
         )
-
-        if self.save:
-            self.save(session_data)
+        
+        if self.save: self.save(session_data)
 
         if self.file:
-            with open(self.file, "w") as writing:
-                writing.write(session_data)
+            with open(self.file, "w") as writing: writing.write(session_data)
 
         self.load_session(session_data)
