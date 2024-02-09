@@ -4,3 +4,5 @@
 /test.py
 /sensitive
 /test.[*]
+/build
+**.egg-info
