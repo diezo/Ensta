@@ -1,7 +1,7 @@
 # Ensta - Free Instagram API
 [![PyPI](https://img.shields.io/pypi/v/ensta)](https://pypi.org/project/ensta)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
-[![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
+[![Downloads](https://static.pepy.tech/badge/ensta/month)](https://pepy.tech/project/ensta)
 
 <!-- ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)  -->
 
