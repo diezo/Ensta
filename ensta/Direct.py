@@ -5,9 +5,8 @@ import string
 import random
 from .lib.Exceptions import FileTypeError, NetworkError
 from json import JSONDecodeError
-import time
 from pathlib import Path
-
+from ensta.Utils import time_id
 
 class Direct:
 
@@ -78,7 +77,7 @@ class Direct:
         with open(media_path, "rb") as file:
             media_data: bytes = file.read()
 
-        upload_name: str = f"{str(int(time.time()) * 1000)}_0_{random.randint(1000000000, 9999999999)}"
+        upload_name: str = f"{time_id()}_0_{random.randint(1000000000, 9999999999)}"
         media_length: str = str(len(media_data))
 
         response: Response = self.session.post(

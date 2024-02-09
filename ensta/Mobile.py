@@ -4,14 +4,13 @@ from .lib.Exceptions import AuthenticationError, FileTypeError, NetworkError
 from uuid import uuid4
 from json import  JSONDecodeError
 from pathlib import Path
-import time
 import random
 import string
 import json
 from .parser.ProfileParser import parse_profile
 from .structures import Profile
 from .Direct import Direct
-
+from ensta.Utils import time_id
 
 class Mobile:
 
@@ -143,7 +142,7 @@ class Mobile:
                 "Only jpg and jpeg image types are allowed to upload."
             )
 
-        upload_id = arg_upload_id if arg_upload_id is not None else str(int(time.time()) * 1000)
+        upload_id = arg_upload_id if arg_upload_id is not None else time_id()
         upload_name = f"{upload_id}_0_{random.randint(1000000000, 9999999999)}"
 
         rupload_params = {

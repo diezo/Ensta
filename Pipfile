@@ -16,4 +16,4 @@ ntplib = "*"
 python_version = "3.10"
 
 [scripts]
-test = "python -m unittest"
+test = "python -m unittest discover -s test_ensta/ -t ."

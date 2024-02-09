@@ -1,4 +1,3 @@
-import time
 import json
 import random
 import string
@@ -24,6 +23,7 @@ from .lib import (
     ConversionError,
     FileTypeError
 )
+from ensta.Utils import time_id
 
 USERNAME, UID = 0, 1
 
@@ -832,7 +832,7 @@ class SessionHost:
             "Only jpg and jpeg image types are allowed to post."
         )
 
-        upload_id = arg_upload_id if arg_upload_id is not None else str(int(time.time()) * 1000)
+        upload_id = arg_upload_id if arg_upload_id is not None else time_id()
         waterfall_id = str(uuid4())
         upload_name = f"{upload_id}_0_{random.randint(1000000000, 9999999999)}"
 
@@ -885,7 +885,7 @@ class SessionHost:
         path: Path = Path(path)
         waterfall_id = str(uuid4())
 
-        upload_id = arg_upload_id if arg_upload_id is not None else str(int(time.time()) * 1000)
+        upload_id = arg_upload_id if arg_upload_id is not None else time_id()
         upload_name = f"{upload_id}_0_{random.randint(1000000000, 9999999999)}"
 
         rupload_params = {
@@ -1072,7 +1072,7 @@ class SessionHost:
             "archive_only": archive_only,
             "caption": caption,
             "children_metadata": [{"upload_id": upload_id} for upload_id in upload_ids],
-            "client_sidecar_id": str(int(time.time()) * 1000),
+            "client_sidecar_id": time_id(),
             "disable_comments": "1" if disable_comments else "0",
             "like_and_view_counts_disabled": "1" if like_and_view_counts_disabled else "0",
             "source_type": "library"
@@ -1116,7 +1116,7 @@ class SessionHost:
         :return: ReelUpload
         """
 
-        upload_id = str(int(time.time()) * 1000)
+        upload_id = time_id()
 
         video_success, video_duration, video_width, video_height = self.__upload_video(video_path, upload_id)
 
