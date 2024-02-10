@@ -459,9 +459,5 @@ If you wish to support my work, please consider visiting this link:
 ## Contributors
 [![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)
 
-## Ensta-Powered Projects
-1. [**Mr. Tornado**](https://instagram.com/nado.meow): An Instagram account which automatically updates it's biography to reflect the current weekday. (IST Timezone)
-2. [**Olgu's Ensta REST API**](https://github.com/olgud/ensta-rest): An unofficial Instagram REST API.
-
 ## Legal
 This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
