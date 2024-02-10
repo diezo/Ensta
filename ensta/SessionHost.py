@@ -1,4 +1,3 @@
-import time
 import mimetypes
 import json
 import random
@@ -23,11 +22,11 @@ from .lib import (
     IdentifierError,
     DevelopmentError,
     APIError,
-    ConversionError,
-    FileTypeError
+    ConversionError
 )
 from ensta.lib.Searcher import create_search_obj, search_comments
 from urllib.parse import urlparse, parse_qs
+from .Utils import time_id, fb_uploader
 from pyquery import PyQuery
 
 USERNAME, UID = 0, 1
@@ -186,8 +185,10 @@ class SessionHost:
                         )
                 else:
                     if response_json["status"] != "ok":
-                        if response_json.get("spam", False) == True:
-                            raise NetworkError("Spam Detected: Your actions are being limited by Instagram. Please slow down.")
+                        if response_json.get("spam", False):
+                            raise NetworkError(
+                                "Spam Detected: Your actions are being limited by Instagram. Please slow down."
+                            )
                         
                         raise NetworkError("Response \"Status\" not ok.")
                     
@@ -623,7 +624,13 @@ class SessionHost:
         http_response = self.request_session.get(share_url, headers=request_headers)
         return http_response.text
 
-    def get_post(self, share_url: str) -> PostDetail:
+    def post(self, share_url: str) -> PostDetail:
+        """
+        Get single post data from URL.
+        :param share_url: URL of target post
+        :return: PostDetail Object
+        """
+
         parsed_url = urlparse(share_url)
         code = parsed_url.path.removeprefix('/p/').removesuffix('/')
         response_text = self.get_raw_post(share_url)

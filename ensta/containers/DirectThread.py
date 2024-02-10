@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from .DirectThreadInviter import DirectThreadInviter
-from .DirectThreadLastPermanentItem import DirectThreadLastPermanentItem
 
 
 @dataclass(frozen=False)

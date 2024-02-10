@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Set, Callable, Generic, TypeVar, Sequence
+from typing import Any, Set, Generic, TypeVar, Sequence
 from dataclasses import dataclass
 
 E = TypeVar('E')
