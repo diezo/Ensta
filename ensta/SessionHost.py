@@ -15,6 +15,7 @@ from .containers.Post import Post
 from collections.abc import Generator
 from .containers.ProfileHost import ProfileHost
 from .containers.PrivateInfo import PrivateInfo
+from .containers.PostDetail import PostDetail
 from .containers import (FollowedStatus, UnfollowedStatus, FollowPerson, PhotoUpload, ReelUpload)
 from .lib import (
     SessionError,
@@ -25,7 +26,9 @@ from .lib import (
     ConversionError,
     FileTypeError
 )
-from ensta.Utils import time_id, fb_uploader
+from ensta.lib.Searcher import create_search_obj, search_comments
+from urllib.parse import urlparse, parse_qs
+from pyquery import PyQuery
 
 USERNAME, UID = 0, 1
 
@@ -594,13 +597,7 @@ class SessionHost:
 
         return self.guest.posts(username, count, __session__=self.request_session)
 
-    def get_post_id(self, share_url: str) -> str:
-        """
-        Returns post_id of specific post, given its share_url, which can further be used to like or add comment to that post.
-        :param share_url: Share URL of post. e.g. - https://www.instagram.com/p/Czr2yLmroCQ/
-        :return: PostID in text format
-        """
-
+    def get_raw_post(self, share_url: str) -> str:
         share_url: str = share_url.strip()
 
         request_headers = {
@@ -624,7 +621,37 @@ class SessionHost:
         }
 
         http_response = self.request_session.get(share_url, headers=request_headers)
-        response_text = http_response.text
+        return http_response.text
+
+    def get_post(self, share_url: str) -> PostDetail:
+        parsed_url = urlparse(share_url)
+        code = parsed_url.path.removeprefix('/p/').removesuffix('/')
+        response_text = self.get_raw_post(share_url)
+        doc = PyQuery(response_text)
+        url = urlparse(doc('meta[property="al:ios:url"]').attr('content'))
+        pk = parse_qs(url.query)['id'][0]
+        search_post = create_search_obj(code=code, pk=pk)
+        post = {}
+        comments = []
+        for json_script in doc('script[type="application/json"]'):
+            try:
+                json_data = json.loads(json_script.text)
+            except Exception as ex:
+                continue
+            comments.extend(search_comments(json_data))
+            for p in search_post(json_data):
+                post.update(p)
+        post['comments'] = comments
+        return PostDetail.from_data(post)
+
+    def get_post_id(self, share_url: str) -> str:
+        """
+        Returns post_id of specific post, given its share_url, which can further be used to like or add comment to that post.
+        :param share_url: Share URL of post. e.g. - https://www.instagram.com/p/Czr2yLmroCQ/
+        :return: PostID in text format
+        """
+
+        response_text = self.get_raw_post(share_url)
 
         required_text = "instagram://images?id="
 
@@ -1031,7 +1058,6 @@ class SessionHost:
         disable_comments: bool = False,
         like_and_view_counts_disabled: bool = False,
     ) -> bool:  # TODO: Implement Return Value
-
         """
         Creates a single post with multiple photos on your account.
         :param upload_ids: List (Upload IDs of files already uploaded using get_upload_id() method)

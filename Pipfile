@@ -9,6 +9,7 @@ moviepy = "*"
 cryptography = "*"
 pyotp = "*"
 ntplib = "*"
+pyquery = "*"
 
 [dev-packages]
 autopep8 = "*"
