@@ -35,7 +35,7 @@ class Mobile:
         identifier: str = None,
         password: str = None,
         proxy: dict[str, str] = None,
-        save_file: str = "ensta-mobile-session.txt",
+        save_file: str = "ensta-mobile-session.json",
         skip_authorization: bool = False,
         logging: bool = False,
         totp_token : str = None,

@@ -174,7 +174,8 @@ class Credentials:
                             "identifier": identifier,
                             "phone_id": phone_id,
                             "device_id": self.device_id
-                        })
+                        },
+                            indent=4)
                     )
 
         # Response Body Not A Valid JSON

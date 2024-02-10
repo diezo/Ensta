@@ -8,7 +8,7 @@ from .Authentication import new_session_id
 # noinspection PyMissingConstructor
 class Host(SessionHost):
 
-    DEFAULT_FILE: str = "ensta-web-session.txt"
+    DEFAULT_FILE: str = "ensta-web-session.json"
 
     identifier: str = None
     password: str = None
@@ -20,6 +20,8 @@ class Host(SessionHost):
     proxy: dict[str, str] = None
     totp_token: str = None
 
+    skip_auth_verification: bool
+
     def __init__(
         self,
         identifier: str,
@@ -28,7 +30,8 @@ class Host(SessionHost):
         save: any = None,
         load: any = None,
         proxy: dict[str, str] = None,
-        totp_token: str = None
+        totp_token: str = None,
+        skip_auth_verification: bool = False
     ) -> None:
 
         """
@@ -49,6 +52,7 @@ class Host(SessionHost):
         self.load: any = load
         self.proxy: dict[str, str] = proxy
         self.totp_token = totp_token
+        self.skip_auth_verification = skip_auth_verification
 
         if self.file is None and self.load is None: self.file: str = self.DEFAULT_FILE
         self.load_session()
@@ -58,7 +62,12 @@ class Host(SessionHost):
             raise Exception("Neither Load Function nor File Name was passed to load SessionId.")
 
         if sid:
-            try: super().__init__(sid, self.proxy)
+            try:
+                super().__init__(
+                    session_data=sid,
+                    proxy=self.proxy,
+                    skip_auth_verification=self.skip_auth_verification
+                )
             except SessionError: return self.new_session()
 
         elif self.load:
@@ -66,7 +75,12 @@ class Host(SessionHost):
 
             if session_data == "": return self.new_session()
             else:
-                try: super().__init__(session_data, self.proxy)
+                try:
+                    super().__init__(
+                        session_data=session_data,
+                        proxy=self.proxy,
+                        skip_auth_verification=self.skip_auth_verification
+                    )
                 except SessionError: return self.new_session()
 
         elif self.file:
@@ -79,7 +93,11 @@ class Host(SessionHost):
                     # noinspection PyBroadException
                     try:
                         if json.loads(session_data)["identifier"] != self.identifier: raise Exception()
-                        super().__init__(session_data, self.proxy)
+                        super().__init__(
+                            session_data=session_data,
+                            proxy=self.proxy,
+                            skip_auth_verification=self.skip_auth_verification
+                        )
                     except Exception: return self.new_session()
 
     def new_session(self) -> None:
@@ -93,6 +111,11 @@ class Host(SessionHost):
         if self.save: self.save(session_data)
 
         if self.file:
-            with open(self.file, "w") as writing: writing.write(session_data)
+            with open(self.file, "w") as writing: writing.write(
+                json.dumps(
+                    json.loads(session_data),
+                    indent=4
+                )
+            )
 
         self.load_session(session_data)
