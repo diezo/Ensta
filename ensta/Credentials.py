@@ -1,7 +1,6 @@
 import json
 from json import JSONDecodeError
 from requests import Session, Response
-import os
 from uuid import uuid4
 from .PasswordEncryption import PasswordEncryption
 from .lib.Exceptions import AuthenticationError
@@ -39,7 +38,7 @@ class Credentials:
         password: str,
         user_agent: str,
         session: Session,
-        save_file: str,
+        save_folder: str,
         totp_token: str,
         session_data: str,
         logging: bool = False
@@ -51,7 +50,7 @@ class Credentials:
 
         # Existing Stored Credentials?
         if session_data is not None: stored_dict: dict = json.loads(session_data)
-        else: stored_dict: dict = self.fetch_stored_dict(save_file)
+        else: stored_dict: dict = SessionManager.load_from_file(identifier, password, save_folder)
 
         stored_dict_valid: bool = True
 
@@ -71,35 +70,15 @@ class Credentials:
         # Create New Session
         else:
             if logging: print("Creating new session...")
-            self.login(identifier, password, save_file)
-
-    @staticmethod
-    def fetch_stored_dict(save_file: str) -> dict:
-        """
-        Reads the stored session file content and returns its JSON.
-        :param save_file: File Path
-        :return: JSON Content or None
-        """
-
-        # File Doesn't Exist
-        if not os.path.exists(save_file) or not os.path.isfile(save_file): return dict()
-
-        # Read File Content
-        content: str = SessionManager.load_from_file(save_file)
-
-        # Is Content A Valid JSON?
-        try: return json.loads(content)
-
-        # File Content Not A Valid JSON
-        except JSONDecodeError: return dict()
+            self.login(identifier, password, save_folder)
 
 
-    def login(self, identifier: str, password: str, save_file: str) -> None:
+    def login(self, identifier: str, password: str, save_folder: str) -> None:
         """
         Takes identifier and password, authenticates, stores new session in file, and returns a bunch of session data.
         :param identifier: Username or Email
         :param password: Password
-        :param save_file: File path to store new session in. Empty to skip storing session.
+        :param save_folder: Folder path to store new session in. Empty to skip storing session.
         :return: Tuple of session data
         """
 
@@ -164,8 +143,14 @@ class Credentials:
             self.stored_identifier = identifier
 
             # Save Session in File
-            if save_file != "":
-                SessionManager.save_to_file(save_file, identifier, phone_id, self)
+            if save_folder != "":
+                SessionManager.save_to_file(
+                    folder_name=save_folder,
+                    identifier=identifier,
+                    password=password,
+                    phone_id=phone_id,
+                    instance=self
+                )
 
         # Response Body Not A Valid JSON
         except JSONDecodeError:
