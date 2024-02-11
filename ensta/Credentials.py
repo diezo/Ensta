@@ -6,6 +6,7 @@ from uuid import uuid4
 from .PasswordEncryption import PasswordEncryption
 from .lib.Exceptions import AuthenticationError
 from requests.models import CaseInsensitiveDict
+from .SessionManager import SessionManager
 import pyotp
 import ntplib
 
@@ -84,8 +85,7 @@ class Credentials:
         if not os.path.exists(save_file) or not os.path.isfile(save_file): return dict()
 
         # Read File Content
-        with open(save_file, "r") as file:
-            content: str = file.read().strip()
+        content: str = SessionManager.load_from_file(save_file)
 
         # Is Content A Valid JSON?
         try: return json.loads(content)
@@ -165,18 +165,7 @@ class Credentials:
 
             # Save Session in File
             if save_file != "":
-                with open(save_file, "w") as file:
-                    file.write(
-                        json.dumps({
-                            "bearer": self.bearer,
-                            "user_id": self.user_id,
-                            "username": self.username,
-                            "identifier": identifier,
-                            "phone_id": phone_id,
-                            "device_id": self.device_id
-                        },
-                            indent=4)
-                    )
+                SessionManager.save_to_file(save_file, identifier, phone_id, self)
 
         # Response Body Not A Valid JSON
         except JSONDecodeError:
