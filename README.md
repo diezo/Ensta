@@ -483,8 +483,8 @@ Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
-## Support Me
-Want to support this project? Please consider buying a coffee here:
+## ❤ Donate
+Want to support this project? Please consider donating here:
 <!--**PayPal:** [**@gitdiezo**](https://www.paypal.com/paypalme/gitdiezo)-->
 
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="160"/>](https://buymeacoffee.com/diezo)
