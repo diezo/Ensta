@@ -5,9 +5,10 @@ from uuid import uuid4
 from json import  JSONDecodeError
 from pathlib import Path
 import string
+import datetime
 import json
 from .parser.ProfileParser import parse_profile
-from .structures import Profile
+from .structures import Profile, StoryLink
 from .Direct import Direct
 from ensta.Utils import time_id, fb_uploader
 
@@ -410,4 +411,108 @@ class Mobile:
             raise NetworkError(
                 "Unable to unblock. Is the user_id correct? Username should not be used. Try using another account, switch "
                 "to a different network, or use reputed proxies."
+            )
+
+    def upload_story(
+            self,
+            upload_id: str,
+            resolution: tuple[int, int] = (1080, 1920),
+            entities: list[StoryLink] = None
+    ) -> bool:
+        """
+        Uploads media to story
+        :param upload_id: Returned by get_upload_id(media_path)
+        :param resolution: Resolution (Width, Height) of device canvas
+        :param entities: Entities like stickers, links etc.
+        :return: Boolean (Uploaded or not)
+        """
+
+        date = datetime.datetime.now()
+
+        data: dict = {
+            "supported_capabilities_new": "[{\"name\":\"SUPPORTED_SDK_VERSIONS\",\"value\":\"131.0,132.0,133.0,134.0,135.0,136.0,137.0,138.0,139.0,140.0,141.0,142.0,143.0,144.0,145.0,146.0,147.0,148.0,149.0,150.0,151.0,152.0,153.0,154.0,155.0,156.0,157.0,158.0,159.0\"},{\"name\":\"FACE_TRACKER_VERSION\",\"value\":\"14\"},{\"name\":\"COMPRESSION\",\"value\":\"ETC2_COMPRESSION\"},{\"name\":\"gyroscope\",\"value\":\"gyroscope_enabled\"}]",
+            "has_original_sound": "1",
+            "camera_entry_point": "12",
+            "original_media_type": "1",
+            "camera_session_id": str(uuid4()),
+            "date_time_digitalized": f"{date.year}:{date.month:02}:{date.day:02} {date.hour:02}:{date.minute:02}:{date.second:02}",
+            "camera_model": "sdk_gphone64_x86_64",
+            "scene_capture_type": "",
+            "timezone_offset": (datetime.datetime.fromtimestamp(date.timestamp() * 1e-3) - datetime.datetime.utcfromtimestamp(date.timestamp() * 1e-3)).seconds,
+            "client_shared_at": int(date.timestamp()),
+            "story_sticker_ids": "link_sticker_default",
+            "configure_mode": "1",
+            "source_type": "3",
+            "camera_position": "front",
+            "_uid": self.user_id,
+            "device_id": self.device_id,
+            "composition_id": str(uuid4()),
+            "_uuid": self.phone_id,
+            "creation_surface": "camera",
+            "can_play_spotify_audio": "1",
+            "date_time_original": f"{date.year}:{date.month:02}:{date.day:02} {date.hour:02}:{date.minute:02}:{date.second:02}",
+            "capture_type": "normal",
+            "upload_id": upload_id,
+            "client_timestamp": int(date.timestamp()),
+            "private_mention_sharing_enabled": "1",
+            "media_transformation_info": f"{{\"width\":\"{resolution[0]}\",\"height\":\"{resolution[1]}\",\"x_transform\":\"0\",\"y_transform\":\"0\",\"zoom\":\"1.0\",\"rotation\":\"0.0\",\"background_coverage\":\"0.0\"}}",
+            "camera_make": "Google",
+            "device": {
+                "manufacturer": "Google",
+                "model": "sdk_gphone64_x86_64",
+                "android_version": 31,
+                "android_release": "12"
+            },
+            "edits": {
+                "filter_type": 0,
+                "filter_strength": 1.0,
+                "crop_original_size": [
+                    float(resolution[0]),
+                    float(resolution[1])
+                ]
+            },
+            "extra": {
+                "source_width": resolution[0],
+                "source_height": resolution[1]
+            }
+        }
+
+        tap_models: list[dict] = []
+
+        if entities is not None:
+            for entity in entities:
+
+                # A Story Link?
+                if isinstance(entity, StoryLink):
+                    tap_models.append(
+                        {
+                            "x": entity.x,
+                            "y": entity.y,
+                            "z": entity.z,
+                            "width": entity.width,
+                            "height": entity.height,
+                            "rotation": entity.rotation,
+                            "type": entity.type,
+                            "link_type": entity.link_type,
+                            "custom_cta": entity.title if entity.title != "" else entity.url,
+                            "url": entity.url,
+                            "is_sticker": entity.is_sticker,
+                            "tap_state": entity.tap_state,
+                            "tap_state_str_id": entity.tap_state_str_id,
+                        }
+                    )
+
+        if len(tap_models) > 0: data["tap_models"] = tap_models
+
+        response: Response = self.session.post(
+            url="https://i.instagram.com/api/v1/media/configure_to_story/",
+            data={"signed_body": "SIGNATURE." + json.dumps(data)}
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Failed to publish story. Is your media correct? Are all entities correct? "
+                "Maybe you're being rate limited, try using a different account."
             )

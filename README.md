@@ -369,8 +369,44 @@ mobile.unblock(123456789)  # Use UserID
 
 Any missing feature? Please raise an issue.
 
+### Stories
+
+<details>
+
+<summary>Upload Story (Picture)</summary>
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)
+
+upload_id = mobile.get_upload_id("image.jpg")
+
+mobile.upload_story(upload_id)
+```
+
+</details>
+
+<details>
+
+<summary>Upload Story (Picture) + Link Sticker</summary>
+
+```python
+from ensta import Mobile
+from ensta.structures import StoryLink
+
+mobile = Mobile(username, password)
+
+upload_id = mobile.get_upload_id("image.jpg")
+
+mobile.upload_story(upload_id, entities=[
+    StoryLink(title="Google", url="https://google.com")
+])
+```
+
+</details>
+
 ### Direct Messaging
-Tap on the headings to view code:
 
 <details>
 
@@ -403,8 +439,6 @@ direct.send_photo(media_id, thread_id)
 ```
 
 </details>
-
-We'll implement more features soon.
 
 ## Basic Usage
 
