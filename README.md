@@ -425,7 +425,7 @@ direct.send_text("Hello", thread_id)
 
 <details>
 
-<summary>Send Message (Picture)</summary>
+<summary>Send Photo</summary>
 
 ```python
 from ensta import Mobile
@@ -440,9 +440,11 @@ direct.send_photo(media_id, thread_id)
 
 </details>
 
-## Basic Usage
+## Supported Classes
 
 <details>
+
+<br>
 
 <summary><b>Host Class</b> (Authenticated)</summary>
 
@@ -461,6 +463,8 @@ print(profile.biography)
 
 <details>
 
+<br>
+
 <summary><b>Guest Class</b> (Non-Authenticated)</summary>
 
 Doesn't require login, but has limited features.
@@ -472,6 +476,24 @@ guest = Guest()
 profile = guest.profile("leomessi")
 
 print(profile.biography)
+```
+
+</details>
+
+<details>
+
+<br>
+
+<summary><b>Mobile Class</b> (Authenticated)</summary>
+
+Requires login through username & password. Has access to more features as it uses the Mobile API.
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)
+
+mobile.follow("leomessi")
 ```
 
 </details>
