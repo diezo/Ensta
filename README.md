@@ -37,7 +37,7 @@ print(profile.is_private)
 print(profile.profile_picture_url_hd)
 ```
 
-## Features List
+## Features
 Tap on the headings to view code:
 
 <details>
@@ -386,7 +386,8 @@ mobile.unblock(123456789)  # Use UserID
 
 Any missing feature? Please raise an issue.
 
-### Stories
+## Stories
+Tap on the headings to view code:
 
 <details>
 
@@ -423,7 +424,10 @@ mobile.upload_story(upload_id, entities=[
 
 </details>
 
-### Direct Messaging
+We're working on adding more features.
+
+## Direct Messaging
+Tap on the headings to view code:
 
 <details>
 
@@ -456,6 +460,8 @@ direct.send_photo(media_id, thread_id)
 ```
 
 </details>
+
+We're working on adding more features.
 
 ## Supported Classes
 
