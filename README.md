@@ -20,7 +20,24 @@ Python [**3.10**](https://www.python.org/downloads/) or later is required.
 $ pip install ensta
 ```
 
-## Supported Actions
+## Example
+An example using the Host Class:
+```python
+from ensta import Host
+
+# Login
+host = Host(username, password)
+
+# Fetch someone's profile
+profile = host.profile("leomessi")
+
+# Print profile info
+print(profile.biography)
+print(profile.is_private)
+print(profile.profile_picture_url_hd)
+```
+
+## Features List
 Tap on the headings to view code:
 
 <details>
