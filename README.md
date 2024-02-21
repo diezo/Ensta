@@ -37,7 +37,8 @@ print(profile.is_private)
 print(profile.profile_picture_url_hd)
 ```
 
-## 📌 Proxy Referral Links
+## 📌 Recommended Proxies
+I get commissions for purchases made through these links:
 - [**ProxySeller**](https://proxy-seller.com/?partner=ZE0NW8E50UJ4RN) - Apply Coupon: **QVMACW_700935** (Residential + LTE Proxies)
 - [**WebShare**](https://www.webshare.io/?referral_code=zeasut9nmipd) - 10 Free Proxies
 
