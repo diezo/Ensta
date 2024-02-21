@@ -39,7 +39,8 @@ print(profile.profile_picture_url_hd)
 
 ## Recommended Proxies
 I get commissions for purchases made through these links.
-- [**WebShare Proxies (Free Trial)**](https://www.webshare.io/?referral_code=zeasut9nmipd) - What I personally use
+- [**ProxySeller**](https://proxy-seller.com/?partner=ZE0NW8E50UJ4RN) - Apply Coupon: **QVMACW_700935** (Residential + LTE Proxies)
+- [**WebShare**](https://www.webshare.io/?referral_code=zeasut9nmipd) - 10 Free Proxies
 
 ## Features
 Tap on the headings to view code:
