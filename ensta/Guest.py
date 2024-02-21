@@ -383,7 +383,7 @@ class Guest:
 
                 for each_item in response_json["items"]:
                     if generated_count < count or count == 0:
-                        yield self.__process_post_data(each_item["media"])
+                        yield self.__process_post_data(each_item["media"], reel=True)
                         generated_count += 1
 
                 if (generated_count < count or count == 0) and response_json.get(
@@ -397,8 +397,7 @@ class Guest:
                 raise NetworkError("HTTP Response is not a valid JSON.")
 
     @staticmethod
-    def __process_post_data(data: dict) -> Post:
-
+    def __process_post_data(data: dict, reel: bool = False) -> Post:
         caption: dict | None = data.get("caption", None)
 
         caption_text = ""
@@ -439,7 +438,9 @@ class Guest:
             )
 
         return Post(
-            share_url=f"https://www.instagram.com/p/{data.get('code', '')}",
+            share_url=f"https://www.instagram.com/reel/{data.get('code', '')}"
+            if reel
+            else f"https://www.instagram.com/p/{data.get('code', '')}/",
             taken_at=data.get("taken_at", 0),
             post_id=data.get("pk", ""),
             media_type=data.get("media_type", 0),
