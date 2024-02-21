@@ -40,7 +40,7 @@ print(profile.profile_picture_url_hd)
 ## 📌 Recommended Proxy
 <a href="https://www.abcproxy.com/?code=O4H3OC0O"><img src="https://www.abcproxy.com/img/commission/2/760X90.png" ></a>
 
-If you're planning to use Ensta in the cloud or wish to bypass the rate limits, you must use a reputed proxy provider offering residential proxies. Here's what we recommend:
+If you're planning to use Ensta in the cloud or wish to bypass the rate limits, you should use a reputed proxy provider offering residential proxies. Here's what we recommend:
 
 - Pure Residential IPs
 - Invalid IP Refunds
