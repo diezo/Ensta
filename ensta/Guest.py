@@ -311,15 +311,21 @@ class Guest:
                 raise NetworkError("HTTP Response is not a valid JSON.")
 
     def reels(
-        self, user_id: str, count: int = 0, __session__: requests.Session | None = None
+        self,
+        uid: str | int,
+        count: int = 0,
+        __session__: requests.Session | None = None,
     ) -> Generator[Post, None, None]:
         """
         Generates a list of target's reels of specified size.
-        :param user_id: Target's user ID
+        :param uid: Target's user ID
         :param count: Amount of reels to fetch
         :param __session__: (Optional) Custom request session object
         :return: Generator which yields each reel's data
         """
+
+        uid = str(uid).replace(" ", "")
+
         request_headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
