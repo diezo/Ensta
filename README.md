@@ -542,6 +542,8 @@ Ask questions, discuss upcoming features and meet other developers.
 ## Support Me
 If you're benefitting from my work and wish to support me, please consider visiting this link:
 
+<ins>**LTC: ltc1qgpy7thxfekd3g8a2ejsaclg6jt2fwk8exq5x6v**</ins>
+
 <ins>**USDT (TRC20): THBBn3JW5gqWYD2KetdrDifRFWfpZcKDGv**</ins>
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/sonii)
