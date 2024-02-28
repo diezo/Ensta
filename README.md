@@ -410,11 +410,7 @@ mobile.unblock(123456789)  # Use UserID
 
 </details>
 
-Any missing feature? Please raise an issue.
-
-## Stories
-Tap on the headings to view code:
-
+### Stories
 <details>
 
 <summary>Upload Story (Picture)</summary>
@@ -450,11 +446,7 @@ mobile.upload_story(upload_id, entities=[
 
 </details>
 
-We're working on adding more features.
-
-## Direct Messaging
-Tap on the headings to view code:
-
+### Direct Messaging
 <details>
 
 <summary>Send Message (Text)</summary>
@@ -487,7 +479,7 @@ direct.send_photo(media_id, thread_id)
 
 </details>
 
-We're working on adding more features.
+Any missing feature? Please raise an issue.
 
 ## Supported Classes
 
@@ -554,12 +546,8 @@ Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
-## Support Me
-If you're benefitting from my work and wish to support me, please consider visiting this link:
-
-<ins>**LTC: ltc1qgpy7thxfekd3g8a2ejsaclg6jt2fwk8exq5x6v**</ins>
-
-<ins>**USDT (TRC20): THBBn3JW5gqWYD2KetdrDifRFWfpZcKDGv**</ins>
+## Donate ❤️
+If this library has added value to your projects, you may consider supporting me in the development of this library by donating here:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/sonii)
 
