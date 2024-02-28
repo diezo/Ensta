@@ -516,7 +516,7 @@ print(profile.biography)
 
 <summary><b>Guest Class</b> (Non-Authenticated)</summary>
 
-Doesn't require login, but has limited features.
+Doesn't require login, but has limited features. See [this](https://github.com/diezo/Ensta?tab=readme-ov-file#bypass-ip-restrictions) if this class isn't working.
 
 ```python
 from ensta import Guest
@@ -533,9 +533,9 @@ print(profile.biography)
 
 <br>
 
-<summary><b>Mobile Class</b> (Authenticated)</summary>
+<summary><b>Mobile Class</b> (New)</summary>
 
-Requires login through username & password. Has access to more features as it uses the Mobile API.
+Same as **Host Class** but uses the Mobile API. We're working on adding more features to this class.
 
 ```python
 from ensta import Mobile
