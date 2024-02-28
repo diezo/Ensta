@@ -53,13 +53,27 @@ Tap on the headings to view code:
 
 <details>
 
-<summary>Proxy Support</summary><br>
+<summary>Using Proxies</summary><br>
+
+When you should use a proxy:
+- You're being rate limited when using the **Guest Class**.
+- Ensta is not working because your Home IP is flagged.
+- You're deploying Ensta to the cloud. (Instagram blocks requests from IPs of cloud providers, so a proxy must be used)
 
 ```python
 from ensta import Host
 
-host = Host(username, password, proxy={"http": "http://1.2.3.4", "https": "https://1.2.3.4"})
+host = Host(
+    username,
+    password,
+    proxy={
+        "http": "socks5://username:password@host:port",
+        "https": "socks5://username:password@host:port"
+    }
+)
 ```
+
+Ensta uses the same proxy settings as the **requests** module.
 
 </details>
 
