@@ -79,12 +79,18 @@ Ensta uses the same proxy settings as the **requests** module.
 
 <details>
 
-<summary>Username Password Login</summary><br>
+<summary>Username-Password Login</summary><br>
+
+We recommend using your email address to sign in. But if you have multiple accounts created on the same email address, you may consider using your username instead.
 
 ```python
 from ensta import Host
 
-host = Host(username, password)  # Email can also be used
+# Recommended
+host = Host(email, password)
+
+# This also works
+host = Host(username, password)
 ```
 
 </details>
@@ -93,11 +99,13 @@ host = Host(username, password)  # Email can also be used
 
 <summary>SessionData Login</summary><br>
 
+Ensta will automatically save your login sessions inside a directory named **ensta-sessions** and reuse them every time you log in using the same username-password combination.
+
+But, if you wish to load a custom session, you can use the **SessionHost Class** instead of **Host Class** by passing your session data as a string.
+
 ```python
 from ensta import SessionHost
 
-# "session_data" is stored in "ensta-session.txt" file by default.
-# you can also get it using "host.session_data"
 host = SessionHost(session_data)
 ```
 
@@ -122,9 +130,7 @@ host = Host(
 )
 ```
 
-**SMS Based**
-
-No need to configure anything. Ensta will automatically ask for SMS OTP in the runtime.
+**SMS Based:** Ensta will prompt you for the OTP in the runtime.
 
 </details>
 
