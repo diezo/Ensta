@@ -37,16 +37,11 @@ print(profile.is_private)
 print(profile.profile_picture_url_hd)
 ```
 
-## 📌 Recommended Proxy
-<a href="https://www.abcproxy.com/?code=O4H3OC0O"><img src="https://www.abcproxy.com/img/commission/2/760X90.png" ></a>
-
-If you're planning to use Ensta in the cloud or wish to bypass the rate limits, you should use a reputed proxy provider offering residential proxies. Here's what we recommend:
-
-- Pure Residential IPs
-- Invalid IP Refunds
-- SOCKS5 Support
-
-[**Invitation Code: O4H3OC0O**](https://www.abcproxy.com/?code=O4H3OC0O)
+## Bypass IP Restrictions
+If you're being rate limited when using Ensta on your home network or Ensta doesn't work when you deploy your app to the cloud, you should consider using a reputed proxy. Here's how to do that:
+1. Visit [abcproxy](https://www.abcproxy.com/?code=O4H3OC0O) and apply coupon ```O4H3OC0O``` for additional discount.
+2. Buy a residential SOCKS5 proxy there.
+3. Configure Ensta to use that proxy. See the [**Features**](https://github.com/diezo/ensta?tab=readme-ov-file#features) section.
 
 ## Features
 Tap on the headings to view code:
