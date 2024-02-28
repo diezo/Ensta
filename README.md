@@ -94,9 +94,9 @@ host = Host(username, password)
 
 <summary>SessionData Login</summary><br>
 
-Ensta will automatically save your login sessions inside a directory named **ensta-sessions** and reuse them every time you log in using the same username-password combination.
+Ensta will automatically save your login session in a file named ```ensta-session.json``` and reuse it until it expires.
 
-But, if you wish to load a custom session, you can use the **SessionHost Class** instead of **Host Class** by passing your session data as a string.
+But, if you wish to load a session manually, you can use the **SessionHost Class** instead of **Host Class** by passing your session data (which is stored inside ```ensta-session.json```) as a string.
 
 ```python
 from ensta import SessionHost
