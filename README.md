@@ -7,21 +7,19 @@
 
 <!-- ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)  -->
 
-Ensta uses a combination of Instagram's Web API & Mobile API making it a reliable choice over other third-party libraries. Also unlike other libraries, ensta always stays up-to-date.
+Ensta is a simple, reliable and up-to-date python package for Instagram API.
 
-Both authenticated & non-authenticated requests are supported.
+Both **authenticated** and **anonymous** requests are supported.
 
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="160"/>](https://buymeacoffee.com/sonii)
 
 ## Installation
 Python [**3.10**](https://www.python.org/downloads/) or later is required.
 
-```shell
-$ pip install ensta
-```
+    pip install ensta
 
 ## Example
-An example using the Host Class:
+Here's how to fetch someone's profile info:
 ```python
 from ensta import Host
 
@@ -41,9 +39,9 @@ print(profile.profile_picture_url_hd)
 If you're being rate limited when using Ensta on your home network or Ensta doesn't work when you deploy your app to the cloud, you should consider using a reputed proxy. Here's how to do that:
 1. Visit [abcproxy](https://www.abcproxy.com/?code=O4H3OC0O) and apply coupon ```O4H3OC0O``` for additional discount.
 2. Buy a residential SOCKS5 proxy there.
-3. Configure Ensta to use that proxy. See the [**Features**](https://github.com/diezo/ensta?tab=readme-ov-file#features) section.
+3. Configure Ensta to use that proxy. See the [**Supported Actions**](https://github.com/diezo/ensta?tab=readme-ov-file#supported-actions) section.
 
-## Features
+## Supported Actions
 Tap on the headings to view code:
 
 <details>
@@ -539,17 +537,17 @@ mobile.follow("leomessi")
 
 </details>
 
-[**Learn to use ensta**](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)
+<!--[**Learn to use ensta**](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)-->
 
-## Discord Community
-Ask questions, discuss upcoming features and meet other developers.
+## Any Questions?
+Join ensta's discord server and get help from the community.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
-## Donate ❤️
-If this library has added value to your projects, you may consider supporting me in the development of this library by donating here:
+## Support Me
+Help me add more features to this library and keep it up-to-date:
 
-[<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="150"/>](https://buymeacoffee.com/sonii)
+[<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="170"/>](https://buymeacoffee.com/sonii)
 
 ## Contributors
 [![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)
