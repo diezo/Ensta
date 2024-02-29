@@ -479,6 +479,7 @@ direct.send_photo(media_id, thread_id)
 
 </details>
 
+<!--
 ## Supported Classes
 
 <details>
@@ -536,6 +537,23 @@ mobile.follow("leomessi")
 ```
 
 </details>
+-->
+
+## Anonymous Requests
+To fetch profile information without logging in, use the **Guest Class**:
+
+```python
+from ensta import Guest
+
+# No login required
+guest = Guest()
+
+# Fetch someone's profile
+profile = guest.profile("leomessi")
+
+# Access information
+print(profile.biography)
+```
 
 <!--[**Learn to use ensta**](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)-->
 
