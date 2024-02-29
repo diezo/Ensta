@@ -1,9 +1,9 @@
 # Ensta - Simple Instagram API
 [![PyPI](https://img.shields.io/pypi/v/ensta)](https://pypi.org/project/ensta)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
-[![Downloads](https://static.pepy.tech/badge/ensta/month)](https://pepy.tech/project/ensta)
+[![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 
-![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)
+<!--![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)-->
 
 ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)
 
@@ -11,7 +11,7 @@ Ensta is a simple, reliable and up-to-date python package for Instagram API.
 
 Both **authenticated** and **anonymous** requests are supported.
 
-[<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="160"/>](https://buymeacoffee.com/sonii)
+[<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="180"/>](https://buymeacoffee.com/sonii)
 
 ## Installation
 Python [**3.10**](https://www.python.org/downloads/) or later is required.
@@ -406,8 +406,6 @@ mobile.unblock(123456789)  # Use UserID
 
 </details>
 
-Any missing feature? Please raise an issue.
-
 ## Stories
 <details>
 
@@ -444,7 +442,7 @@ mobile.upload_story(upload_id, entities=[
 
 </details>
 
-## Direct Messaging
+## Direct Message
 <details>
 
 <summary>Send Text Message</summary>
@@ -543,13 +541,10 @@ To fetch profile information without logging in, use the **Guest Class**:
 ```python
 from ensta import Guest
 
-# No login required
 guest = Guest()
 
-# Fetch someone's profile
 profile = guest.profile("leomessi")
 
-# Access information
 print(profile.biography)
 ```
 
