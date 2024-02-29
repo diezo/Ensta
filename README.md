@@ -475,16 +475,17 @@ direct.send_photo(media_id, thread_id)
 
 </details>
 
-<!--
 ## Supported Classes
 
 <details>
 
 <br>
 
-<summary><b>Host Class</b> (Authenticated)</summary>
+<summary><b>Host Class</b> (Web, Authenticated)</summary>
 
-Requires login through username & password.
+- **Recommended**
+- Requires login
+- Comes with a lot of features
 
 ```python
 from ensta import Host
@@ -501,9 +502,10 @@ print(profile.biography)
 
 <br>
 
-<summary><b>Guest Class</b> (Non-Authenticated)</summary>
+<summary><b>Guest Class</b> (Web, Non-Authenticated)</summary>
 
-Doesn't require login, but has limited features. See [this](https://github.com/diezo/Ensta?tab=readme-ov-file#bypass-ip-restrictions) if this class isn't working.
+- Doesn't require login
+- Has limited features.
 
 ```python
 from ensta import Guest
@@ -520,9 +522,10 @@ print(profile.biography)
 
 <br>
 
-<summary><b>Mobile Class</b> (New)</summary>
+<summary><b>Mobile Class</b> (Mobile, Authenticated)</summary>
 
-Same as **Host Class** but uses the Mobile API. We're working on adding more features to this class.
+- Requires login
+- Has some features missing in **Host Class**
 
 ```python
 from ensta import Mobile
@@ -533,8 +536,8 @@ mobile.follow("leomessi")
 ```
 
 </details>
--->
 
+<!--
 ## Anonymous Requests
 To fetch profile information without logging in, use the **Guest Class**:
 
@@ -547,6 +550,7 @@ profile = guest.profile("leomessi")
 
 print(profile.biography)
 ```
+-->
 
 <!--[**Learn to use ensta**](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)-->
 
