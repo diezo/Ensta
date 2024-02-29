@@ -406,10 +406,9 @@ mobile.unblock(123456789)  # Use UserID
 
 </details>
 
-## Stories
 <details>
 
-<summary>Upload Photo</summary>
+<summary>Upload Story (Photo)</summary>
 
 ```python
 from ensta import Mobile
@@ -425,7 +424,7 @@ mobile.upload_story(upload_id)
 
 <details>
 
-<summary>Upload Photo + Link Sticker</summary>
+<summary>Upload Story (Photo) + Link Sticker</summary>
 
 ```python
 from ensta import Mobile
@@ -442,10 +441,9 @@ mobile.upload_story(upload_id, entities=[
 
 </details>
 
-## Direct Message
 <details>
 
-<summary>Send Text Message</summary>
+<summary>Send Message (Text)</summary>
 
 ```python
 from ensta import Mobile
@@ -460,7 +458,7 @@ direct.send_text("Hello", thread_id)
 
 <details>
 
-<summary>Send Photo</summary>
+<summary>Send Message (Picture)</summary>
 
 ```python
 from ensta import Mobile
