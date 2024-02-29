@@ -5,7 +5,7 @@
 
 ![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)
 
-<!-- ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)  -->
+![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)
 
 Ensta is a simple, reliable and up-to-date python package for Instagram API.
 
@@ -19,29 +19,27 @@ Python [**3.10**](https://www.python.org/downloads/) or later is required.
     pip install ensta
 
 ## Example
-Here's how to fetch someone's profile info:
+Fetching profile info by username:
+
 ```python
 from ensta import Host
 
-# Login
 host = Host(username, password)
 
-# Fetch someone's profile
 profile = host.profile("leomessi")
 
-# Print profile info
 print(profile.biography)
 print(profile.is_private)
 print(profile.profile_picture_url_hd)
 ```
 
-## Bypass IP Restrictions
+<!--## Bypass IP Restrictions
 If you're being rate limited when using Ensta on your home network or Ensta doesn't work when you deploy your app to the cloud, you should consider using a reputed proxy. Here's how to do that:
 1. Visit [abcproxy](https://www.abcproxy.com/?code=O4H3OC0O) and apply coupon ```O4H3OC0O``` for additional discount.
 2. Buy a residential SOCKS5 proxy there.
-3. Configure Ensta to use that proxy. See the [**Supported Actions**](https://github.com/diezo/ensta?tab=readme-ov-file#supported-actions) section.
+3. Configure Ensta to use that proxy. See the [**Supported Actions**](https://github.com/diezo/ensta?tab=readme-ov-file#supported-actions) section.-->
 
-## Supported Actions
+## Features
 Tap on the headings to view code:
 
 <details>
@@ -557,8 +555,8 @@ print(profile.biography)
 
 <!--[**Learn to use ensta**](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)-->
 
-## Any Questions?
-Join ensta's discord server and get help from the community.
+## Discord Community
+Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
@@ -567,8 +565,8 @@ Help me add more features to this library and keep it up-to-date:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="170"/>](https://buymeacoffee.com/sonii)
 
-## Contributors
-[![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)
+<!--## Contributors
+[![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)-->
 
-## Legal
+## Disclaimer
 This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
