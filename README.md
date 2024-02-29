@@ -481,11 +481,9 @@ direct.send_photo(media_id, thread_id)
 
 <br>
 
-<summary><b>Host Class</b> (Web, Authenticated)</summary>
+<summary><b>Host Class</b> (Authenticated)</summary>
 
-- **Recommended**
-- Requires login
-- Comes with a lot of features
+Requires login, and has many features.
 
 ```python
 from ensta import Host
@@ -502,10 +500,9 @@ print(profile.biography)
 
 <br>
 
-<summary><b>Guest Class</b> (Web, Non-Authenticated)</summary>
+<summary><b>Guest Class</b> (Non-Authenticated)</summary>
 
-- Doesn't require login
-- Has limited features.
+Doesn't require login, but has limited features.
 
 ```python
 from ensta import Guest
@@ -517,42 +514,6 @@ print(profile.biography)
 ```
 
 </details>
-
-<details>
-
-<br>
-
-<summary><b>Mobile Class</b> (Mobile, Authenticated)</summary>
-
-- Requires login
-- Has some features missing in **Host Class**
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-mobile.follow("leomessi")
-```
-
-</details>
-
-<!--
-## Anonymous Requests
-To fetch profile information without logging in, use the **Guest Class**:
-
-```python
-from ensta import Guest
-
-guest = Guest()
-
-profile = guest.profile("leomessi")
-
-print(profile.biography)
-```
--->
-
-<!--[**Learn to use ensta**](https://github.com/diezo/Ensta/wiki/Getting-Started-With-Ensta)-->
 
 ## Discord Community
 Ask questions, discuss upcoming features and meet other developers.
@@ -560,12 +521,12 @@ Ask questions, discuss upcoming features and meet other developers.
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
 ## Support Me
-Help me add more features to this library and keep it up-to-date:
+Wish to support this project? Please consider buying me a coffee here:
 
 [<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="170"/>](https://buymeacoffee.com/sonii)
 
-<!--## Contributors
-[![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)-->
+## Contributors
+[![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)
 
 ## Disclaimer
 This is a third party library and not associated with Instagram. We're strictly against spam. You are liable for all the actions you take.
