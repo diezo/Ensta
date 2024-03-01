@@ -295,13 +295,15 @@ class Mobile:
             device_id=self.device_id
         )
 
-    def follow(self, user_id: str) -> bool:
+    def follow(self, identifier: str) -> bool:
         """
-        Follows a user by user_id
+        Follows a user
         :param self: None
-        :param user_id: UserID of target user
+        :param identifier: Username or UserID of target (UserID Recommended)
         :return: Boolean (Followed or not)
         """
+
+        user_id: str = self.profile(identifier).user_id
 
         response: Response = self.session.post(
             url=f"https://i.instagram.com/api/v1/friendships/create/{user_id}/",
@@ -324,13 +326,15 @@ class Mobile:
                 "to a different network, or use reputed proxies."
             )
 
-    def unfollow(self, user_id: str) -> bool:
+    def unfollow(self, identifier: str) -> bool:
         """
         Unfollows a user by user_id
         :param self: None
-        :param user_id: UserID of target user
+        :param identifier: Username or UserID of target (UserID Recommended)
         :return: Boolean (Unfollowed or not)
         """
+
+        user_id: str = self.profile(identifier).user_id
 
         response: Response = self.session.post(
             url=f"https://i.instagram.com/api/v1/friendships/destroy/{user_id}/",
@@ -353,13 +357,15 @@ class Mobile:
                 "to a different network, or use reputed proxies."
             )
 
-    def block(self, user_id: str) -> bool:
+    def block(self, identifier: str) -> bool:
         """
-        Blocks a user by user_id
+        Blocks a user
         :param self: None
-        :param user_id: UserID of target user
+        :param identifier: Username or UserID of target (UserID Recommended)
         :return: Boolean (Blocked or not)
         """
+
+        user_id: str = self.profile(identifier).user_id
 
         response: Response = self.session.post(
             url=f"https://i.instagram.com/api/v1/friendships/block/{user_id}/",
@@ -383,13 +389,15 @@ class Mobile:
                 "to a different network, or use reputed proxies."
             )
 
-    def unblock(self, user_id: str) -> bool:
+    def unblock(self, identifier: str) -> bool:
         """
-        Unblocks a user by user_id
+        Unblocks a user
         :param self: None
-        :param user_id: UserID of target user
+        :param identifier: Username or UserID of target (UserID Recommended)
         :return: Boolean (Unblocked or not)
         """
+
+        user_id: str = self.profile(identifier).user_id
 
         response: Response = self.session.post(
             url=f"https://i.instagram.com/api/v1/friendships/unblock/{user_id}/",
@@ -616,3 +624,78 @@ class Mobile:
         """
 
         return self.profile(user_id).username
+
+    def like(self, media_id: str) -> bool:
+        """
+        Likes a post or reel
+        :param: media_id: ID of post or reel
+        :return: True/False
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/media/{media_id}/like/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(
+                    {
+                        "_uid": self.user_id,
+                        "_uuid": str(uuid4()),
+                        "delivery_class": "organic",
+                        "tap_source": "double_tap_media",
+                        "media_id": media_id,
+                        "source_of_like": "double_tap_media",
+                        "carousel_index": "0",
+                        "radio_type": "wifi-none",
+                        "normalized_position_x": "0.5124817",
+                        "normalized_position_y": "0.6305241",
+                        "is_carousel_bumped_post": "false",
+                        "container_module": "feed_contextual_profile",
+                        "feed_position": "0"
+                    }
+                ),
+                "d": "1"
+            }
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to like media. Maybe try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def unlike(self, media_id: str) -> bool:
+        """
+        Unlikes a post or reel
+        :param: media_id: ID of post or reel
+        :return: True/False
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/media/{media_id}/unlike/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(
+                    {
+                        "_uid": self.user_id,
+                        "_uuid": str(uuid4()),
+                        "delivery_class": "organic",
+                        "tap_source": "button",
+                        "media_id": media_id,
+                        "carousel_index": "0",
+                        "radio_type": "wifi-none",
+                        "is_carousel_bumped_post": "false",
+                        "container_module": "feed_contextual_profile",
+                        "feed_position": "0"
+                    }
+                ),
+                "d": "0"
+            }
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to unlike media. Maybe try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )

@@ -12,6 +12,4 @@
 - upload carousel
 - upload single reel
 - comment
-- like post
-- unlike post
 - fetch likers
