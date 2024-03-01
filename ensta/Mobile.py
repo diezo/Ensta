@@ -37,7 +37,7 @@ class Mobile:
         password: str = None,
         proxy: dict[str, str] = None,
         save_folder: str = "ensta-sessions",
-        skip_authorization: bool = False,
+        skip_auth_check: bool = False,
         logging: bool = False,
         totp_token : str = None,
         session_data: str = None
@@ -55,7 +55,7 @@ class Mobile:
             logging=logging,
             totp_token=totp_token,
             session_data=session_data,
-            skip_authorization=skip_authorization
+            skip_auth_check=skip_auth_check
         )
 
     def refresh_credentials(
@@ -67,7 +67,7 @@ class Mobile:
         logging: bool,
         totp_token: str,
         session_data: str,
-        skip_authorization: bool
+        skip_auth_check: bool
     ) -> None:
 
         if logging: print(f"Login Attempt: {cycle} (Max: {self.credentials_refresh_max_cycle})")
@@ -111,7 +111,7 @@ class Mobile:
         })
 
         # Authorization: Is the current session even valid?
-        if not skip_authorization:
+        if not skip_auth_check:
             if not self.authorize():
                 self.refresh_credentials(
                     cycle=cycle + 1,
@@ -121,13 +121,14 @@ class Mobile:
                     logging=logging,
                     totp_token=totp_token,
                     session_data=session_data,
-                    skip_authorization=skip_authorization
+                    skip_auth_check=skip_auth_check
                 )
 
     def authorize(self) -> bool:
         return self.session.post(self.authorization_url).status_code == 400
 
-    def get_upload_id(self, media_path: str, arg_upload_id: str | None = None) -> str:  # Web API
+    # TASK: Use FB Uploader; Currently uses Web API
+    def get_upload_id(self, media_path: str, arg_upload_id: str | None = None) -> str:
         """
         Uploads the image to Instagram's server using Web API and returns its UploadID.
         :param media_path: Path to the image file (only jpg & jpeg)
@@ -227,10 +228,7 @@ class Mobile:
 
         except JSONDecodeError: return False
 
-    def profile(
-        self,
-        identifier: str
-    ) -> Profile:
+    def profile(self, identifier: str) -> Profile:
         """
         Fetches profile information of specified Username or UserID, and returns a Profile Object.
         :param identifier: Username or UserID of target
