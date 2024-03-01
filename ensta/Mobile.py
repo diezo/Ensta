@@ -514,3 +514,33 @@ class Mobile:
                 "Failed to publish story. Is your media correct? Are all entities correct? "
                 "Maybe you're being rate limited, try using a different account."
             )
+
+    def set_biography(self, text: str) -> bool:
+        """
+        Sets a new biography to your account
+        :param text: New biography
+        :return: Boolean (Updated or not)
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/accounts/set_biography/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(
+                    {
+                        "_uid": self.user_id,
+                        "device_id": self.device_id,
+                        "_uuid": str(uuid4()),
+                        "raw_text": text
+                    }
+                )
+            }
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to change biography. Make sure the new biography doesn't contain any "
+                "illegal words not characters that are not permitted. Maybe try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )

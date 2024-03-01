@@ -11,7 +11,6 @@
 - individual post data
 - get post id by share url
 - private info
-- update bio
 - update display name
 - fb upload video
 - upload single photo post
