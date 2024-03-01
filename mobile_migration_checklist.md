@@ -2,9 +2,6 @@
 
 - followers
 - followings
-- identifier
-- get username
-- get uid
 - fetch posts
 - individual post data
 - get post id by share url

@@ -598,3 +598,21 @@ class Mobile:
                 "Maybe try using another account, switch "
                 "to a different network, or use reputed proxies."
             )
+
+    def username_to_userid(self, username: str) -> str:
+        """
+        Converts username to user_id.
+        :param: username: Target username
+        :return: user_id
+        """
+
+        return self.profile(username).user_id
+
+    def userid_to_username(self, user_id: str) -> str:
+        """
+        Converts user_id to username.
+        :param: user_id: Target user_id
+        :return: username
+        """
+
+        return self.profile(user_id).username
