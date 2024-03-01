@@ -544,3 +544,57 @@ class Mobile:
                 "illegal words not characters that are not permitted. Maybe try using another account, switch "
                 "to a different network, or use reputed proxies."
             )
+
+    def switch_to_public_account(self) -> bool:
+        """
+        Switches your account type to 'public'. Anyone one view your profile.
+        :return: Boolean (Switched or not)
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/accounts/set_public/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(
+                    {
+                        "_uid": self.user_id,
+                        "_uuid": str(uuid4())
+                    }
+                )
+            }
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to switch to public. Maybe you've switched account privacy too many times. "
+                "Maybe try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def switch_to_private_account(self) -> bool:
+        """
+        Switches your account type to 'private'. Only your followers can view your profile.
+        :return: Boolean (Switched or not)
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/accounts/set_private/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(
+                    {
+                        "_uid": self.user_id,
+                        "_uuid": str(uuid4())
+                    }
+                )
+            }
+        )
+
+        try: return response.json().get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to switch to private. Maybe you've switched account privacy too many times. "
+                "Maybe try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )

@@ -3,8 +3,6 @@
 - followers
 - followings
 - identifier
-- switch to private
-- switch to public
 - get username
 - get uid
 - fetch posts
