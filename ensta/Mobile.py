@@ -130,7 +130,6 @@ class Mobile:
     def authorize(self) -> bool:
         return self.session.post(self.authorization_url).status_code == 400
 
-    # TASK: Use FB Uploader; Currently uses Web API
     def get_upload_id(self, media_path: str, arg_upload_id: str | None = None) -> str:
         """
         Uploads the image to Instagram's server using Web API and returns its UploadID.
