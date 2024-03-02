@@ -1,7 +1,5 @@
 ### Remaining features:
 
-- followers
-- followings
 - fetch posts
 - individual post data
 - get post id by share url

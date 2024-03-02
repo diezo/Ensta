@@ -8,7 +8,9 @@ import string
 import datetime
 import json
 from .parser.ProfileParser import parse_profile
-from .structures import Profile, StoryLink
+from .parser.FollowersParser import parse_followers
+from .parser.FollowingsParser import parse_followings
+from .structures import Profile, StoryLink, Followers, Followings
 from .Direct import Direct
 from ensta.Utils import time_id, fb_uploader
 
@@ -697,5 +699,74 @@ class Mobile:
         except JSONDecodeError:
             raise NetworkError(
                 "Unable to unlike media. Maybe try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def followers(self, identifier: str, next_cursor: str | int | None = None) -> Followers:
+        """
+        Get followers list of an account
+        :param: identifier: Username or UserID (UserID Recommended)
+        :return: Followers Object
+        """
+
+        next_cursor: str = str(next_cursor) if next_cursor is not None else None
+        user_id: str = self.profile(identifier).user_id
+        max_id_line: str = f"&max_id={next_cursor}" if next_cursor is not None else ""
+
+        response: Response = self.session.get(
+            url=f"https://i.instagram.com/api/v1/friendships/{user_id}/followers/?enable_groups=true{max_id_line}"
+        )
+
+        try:
+            response_dict: dict = response.json()
+
+            if response_dict.get("status", "") != "ok":
+                raise NetworkError(
+                    "Response status was not ok.\n"
+                    f"Response Dict: {response_dict}"
+                )
+
+            return parse_followers(response_dict)
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to get followers list. Make sure either the account is public or you're "
+                "already following the target user. Also, make sure the user hasn't blocked or "
+                "restricted you. Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def followings(self, identifier: str, next_cursor: str | int | None = None) -> Followings:
+        """
+        Get followings list of an account
+        :param: identifier: Username or UserID (UserID Recommended)
+        :return: Followings Object
+        """
+
+        next_cursor: str = str(next_cursor) if next_cursor is not None else None
+        user_id: str = self.profile(identifier).user_id
+        max_id_line: str = f"&max_id={next_cursor}" if next_cursor is not None else ""
+
+        response: Response = self.session.get(
+            url=f"https://i.instagram.com/api/v1/friendships/{user_id}/following/?enable_groups=true"
+                f"&includes_hashtags=true{max_id_line}"
+        )
+
+        try:
+            response_dict: dict = response.json()
+
+            if response_dict.get("status", "") != "ok":
+                raise NetworkError(
+                    "Response status was not ok.\n"
+                    f"Response Dict: {response_dict}"
+                )
+
+            return parse_followings(response_dict)
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to get followings list. Make sure either the account is public or you're "
+                "already following the target user. Also, make sure the user hasn't blocked or "
+                "restricted you. Try using another account, switch "
                 "to a different network, or use reputed proxies."
             )

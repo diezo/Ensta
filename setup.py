@@ -1,7 +1,7 @@
 from distutils.core import setup
 from pathlib import Path
 
-version = "5.1.9"
+version = "5.2.0"
 long_description = (Path(__file__).parent / "README.md").read_text(encoding="utf-8")
 
 setup(
