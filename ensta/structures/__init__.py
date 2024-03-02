@@ -5,3 +5,5 @@ from .Followers import Followers
 from .Followings import Followings
 from .Follower import Follower
 from .Following import Following
+from .AddedComment import AddedComment
+from .AddedCommentUser import AddedCommentUser

@@ -10,7 +10,8 @@ import json
 from .parser.ProfileParser import parse_profile
 from .parser.FollowersParser import parse_followers
 from .parser.FollowingsParser import parse_followings
-from .structures import Profile, StoryLink, Followers, Followings
+from .parser.AddedCommentParser import parse_added_comment
+from .structures import Profile, StoryLink, Followers, Followings, AddedComment
 from .Direct import Direct
 from ensta.Utils import time_id, fb_uploader
 
@@ -630,7 +631,7 @@ class Mobile:
     def like(self, media_id: str) -> bool:
         """
         Likes a post or reel
-        :param: media_id: ID of post or reel
+        :param: media_id: Media ID of post or reel
         :return: True/False
         """
 
@@ -669,7 +670,7 @@ class Mobile:
     def unlike(self, media_id: str) -> bool:
         """
         Unlikes a post or reel
-        :param: media_id: ID of post or reel
+        :param: media_id: Media ID of post or reel
         :return: True/False
         """
 
@@ -768,5 +769,44 @@ class Mobile:
                 "Unable to get followings list. Make sure either the account is public or you're "
                 "already following the target user. Also, make sure the user hasn't blocked or "
                 "restricted you. Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def comment(self, text: str, media_id: str) -> AddedComment:
+        """
+        Comment on a post or reel.
+        :param: media_id: Media ID of post or reel
+        :param: text: Comment text
+        :return: True/False
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/media/{media_id}/comment/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(
+                    {
+                        "_uid": self.user_id,
+                        "_uuid": str(uuid4()),
+                        "comment_text": text
+                    }
+                )
+            }
+        )
+
+        try:
+            response_dict: dict = response.json()
+
+            if response_dict.get("status", "") != "ok":
+                raise NetworkError(
+                    "Couldn't add comment.\n"
+                    f"Response JSON: {response_dict}"
+                )
+
+            return parse_added_comment(response_dict)
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to add comment. Maybe your comment contains offensive words. "
+                "If not, try using another account, switch "
                 "to a different network, or use reputed proxies."
             )
