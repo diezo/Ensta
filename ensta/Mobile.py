@@ -258,6 +258,8 @@ class Mobile:
             # Response actually returns two JSON Objects with profile information,
             # but we'll only use the 1st one for now.
 
+            with open("test.json", "w", encoding="utf-8") as file: file.write(response.text)
+
             information: dict = tuple(json.loads(data) for data in response.text.strip().split("\n"))[0]
 
             if information.get("status", "") != "ok":
@@ -300,7 +302,6 @@ class Mobile:
     def follow(self, identifier: str) -> bool:
         """
         Follows a user
-        :param self: None
         :param identifier: Username or UserID of target (UserID Recommended)
         :return: Boolean (Followed or not)
         """
@@ -331,7 +332,6 @@ class Mobile:
     def unfollow(self, identifier: str) -> bool:
         """
         Unfollows a user by user_id
-        :param self: None
         :param identifier: Username or UserID of target (UserID Recommended)
         :return: Boolean (Unfollowed or not)
         """
@@ -362,7 +362,6 @@ class Mobile:
     def block(self, identifier: str) -> bool:
         """
         Blocks a user
-        :param self: None
         :param identifier: Username or UserID of target (UserID Recommended)
         :return: Boolean (Blocked or not)
         """
@@ -394,7 +393,6 @@ class Mobile:
     def unblock(self, identifier: str) -> bool:
         """
         Unblocks a user
-        :param self: None
         :param identifier: Username or UserID of target (UserID Recommended)
         :return: Boolean (Unblocked or not)
         """
@@ -807,5 +805,61 @@ class Mobile:
             raise NetworkError(
                 "Unable to add comment. Maybe your comment contains offensive words. "
                 "If not, try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    # TODO: Implement Return Data Type
+    def upload_photo(self, upload_id: str, caption: str = "", alt_text: str = "", location_id: str = "") -> bool:
+        """
+        Uploads a single photo post.
+        :param upload_id: Returned by get_upload_id(image_path)
+        :param caption: Caption text
+        :param alt_text: Custom Accessibility Caption Text
+        :param location_id: Facebook place ID of location
+        :return: Boolean (Success or not)
+        """
+
+        body: dict = {
+            "_uid": self.user_id,
+            "device_id": self.device_id,
+            "_uuid": str(uuid4()),
+            "custom_accessibility_caption": alt_text,
+            "source_type": "4",
+            "caption": caption,
+            "upload_id": upload_id
+        }
+
+        # Add Location ID
+        if location_id != "": body["location"] = f"{{\"facebook_places_id\":\"{location_id}\"}}"
+
+        # Hit Endpoint
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/media/configure/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(body)
+            }
+        )
+
+        try:
+            response_dict: dict = response.json()
+
+            if response_dict.get("status", "") != "ok":
+
+                if f"NodeInvalidTypeException: Node backed by fbid {location_id}" in response_dict.get("message", ""):
+                    raise NetworkError(
+                        f"Location ID {location_id} doesn't exist on facebook places."
+                    )
+
+                raise NetworkError(
+                    "Unable to upload photo.\n"
+                    f"Response: {response_dict}"
+                )
+
+            return True
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to upload photo. Is the upload_id correct? Are all other configurations "
+                "correct? Are you using a valid image? Try using another account, switch "
                 "to a different network, or use reputed proxies."
             )

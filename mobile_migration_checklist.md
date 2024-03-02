@@ -6,7 +6,6 @@
 - update display name
 
 - fb upload video
-- upload single photo post
 - upload carousel
 - upload single reel
 
