@@ -521,7 +521,7 @@ Ask questions, discuss upcoming features and meet other developers.
 ## Support Me
 Wish to support this project? Please consider buying me a coffee here:
 
-[<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="170"/>](https://buymeacoffee.com/sonii)
+[<img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="170"/>](https://buymeacoffee.com/sonii)
 
 ## Contributors
 [![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)
