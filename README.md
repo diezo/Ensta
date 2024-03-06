@@ -13,13 +13,13 @@ Both **authenticated** and **anonymous** requests are supported.
 
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="180"/>](https://buymeacoffee.com/sonii)
 
+## <img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/colorful-instagram-icon-vintage-style-art-vector-illustration_836950-30.jpg" width="23"> Account Creator
+Buy an Instagram [**Account Creator**](https://sonii.gumroad.com) written in Python.
+
 ## Installation
 Python [**3.10**](https://www.python.org/downloads/) or later is required.
 
     pip install ensta
-
-## [Instagram Account Creator](https://sonii.gumroad.com)
-To buy an Instagram account creator written in Python, [**visit our store**](https://sonii.gumroad.com).
 
 ## Example
 Fetching profile info by username:
