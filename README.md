@@ -18,8 +18,8 @@ Python [**3.10**](https://www.python.org/downloads/) or later is required.
 
     pip install ensta
 
-## Instagram Account Creator
-Buy our products on [**Gumroad**](https://sonii.gumroad.com).
+## [Instagram Account Creator](https://sonii.gumroad.com)
+To buy an Instagram account creator written in Python, [**visit our store**](https://sonii.gumroad.com).
 
 ## Example
 Fetching profile info by username:
