@@ -19,7 +19,7 @@ Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-
 - Auto-generates email addresses using **DuckDuckGo Emails**.
 - Auto fetches OTPs from **ProtonMail Inbox**.
 - Auto updates profile picture using [**thispersondoesnotexist.com**](https://thispersondoesnotexist.com)
-- Auto-updates to a random **Biography**.
+- Auto-updates a random biography.
 
 ## Installation
 Python [**3.10**](https://www.python.org/downloads/) or later is required.
