@@ -142,27 +142,27 @@ from ensta import Host
 
 host = Host(username, password)
 
-upload = host.get_upload_id("Picture.jpg")
+upload = host.upload_image("Picture.jpg")
 
-host.upload_photo(upload, caption="Travelling 🌆")
+host.pub_photo(upload, caption="Travelling 🌆")
 ```
 
 </details>
 
 <details>
 
-<summary>Upload Multiple Photos (Single Post)</summary><br>
+<summary>Upload Multiple Medias (Single Post)</summary><br>
 
 ```python
 from ensta import Host
 
 host = Host(username, password)
 
-upload1 = host.get_upload_id("First.jpg")
-upload2 = host.get_upload_id("Second.jpg")
-upload3 = host.get_upload_id("Third.jpg")
+upload1 = host.upload_image("First.jpg")
+upload2 = host.upload_image("Second.jpg")
+upload3 = host.upload_video_for_carousel("Video.mp4", thumbnail="Thumbnail.jpg")
 
-host.upload_photos([upload1, upload2, upload3], caption="Travelling 🌆")
+host.pub_carousel([upload1, upload2, upload3], caption="Travelling 🌆")
 ```
 
 </details>
@@ -176,9 +176,10 @@ from ensta import Host
 
 host = Host(username, password)
 
-host.upload_reel(
-    video_path="Video.mp4",
-    thumbnail_path="Thumbnail.jpg",
+video_id = host.upload_video_for_reel("Video.mp4", thumbnail="Thumbnail.jpg")
+
+host.pub_reel(
+    video_id,
     caption="Enjoying the winter! ⛄"
 )
 ```
