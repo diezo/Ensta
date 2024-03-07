@@ -14,7 +14,12 @@ Both **authenticated** and **anonymous** requests are supported.
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="180"/>](https://buymeacoffee.com/sonii)
 
 ## <img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/colorful-instagram-icon-vintage-style-art-vector-illustration_836950-30.jpg" width="23"> Account Creator
-Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-creator/EARLY20) written in Python. **(20% Discount For First 10 People!)**
+Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-creator/EARLY20) written in Python.
+
+- Auto-generates email addresses using **DuckDuckGo Emails**.
+- Auto fetches OTPs from **ProtonMail Inbox**.
+- Auto updates profile picture using [**thispersondoesnotexist.com**](https://thispersondoesnotexist.com)
+- Auto-updates to a random **Biography**.
 
 ## Installation
 Python [**3.10**](https://www.python.org/downloads/) or later is required.
