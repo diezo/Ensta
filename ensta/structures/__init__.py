@@ -7,3 +7,9 @@ from .Follower import Follower
 from .Following import Following
 from .AddedComment import AddedComment
 from .AddedCommentUser import AddedCommentUser
+from .UploadedPhoto import UploadedPhoto
+from .Caption import Caption
+from .ImageVersion import ImageVersion
+from .SidecarChild import SidecarChild
+from .UploadedSidecar import UploadedSidecar
+from .CarouselMedia import CarouselMedia

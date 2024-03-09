@@ -6,7 +6,6 @@
 - update display name
 
 - fb upload video
-- upload carousel
 - upload single reel
 
 - fetch likers

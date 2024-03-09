@@ -2,7 +2,8 @@ from requests import Session, Response
 from .Credentials import Credentials
 from .lib.Exceptions import AuthenticationError, FileTypeError, NetworkError
 from uuid import uuid4
-from json import  JSONDecodeError
+from json import JSONDecodeError
+import time
 from pathlib import Path
 import string
 import datetime
@@ -11,9 +12,14 @@ from .parser.ProfileParser import parse_profile
 from .parser.FollowersParser import parse_followers
 from .parser.FollowingsParser import parse_followings
 from .parser.AddedCommentParser import parse_added_comment
-from .structures import Profile, StoryLink, Followers, Followings, AddedComment
+from .parser.UploadedPhotoParser import parse_uploaded_photo
+from .parser.UploadedSidecarParser import parse_uploaded_sidecar
+from .structures import (
+    Profile, StoryLink, Followers, Followings, AddedComment, UploadedPhoto, SidecarChild, UploadedSidecar
+)
 from .Direct import Direct
 from ensta.Utils import time_id, fb_uploader
+
 
 class Mobile:
 
@@ -257,8 +263,6 @@ class Mobile:
         try:
             # Response actually returns two JSON Objects with profile information,
             # but we'll only use the 1st one for now.
-
-            with open("test.json", "w", encoding="utf-8") as file: file.write(response.text)
 
             information: dict = tuple(json.loads(data) for data in response.text.strip().split("\n"))[0]
 
@@ -808,15 +812,14 @@ class Mobile:
                 "to a different network, or use reputed proxies."
             )
 
-    # TODO: Implement Return Data Type
-    def upload_photo(self, upload_id: str, caption: str = "", alt_text: str = "", location_id: str = "") -> bool:
+    def upload_photo(self, upload_id: str, caption: str = "", alt_text: str = "", location_id: str = "") -> UploadedPhoto:
         """
         Uploads a single photo post.
         :param upload_id: Returned by get_upload_id(image_path)
         :param caption: Caption text
         :param alt_text: Custom Accessibility Caption Text
         :param location_id: Facebook place ID of location
-        :return: Boolean (Success or not)
+        :return: Uploaded Photo's Information
         """
 
         body: dict = {
@@ -855,11 +858,71 @@ class Mobile:
                     f"Response: {response_dict}"
                 )
 
-            return True
+            return parse_uploaded_photo(response_dict.get("media", {}))
 
         except JSONDecodeError:
             raise NetworkError(
                 "Unable to upload photo. Is the upload_id correct? Are all other configurations "
                 "correct? Are you using a valid image? Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def upload_sidecar(self, children: list[SidecarChild], caption: str = "", location_id: str = "") -> UploadedSidecar:
+        """
+        Uploads a sidecar post (multiple photos in a single post).
+        :param children: Each photo's information (SidecarChild Object)
+        :param caption: Caption text
+        :param location_id: Facebook place ID of location
+        :return: Uploaded Sidecar's Information
+        """
+
+        body: dict = {
+            "_uid": self.user_id,
+            "device_id": self.device_id,
+            "_uuid": str(uuid4()),
+            "client_sidecar_id": str(int(time.time() * 1000)),
+            "source_type": "4",
+            "caption": caption,
+            "children_metadata": [
+                {
+                    "upload_id": child.upload_id,
+                    "source_type": "4",
+                    "custom_accessibility_caption": child.alt_text,
+                } for child in children
+            ]
+        }
+
+        # Add Location ID
+        if location_id != "": body["location"] = f"{{\"facebook_places_id\":\"{location_id}\"}}"
+
+        # Hit Endpoint
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/media/configure_sidecar/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(body)
+            }
+        )
+
+        try:
+            response_dict: dict = response.json()
+
+            if response_dict.get("status", "") != "ok":
+
+                if f"NodeInvalidTypeException: Node backed by fbid {location_id}" in response_dict.get("message", ""):
+                    raise NetworkError(
+                        f"Location ID {location_id} doesn't exist on facebook places."
+                    )
+
+                raise NetworkError(
+                    "Unable to upload sidecar.\n"
+                    f"Response: {response_dict}"
+                )
+
+            return parse_uploaded_sidecar(response_dict)
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to upload sidecar. Are the upload_id's correct? Are all other configurations "
+                "correct? Are you using valid images? Try using another account, switch "
                 "to a different network, or use reputed proxies."
             )
