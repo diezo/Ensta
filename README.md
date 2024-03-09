@@ -13,6 +13,16 @@ Both **authenticated** and **anonymous** requests are supported.
 
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="180"/>](https://buymeacoffee.com/sonii)
 
+## <img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/colorful-instagram-icon-vintage-style-art-vector-illustration_836950-30.jpg" width="23"> Account Creator
+Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-creator/EARLY20) written in Python.
+
+- Auto-generates **DuckDuckGo Private Email Addresses**.
+- Auto-fetches OTP from **ProtonMail Inbox**.
+- Auto-updates Profile Picture to an **AI-Generated Human Face**.
+- Sets a random **AI-Generated Biography** on account creation.
+
+Creator should only be used for legitimate purposes. It's strictly not for spam.
+
 ## Installation
 Python [**3.10**](https://www.python.org/downloads/) or later is required.
 
@@ -134,27 +144,27 @@ from ensta import Host
 
 host = Host(username, password)
 
-upload = host.get_upload_id("Picture.jpg")
+upload = host.upload_image("Picture.jpg")
 
-host.upload_photo(upload, caption="Travelling 🌆")
+host.pub_photo(upload, caption="Travelling 🌆")
 ```
 
 </details>
 
 <details>
 
-<summary>Upload Multiple Photos (Single Post)</summary><br>
+<summary>Upload Multiple Medias (Single Post)</summary><br>
 
 ```python
 from ensta import Host
 
 host = Host(username, password)
 
-upload1 = host.get_upload_id("First.jpg")
-upload2 = host.get_upload_id("Second.jpg")
-upload3 = host.get_upload_id("Third.jpg")
+upload1 = host.upload_image("First.jpg")
+upload2 = host.upload_image("Second.jpg")
+upload3 = host.upload_video_for_carousel("Video.mp4", thumbnail="Thumbnail.jpg")
 
-host.upload_photos([upload1, upload2, upload3], caption="Travelling 🌆")
+host.pub_carousel([upload1, upload2, upload3], caption="Travelling 🌆")
 ```
 
 </details>
@@ -168,9 +178,10 @@ from ensta import Host
 
 host = Host(username, password)
 
-host.upload_reel(
-    video_path="Video.mp4",
-    thumbnail_path="Thumbnail.jpg",
+video_id = host.upload_video_for_reel("Video.mp4", thumbnail="Thumbnail.jpg")
+
+host.pub_reel(
+    video_id,
     caption="Enjoying the winter! ⛄"
 )
 ```
@@ -521,7 +532,7 @@ Ask questions, discuss upcoming features and meet other developers.
 ## Support Me
 Wish to support this project? Please consider buying me a coffee here:
 
-[<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" width="170"/>](https://buymeacoffee.com/sonii)
+[<img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="170"/>](https://buymeacoffee.com/sonii)
 
 ## Contributors
 [![Contributors](https://contrib.rocks/image?anon=1&repo=diezo/ensta&)](https://github.com/diezo/ensta/graphs/contributors)

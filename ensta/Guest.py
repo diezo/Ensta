@@ -310,9 +310,100 @@ class Guest:
                 yield None
                 raise NetworkError("HTTP Response is not a valid JSON.")
 
-    @staticmethod
-    def __process_post_data(data: dict) -> Post:
+    def reels(
+        self,
+        uid: str | int,
+        count: int = 0,
+        __session__: requests.Session | None = None,
+    ) -> Generator[Post, None, None]:
+        """
+        Generates a list of target's reels of specified size.
+        :param uid: Target's user ID
+        :param count: Amount of reels to fetch
+        :param __session__: (Optional) Custom request session object
+        :return: Generator which yields each reel's data
+        """
 
+        uid = str(uid).replace(" ", "")
+
+        request_headers = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
+            "sec-ch-ua": self.user_agent,
+            "sec-ch-ua-full-version-list": self.user_agent,
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sec-ch-ua-platform-version": '"15.0.0"',
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "129477",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": self.x_ig_www_claim,
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": "https://www.instagram.com/",
+            "Referrer-Policy": "strict-origin-when-cross-origin",
+        }
+
+        generated_count = 0
+        max_id = None
+
+        while True:
+            try:
+                session: requests.Session = __session__
+                if __session__ is None:
+                    session: requests.Session = self.request_session
+
+                http_response = session.post(
+                    "https://www.instagram.com/api/v1/clips/user/",
+                    data={
+                        "target_user_id": user_id,
+                        "page_size": "50",
+                        "include_feed_video": "true",
+                        "max_id": max_id,
+                    },
+                    headers=request_headers,
+                )
+
+                response_json = http_response.json()
+
+                if "status" not in response_json or "items" not in response_json:
+                    yield None
+                    raise NetworkError(
+                        "HTTP response doesn't include 'status' or 'items' node."
+                    )
+
+                if response_json["status"] != "ok":
+                    yield None
+
+                    if response_json.get("message", "") == "checkpoint_required":
+                        raise RateLimitedError(
+                            "IP Temporarily Flagged: Wait for some time, or switch "
+                            "to a different WiFi Network, or use proxies."
+                        )
+
+                    raise NetworkError("Request failed.")
+
+                for each_item in response_json["items"]:
+                    if generated_count < count or count == 0:
+                        yield self.__process_post_data(each_item["media"], reel=True)
+                        generated_count += 1
+
+                if (generated_count < count or count == 0) and response_json.get(
+                    "paging_info", {}
+                ).get("more_available", False):
+                    max_id = response_json["paging_info"]["max_id"]
+                else:
+                    return None
+            except JSONDecodeError:
+                yield None
+                raise NetworkError("HTTP Response is not a valid JSON.")
+
+    @staticmethod
+    def __process_post_data(data: dict, reel: bool = False) -> Post:
         caption: dict | None = data.get("caption", None)
 
         caption_text = ""
@@ -353,7 +444,9 @@ class Guest:
             )
 
         return Post(
-            share_url=f"https://www.instagram.com/p/{data.get('code', '')}",
+            share_url=f"https://www.instagram.com/reel/{data.get('code', '')}"
+            if reel
+            else f"https://www.instagram.com/p/{data.get('code', '')}/",
             taken_at=data.get("taken_at", 0),
             post_id=data.get("pk", ""),
             media_type=data.get("media_type", 0),
