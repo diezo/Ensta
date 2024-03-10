@@ -3,8 +3,6 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 
-<!--![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)-->
-
 ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)
 
 Ensta is a simple, reliable and up-to-date python package for Instagram API.
@@ -34,9 +32,9 @@ Read the [**Pre-Requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90re
 Fetching profile info by username:
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 profile = host.profile("leomessi")
 
@@ -44,12 +42,6 @@ print(profile.biography)
 print(profile.is_private)
 print(profile.profile_picture_url_hd)
 ```
-
-<!--## Bypass IP Restrictions
-If you're being rate limited when using Ensta on your home network or Ensta doesn't work when you deploy your app to the cloud, you should consider using a reputed proxy. Here's how to do that:
-1. Visit [abcproxy](https://www.abcproxy.com/?code=O4H3OC0O) and apply coupon ```O4H3OC0O``` for additional discount.
-2. Buy a residential SOCKS5 proxy there.
-3. Configure Ensta to use that proxy. See the [**Supported Actions**](https://github.com/diezo/ensta?tab=readme-ov-file#supported-actions) section.-->
 
 ## Features
 These features use the **Mobile API**.
@@ -487,9 +479,9 @@ mobile.clear_bio_links()
 <summary>Upload Reel</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 video_id = host.upload_video_for_reel("Video.mp4", thumbnail="Thumbnail.jpg")
 
@@ -503,26 +495,12 @@ host.pub_reel(
 
 <details>
 
-<summary>Check Username Availability</summary><br>
+<summary>Fetch Web Profile Data</summary><br>
 
 ```python
-from ensta import Guest
+from ensta import Web
 
-guest = Guest()
-
-print(guest.username_availability("theusernameiwant"))
-```
-
-</details>
-
-<details>
-
-<summary>Fetch Profile Data</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
+host = Web(username, password)
 profile = host.profile("leomessi")
 
 print(profile.full_name)
@@ -537,9 +515,9 @@ print(profile.follower_count)
 <summary>Fetch Someone's Feed</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 posts = host.posts("leomessi", 100)  # Want full list? Set count to '0'
 
 for post in posts:
@@ -554,9 +532,9 @@ for post in posts:
 <summary>Fetch Post's Likers</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
 likers = host.likers(post_id)
@@ -579,9 +557,9 @@ for user in likers.users:
 Requires login, and has many features.
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 profile = host.profile("leomessi")
 
 print(profile.biography)

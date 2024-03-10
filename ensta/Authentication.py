@@ -9,7 +9,7 @@ from requests import Response
 from json import JSONDecodeError
 from .PasswordEncryption import PasswordEncryption
 from .lib.Exceptions import (AuthenticationError, NetworkError)
-from .SessionHost import SessionHost
+from .WebSession import WebSession
 
 
 def new_session_id(
@@ -197,7 +197,7 @@ def new_session_id(
                             "user_id": user_id,
                             "ig_did": ig_did,
                             "identifier": user_identifier,
-                            "username": SessionHost(
+                            "username": WebSession(
                                 json.dumps({
                                     "session_id": session_id,
                                     "rur": rur,
@@ -236,7 +236,7 @@ def new_session_id(
             "user_id": user_id,
             "ig_did": ig_did,
             "identifier": user_identifier,
-            "username": SessionHost(
+            "username": WebSession(
                 json.dumps({
                     "session_id": session_id,
                     "rur": rur,

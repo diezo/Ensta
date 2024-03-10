@@ -1,12 +1,12 @@
 import os
 import json
-from .SessionHost import SessionHost
+from .WebSession import WebSession
 from .lib.Exceptions import SessionError
 from .Authentication import new_session_id
 
 
 # noinspection PyMissingConstructor
-class Host(SessionHost):
+class Web(WebSession):
 
     DEFAULT_FILE: str = "ensta-session.json"
 

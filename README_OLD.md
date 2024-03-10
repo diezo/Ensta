@@ -34,9 +34,9 @@ Read the [**Pre-Requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90re
 Fetching profile info by username:
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 profile = host.profile("leomessi")
 
@@ -64,9 +64,9 @@ When you should use a proxy:
 - You're deploying Ensta to the cloud. (Instagram blocks requests from IPs of cloud providers, so a proxy must be used)
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(
+host = Web(
     username,
     password,
     proxy={
@@ -87,13 +87,13 @@ Ensta uses the same proxy settings as the **requests** module.
 We recommend using your email address to sign in. But if you have multiple accounts created on the same email address, you may consider using your username instead.
 
 ```python
-from ensta import Host
+from ensta import Web
 
 # Recommended
-host = Host(email, password)
+host = Web(email, password)
 
 # This also works
-host = Host(username, password)
+host = Web(username, password)
 ```
 
 </details>
@@ -107,9 +107,9 @@ Ensta will automatically save your login session in a file named ```ensta-sessio
 But, if you wish to load a session manually, you can use the **SessionHost Class** instead of **Host Class** by passing your session data (which is stored inside ```ensta-session.json```) as a string.
 
 ```python
-from ensta import SessionHost
+from ensta import WebSession
 
-host = SessionHost(session_data)
+host = WebSession(session_data)
 ```
 
 </details>
@@ -121,12 +121,12 @@ host = SessionHost(session_data)
 **Authenticator App**
 
 ```python
-from ensta import Host
+from ensta import Web
 
 # The key you got from Instagram when setting up your Authenticator App
 key = "R65I7XTTHNHTQ2NKMQL36NCWKNUPBSDG"
 
-host = Host(
+host = Web(
     username,  # or email
     password,
     totp_token=key
@@ -142,9 +142,9 @@ host = Host(
 <summary>Upload Photo (Single Post)</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 upload = host.upload_image("Picture.jpg")
 
@@ -158,9 +158,9 @@ host.pub_photo(upload, caption="Travelling 🌆")
 <summary>Upload Multiple Medias (Single Post)</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 upload1 = host.upload_image("First.jpg")
 upload2 = host.upload_image("Second.jpg")
@@ -176,9 +176,9 @@ host.pub_carousel([upload1, upload2, upload3], caption="Travelling 🌆")
 <summary>Upload Reel</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 video_id = host.upload_video_for_reel("Video.mp4", thumbnail="Thumbnail.jpg")
 
@@ -209,9 +209,9 @@ print(guest.username_availability("theusernameiwant"))
 <summary>Fetch Profile Data</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 profile = host.profile("leomessi")
 
 print(profile.full_name)
@@ -226,9 +226,9 @@ print(profile.follower_count)
 <summary>Username to UserID, and vice versa.</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 username = host.get_username(427553890)
 uid = host.get_uid("leomessi")
@@ -243,9 +243,9 @@ print(username, uid)
 <summary>Follow / Unfollow Users</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 print(host.follow("leomessi"))
 print(host.unfollow("leomessi"))
@@ -258,9 +258,9 @@ print(host.unfollow("leomessi"))
 <summary>Generate Followers / Followings List</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 followers = host.followers("leomessi", count=100)  # Want full list? Set count to '0'
 followings = host.followings("leomessi", count=100)  # Want full list? Set count to '0'
@@ -279,9 +279,9 @@ for user in followings:
 <summary>Switch Account Type - Public/Private</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 print(host.switch_to_public_account())
 print(host.switch_to_private_account())
@@ -294,9 +294,9 @@ print(host.switch_to_private_account())
 <summary>Fetch Someone's Feed</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 posts = host.posts("leomessi", 100)  # Want full list? Set count to '0'
 
 for post in posts:
@@ -311,9 +311,9 @@ for post in posts:
 <summary>Add Comment on Posts</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
 
@@ -327,9 +327,9 @@ host.comment("Looks great!", post_id)
 <summary>Like/Unlike Posts</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
 
@@ -344,9 +344,9 @@ host.unlike(post_id)
 <summary>Fetch Post's Likers</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
 likers = host.likers(post_id)
@@ -377,9 +377,9 @@ mobile.change_profile_picture("image.jpg")
 <summary>Edit Biography, Display Name</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 
 host.change_display_name("Lionel Messi")
 host.change_bio("Athlete")
@@ -392,9 +392,9 @@ host.change_bio("Athlete")
 <summary>Fetch Your Email, Gender, Birthday, etc.</summary><br>
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 me = host.private_info()
 
 print(me.email)
@@ -579,9 +579,9 @@ mobile.clear_bio_links()
 Requires login, and has many features.
 
 ```python
-from ensta import Host
+from ensta import Web
 
-host = Host(username, password)
+host = Web(username, password)
 profile = host.profile("leomessi")
 
 print(profile.biography)

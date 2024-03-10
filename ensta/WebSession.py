@@ -56,7 +56,7 @@ CAROUSEL_VIDEO_RUPLOAD_PARAMS = {
 }
 
 
-class SessionHost:
+class WebSession:
 
     session_data: str
     request_session: requests.Session
