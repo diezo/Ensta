@@ -926,3 +926,43 @@ class Mobile:
                 "correct? Are you using valid images? Try using another account, switch "
                 "to a different network, or use reputed proxies."
             )
+
+    def add_bio_link(self, url: str, title: str = "") -> bool:
+        """
+        Adds a new external link to your bio.
+        :param url: Link's URL
+        :param title: Optional Title for Url
+        :return: Boolean
+        """
+
+        # Hit Endpoint
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/accounts/update_bio_links/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(
+                    {
+                        "_uid": self.user_id,
+                        "_uuid": str(uuid4()),
+                        "updated_links": [
+                            {
+                                "url": url,
+                                "title": title,
+                                "link_type": "external"
+                            }
+                        ]
+                    }
+                )
+            }
+        )
+
+        try:
+            response_dict: dict = response.json()
+
+            return response_dict.get("status", "") == "ok"
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to update bio link. Maybe you're not allowed to add "
+                "bio links to your profile. Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
