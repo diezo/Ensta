@@ -927,15 +927,14 @@ class Mobile:
                 "to a different network, or use reputed proxies."
             )
 
-    def add_bio_link(self, url: str, title: str = "") -> bool:
+    def add_bio_link(self, url: str, title: str = "") -> int:
         """
         Adds a new external link to your bio.
         :param url: Link's URL
         :param title: Optional Title for Url
-        :return: Boolean
+        :return: Link ID (Integer)
         """
 
-        # Hit Endpoint
         response: Response = self.session.post(
             url=f"https://i.instagram.com/api/v1/accounts/update_bio_links/",
             data={
@@ -958,11 +957,65 @@ class Mobile:
         try:
             response_dict: dict = response.json()
 
-            return response_dict.get("status", "") == "ok"
+            if response_dict.get("status", "") != "ok":
+                raise NetworkError(
+                    "Bio link(s) not removed.\n"
+                    f"Response: {response_dict}"
+                )
+
+            try: return response_dict.get("user", {}).get("bio_links", [])[-1].get("link_id", 0)
+            except IndexError: return 0
 
         except JSONDecodeError:
             raise NetworkError(
-                "Unable to update bio link. Maybe you're not allowed to add "
+                "Unable to add bio link. Maybe you're not allowed to add "
                 "bio links to your profile. Try using another account, switch "
                 "to a different network, or use reputed proxies."
             )
+
+    def remove_bio_links(self, link_ids: list[int]) -> bool:
+        """
+        Removes existing external links from your bio.
+        :param link_ids: List of Link IDs to remove
+        :return: Boolean
+        """
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/accounts/remove_bio_links/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(
+                    {
+                        "_uid": self.user_id,
+                        "_uuid": str(uuid4()),
+                        "link_ids": link_ids
+                    }
+                )
+            }
+        )
+
+        try:
+            response_dict: dict = response.json()
+
+            if response_dict.get("status", "") != "ok":
+                raise NetworkError(
+                    "Bio link(s) not removed.\n"
+                    f"Response: {response_dict}"
+                )
+
+            return True
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to remove bio link(s). Maybe you're not allowed to remove "
+                "bio links from your profile. Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def remove_bio_link(self, link_id: int) -> bool:
+        """
+        Removes an existing external link from your bio.
+        :param link_id: Link ID
+        :return: Boolean
+        """
+
+        return self.remove_bio_links([link_id])
