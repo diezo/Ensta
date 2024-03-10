@@ -26,7 +26,7 @@ Creator should only be used for legitimate purposes. It's strictly not for spam.
 -->
 
 ## Installation
-Python [**3.10**](https://www.python.org/downloads/) or later is required.
+Read the [**Pre-Requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90requisites) here.
 
     pip install ensta
 
