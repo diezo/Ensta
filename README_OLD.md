@@ -52,21 +52,21 @@ If you're being rate limited when using Ensta on your home network or Ensta does
 3. Configure Ensta to use that proxy. See the [**Supported Actions**](https://github.com/diezo/ensta?tab=readme-ov-file#supported-actions) section.-->
 
 ## Features
-These features use the **Mobile API**.
+Tap on the headings to view code:
 
 <details>
 
 <summary>Using Proxies</summary><br>
 
-When to use a proxy:
-- You're being rate limited.
+When you should use a proxy:
+- You're being rate limited when using the **Guest Class**.
 - Ensta is not working because your Home IP is flagged.
 - You're deploying Ensta to the cloud. (Instagram blocks requests from IPs of cloud providers, so a proxy must be used)
 
 ```python
-from ensta import Mobile
+from ensta import Host
 
-mobile = Mobile(
+host = Host(
     username,
     password,
     proxy={
@@ -84,16 +84,276 @@ Ensta uses the same proxy settings as the **requests** module.
 
 <summary>Username-Password Login</summary><br>
 
-Username is recommended to sign in. However, email can also be used.
+We recommend using your email address to sign in. But if you have multiple accounts created on the same email address, you may consider using your username instead.
 
 ```python
-from ensta import Mobile
+from ensta import Host
 
 # Recommended
-mobile = Mobile(username, password)
+host = Host(email, password)
 
 # This also works
-mobile = Mobile(email, password)
+host = Host(username, password)
+```
+
+</details>
+
+<details>
+
+<summary>SessionData Login</summary><br>
+
+Ensta will automatically save your login session in a file named ```ensta-session.json``` and reuse it until it expires.
+
+But, if you wish to load a session manually, you can use the **SessionHost Class** instead of **Host Class** by passing your session data (which is stored inside ```ensta-session.json```) as a string.
+
+```python
+from ensta import SessionHost
+
+host = SessionHost(session_data)
+```
+
+</details>
+
+<details>
+
+<summary>2FA Login</summary><br>
+
+**Authenticator App**
+
+```python
+from ensta import Host
+
+# The key you got from Instagram when setting up your Authenticator App
+key = "R65I7XTTHNHTQ2NKMQL36NCWKNUPBSDG"
+
+host = Host(
+    username,  # or email
+    password,
+    totp_token=key
+)
+```
+
+**SMS Based:** Ensta will prompt you for the OTP in the runtime.
+
+</details>
+
+<details>
+
+<summary>Upload Photo (Single Post)</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+upload = host.upload_image("Picture.jpg")
+
+host.pub_photo(upload, caption="Travelling 🌆")
+```
+
+</details>
+
+<details>
+
+<summary>Upload Multiple Medias (Single Post)</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+upload1 = host.upload_image("First.jpg")
+upload2 = host.upload_image("Second.jpg")
+upload3 = host.upload_video_for_carousel("Video.mp4", thumbnail="Thumbnail.jpg")
+
+host.pub_carousel([upload1, upload2, upload3], caption="Travelling 🌆")
+```
+
+</details>
+
+<details>
+
+<summary>Upload Reel</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+video_id = host.upload_video_for_reel("Video.mp4", thumbnail="Thumbnail.jpg")
+
+host.pub_reel(
+    video_id,
+    caption="Enjoying the winter! ⛄"
+)
+```
+
+</details>
+
+<details>
+
+<summary>Check Username Availability</summary><br>
+
+```python
+from ensta import Guest
+
+guest = Guest()
+
+print(guest.username_availability("theusernameiwant"))
+```
+
+</details>
+
+<details>
+
+<summary>Fetch Profile Data</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+profile = host.profile("leomessi")
+
+print(profile.full_name)
+print(profile.biography)
+print(profile.follower_count)
+```
+
+</details>
+
+<details>
+
+<summary>Username to UserID, and vice versa.</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+username = host.get_username(427553890)
+uid = host.get_uid("leomessi")
+
+print(username, uid)
+```
+
+</details>
+
+<details>
+
+<summary>Follow / Unfollow Users</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+print(host.follow("leomessi"))
+print(host.unfollow("leomessi"))
+```
+
+</details>
+
+<details>
+
+<summary>Generate Followers / Followings List</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+followers = host.followers("leomessi", count=100)  # Want full list? Set count to '0'
+followings = host.followings("leomessi", count=100)  # Want full list? Set count to '0'
+
+for user in followers:
+    print(user.username)
+
+for user in followings:
+    print(user.username)
+```
+
+</details>
+
+<details>
+
+<summary>Switch Account Type - Public/Private</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+print(host.switch_to_public_account())
+print(host.switch_to_private_account())
+```
+
+</details>
+
+<details>
+
+<summary>Fetch Someone's Feed</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+posts = host.posts("leomessi", 100)  # Want full list? Set count to '0'
+
+for post in posts:
+    print(post.caption_text)
+    print(post.like_count)    
+```
+
+</details>
+
+<details>
+
+<summary>Add Comment on Posts</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
+
+host.comment("Looks great!", post_id)
+```
+
+</details>
+
+<details>
+
+<summary>Like/Unlike Posts</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
+
+host.like(post_id)
+host.unlike(post_id)
+```
+
+</details>
+
+<details>
+
+<summary>Fetch Post's Likers</summary><br>
+
+```python
+from ensta import Host
+
+host = Host(username, password)
+
+post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
+likers = host.likers(post_id)
+
+for user in likers.users:
+    print(user.username)
+    print(user.profile_picture_url)
 ```
 
 </details>
@@ -114,204 +374,32 @@ mobile.change_profile_picture("image.jpg")
 
 <details>
 
-<summary>Fetch Profile Information</summary><br>
+<summary>Edit Biography, Display Name</summary><br>
 
 ```python
-from ensta import Mobile
+from ensta import Host
 
-mobile = Mobile(username, password)
+host = Host(username, password)
 
-profile = mobile.profile("leomessi")
-
-print(profile.full_name)
-print(profile.biography)
-print(profile.follower_count)
+host.change_display_name("Lionel Messi")
+host.change_bio("Athlete")
 ```
 
 </details>
 
 <details>
 
-<summary>Follow/Unfollow Account</summary><br>
+<summary>Fetch Your Email, Gender, Birthday, etc.</summary><br>
 
 ```python
-from ensta import Mobile
+from ensta import Host
 
-mobile = Mobile(username, password)
+host = Host(username, password)
+me = host.private_info()
 
-mobile.follow("leomessi")
-mobile.unfollow("leomessi")
-```
-
-</details>
-
-<details>
-
-<summary>Change Biography</summary><br>
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-mobile.change_biography("New bio here.")
-```
-
-</details>
-
-<details>
-
-<summary>Switch to Private/Public Account</summary><br>
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-mobile.switch_to_private_account()
-mobile.switch_to_public_account()
-```
-
-</details>
-
-<details>
-
-<summary>Username to UserID / UserID to Username</summary><br>
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-mobile.username_to_userid("leomessi")
-mobile.userid_to_username("12345678")
-```
-
-</details>
-
-<details>
-
-<summary>Like/Unlike Post</summary><br>
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-mobile.like(media_id)
-mobile.unlike(media_id)
-```
-
-</details>
-
-<details>
-
-<summary>Fetch Followers/Followings</summary><br>
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-followers = mobile.followers("leomessi")
-followings = mobile.followings("leomessi")
-
-for user in followers.list:
-    print(user.full_name)
-
-for user in followings.list:
-    print(user.full_name)
-
-# Fetching next chunk
-followers = mobile.followers(
-    "leomessi",
-    next_cursor=followers.next_cursor
-)
-```
-
-</details>
-
-<details>
-
-<summary>Add Comment to Post</summary><br>
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-mobile.comment("Hello", media_id)
-```
-
-</details>
-
-<details>
-
-<summary>Upload Photo</summary><br>
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-mobile.upload_photo(
-    upload_id=upload_id,
-    caption="Hello"
-)
-```
-
-</details>
-
-<details>
-
-<summary>Upload Sidecar (Multiple Photos)</summary><br>
-
-```python
-from ensta import Mobile
-from ensta.structures import SidecarChild
-
-mobile = Mobile(username, password)
-
-mobile.upload_sidecar(
-    children=[
-        SidecarChild(uploda_id),
-        SidecarChild(uploda_id),
-        SidecarChild(uploda_id)
-    ],
-    caption="Hello"
-)
-```
-
-</details>
-
-<details>
-
-<summary>Fetch Private Information (Yours)</summary><br>
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-account = mobile.private_info()
-
-print(account.email)
-print(account.account_type)
-print(account.phone_number)
-```
-
-</details>
-
-<details>
-
-<summary>Update Display Name</summary><br>
-
-```python
-from ensta import Mobile
-
-mobile = Mobile(username, password)
-
-mobile.update_display_name("Lionel Messi")
+print(me.email)
+print(me.gender)
+print(me.birthday)
 ```
 
 </details>
@@ -476,94 +564,6 @@ from ensta import Mobile
 mobile = Mobile(username, password)  # Or use email
 
 mobile.clear_bio_links()
-```
-
-</details>
-
-### Deprecated Features (Web API)
-
-<details>
-
-<summary>Upload Reel</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-
-video_id = host.upload_video_for_reel("Video.mp4", thumbnail="Thumbnail.jpg")
-
-host.pub_reel(
-    video_id,
-    caption="Enjoying the winter! ⛄"
-)
-```
-
-</details>
-
-<details>
-
-<summary>Check Username Availability</summary><br>
-
-```python
-from ensta import Guest
-
-guest = Guest()
-
-print(guest.username_availability("theusernameiwant"))
-```
-
-</details>
-
-<details>
-
-<summary>Fetch Profile Data</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-profile = host.profile("leomessi")
-
-print(profile.full_name)
-print(profile.biography)
-print(profile.follower_count)
-```
-
-</details>
-
-<details>
-
-<summary>Fetch Someone's Feed</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-posts = host.posts("leomessi", 100)  # Want full list? Set count to '0'
-
-for post in posts:
-    print(post.caption_text)
-    print(post.like_count)    
-```
-
-</details>
-
-<details>
-
-<summary>Fetch Post's Likers</summary><br>
-
-```python
-from ensta import Host
-
-host = Host(username, password)
-
-post_id = host.get_post_id("https://www.instagram.com/p/Czr2yLmroCQ/")
-likers = host.likers(post_id)
-
-for user in likers.users:
-    print(user.username)
-    print(user.profile_picture_url)
 ```
 
 </details>

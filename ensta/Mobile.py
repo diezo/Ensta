@@ -529,7 +529,7 @@ class Mobile:
                 "Maybe you're being rate limited, try using a different account."
             )
 
-    def set_biography(self, text: str) -> bool:
+    def change_biography(self, text: str) -> bool:
         """
         Sets a new biography to your account
         :param text: New biography
