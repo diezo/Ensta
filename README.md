@@ -553,9 +553,30 @@ They'll be migrated to the **Mobile API** soon.
 
 <br>
 
-<summary><b>Host Class</b> (Authenticated)</summary>
+<summary><b>Mobile Class</b> (Authenticated)</summary>
 
-Requires login, and has many features.
+Requires login, and has the most features.
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)
+profile = mobile.profile("leomessi")
+
+print(profile.full_name)
+print(profile.biography)
+print(profile.profile_pic_url)
+```
+
+</details>
+
+<details>
+
+<br>
+
+<summary><b>Web Class</b> (Authenticated)</summary>
+
+**Deprecated!** We're migrating all it's features to the **Mobile** class. Once complete, this class will completely be removed.
 
 ```python
 from ensta import Web
