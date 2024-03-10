@@ -486,6 +486,88 @@ direct.send_photo(media_id, thread_id)
 
 </details>
 
+<details>
+
+<summary>Add Biography Link</summary>
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)  # Or use email
+
+link_id = mobile.add_bio_link(
+    url="https://github.com/diezo",
+    title="Diezo's GitHub"
+)
+```
+
+</details>
+
+<details>
+
+<summary>Add Multiple Biography Links</summary>
+
+```python
+from ensta import Mobile
+from ensta.structures import BioLink
+
+mobile = Mobile(username, password)  # Or use email
+
+link_ids = mobile.add_bio_links([
+    BioLink(url="https://example.com", title="Link 1"),
+    BioLink(url="https://example.com", title="Link 2"),
+    BioLink(url="https://example.com", title="Link 3")
+])
+```
+
+</details>
+
+<details>
+
+<summary>Remove Biography Link</summary>
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)  # Or use email
+
+mobile.remove_bio_link(link_id)
+```
+
+</details>
+
+<details>
+
+<summary>Remove Multiple Biography Links</summary>
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)  # Or use email
+
+mobile.remove_bio_links([
+    link_id_1,
+    link_id_2,
+    link_id_3
+])
+```
+
+</details>
+
+<details>
+
+<summary>Clear All Biography Links</summary>
+
+```python
+from ensta import Mobile
+
+mobile = Mobile(username, password)  # Or use email
+
+mobile.clear_bio_links()
+```
+
+</details>
+
 ## Supported Classes
 
 <details>
