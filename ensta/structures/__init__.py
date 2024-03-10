@@ -14,3 +14,4 @@ from .SidecarChild import SidecarChild
 from .UploadedSidecar import UploadedSidecar
 from .CarouselMedia import CarouselMedia
 from .BioLink import BioLink
+from .PrivateInfo import PrivateInfo

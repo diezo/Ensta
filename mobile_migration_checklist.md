@@ -1,9 +1,7 @@
 ### Remaining features:
 
 - fetch posts
-- individual post data
-- get post id by share url
-- update display name
+- individual post data (by share url)
 
 - fb upload video
 - upload single reel

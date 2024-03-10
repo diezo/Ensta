@@ -14,9 +14,10 @@ from .parser.FollowingsParser import parse_followings
 from .parser.AddedCommentParser import parse_added_comment
 from .parser.UploadedPhotoParser import parse_uploaded_photo
 from .parser.UploadedSidecarParser import parse_uploaded_sidecar
+from .parser.PrivateInfoParser import parse_private_info
 from .structures import (
     Profile, StoryLink, Followers, Followings, AddedComment, UploadedPhoto, SidecarChild, UploadedSidecar,
-    BioLink
+    BioLink, PrivateInfo
 )
 from .Direct import Direct
 from ensta.Utils import time_id, fb_uploader
@@ -1039,3 +1040,75 @@ class Mobile:
         """
 
         return self.remove_bio_links([link.link_id for link in self.profile(self.username).bio_links])
+
+    def private_info(self) -> PrivateInfo:
+        """
+        Get your account's private information.
+        :return: PrivateInfo Object
+        """
+
+        response: Response = self.session.get(f"https://i.instagram.com/api/v1/accounts/current_user/?edit=true")
+
+        try:
+            response_dict: dict = response.json()
+
+            if response_dict.get("status", "") != "ok":
+                raise NetworkError(
+                    "Couldn't fetch private info.\n"
+                    f"Response: {response_dict}"
+                )
+
+            return parse_private_info(response_dict.get("user", {}))
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to fetch private info. Are you logged in? Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
+
+    def update_display_name(self, display_name: str) -> bool:
+        """
+        Updates your profile's display name.
+        :param display_name: New display name
+        :return: Boolean
+        """
+
+        private_info: PrivateInfo = self.private_info()
+
+        response: Response = self.session.post(
+            url=f"https://i.instagram.com/api/v1/accounts/edit_profile/",
+            data={
+                "signed_body": "SIGNATURE." + json.dumps(
+                    {
+                        "primary_profile_link_type": "PrimaryProfileLinkType_unspecified",
+                        "phone_number": private_info.phone_number,
+                        "username": private_info.username,
+                        "show_fb_link_on_profile": private_info.show_fb_link_on_profile,
+                        "first_name": display_name,
+                        "_uid": self.user_id,
+                        "device_id": self.device_id,
+                        "biography": private_info.biography,
+                        "_uuid": str(uuid4()),
+                        "email": private_info.email
+                    }
+                )
+            }
+        )
+
+        try:
+            response_dict: dict = response.json()
+
+            if response_dict.get("status", "") != "ok":
+                raise NetworkError(
+                    "Display name not updated.\n"
+                    f"Response: {response_dict}"
+                )
+
+            return True
+
+        except JSONDecodeError:
+            raise NetworkError(
+                "Unable to update display name. Maybe you've already reached the "
+                "weekly limit to update your display name. Try using another account, switch "
+                "to a different network, or use reputed proxies."
+            )
