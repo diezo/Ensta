@@ -11,6 +11,7 @@ Both **authenticated** and **anonymous** requests are supported.
 
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="180"/>](https://buymeacoffee.com/sonii)
 
+<!--
 ## <img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/colorful-instagram-icon-vintage-style-art-vector-illustration_836950-30.jpg" width="23"> Account Creator
 Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-creator/EARLY20) written in Python.
 
@@ -20,6 +21,7 @@ Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-
 - Sets a random **AI-Generated Biography** on account creation.
 
 Creator should only be used for legitimate purposes. [**Discord**](https://discordapp.com/users/1183040947035062382)
+-->
 
 ## Installation
 Read the [**pre-requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90requisites) here.
@@ -614,8 +616,8 @@ Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
-## Support Me
-Wish to support this project? Please consider buying me a coffee here:
+## Buy Me A Coffee
+Donations will help me continue working on open-source projects.
 
 [<img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="170"/>](https://buymeacoffee.com/sonii)
 
