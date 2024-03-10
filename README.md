@@ -32,15 +32,15 @@ Read the [**pre-requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90re
 Fetching profile info by username:
 
 ```python
-from ensta import Web
+from ensta import Mobile
 
-host = Web(username, password)
+mobile = Mobile(username, password)
 
-profile = host.profile("leomessi")
+profile = mobile.profile("leomessi")
 
+print(profile.full_name)
 print(profile.biography)
-print(profile.is_private)
-print(profile.profile_picture_url_hd)
+print(profile.profile_pic_url)
 ```
 
 ## Features
