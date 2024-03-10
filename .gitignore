@@ -3,6 +3,7 @@
 /test.py
 /sensitive
 /test.[*]
+/test.json
 /build
 **.egg-info
 /ensta-sessions
