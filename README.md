@@ -471,6 +471,7 @@ mobile.clear_bio_links()
 </details>
 
 ### Deprecated Features (Web API)
+Features still using the **Web API**:
 
 <details>
 
@@ -543,6 +544,8 @@ for user in likers.users:
 ```
 
 </details>
+
+They'll be migrated to the **Mobile API** soon.
 
 ## Supported Classes
 
