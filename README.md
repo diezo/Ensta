@@ -549,6 +549,9 @@ They'll be migrated to the **Mobile API** soon.
 
 ## Supported Classes
 
+> [!IMPORTANT]
+> **Web Class** is *deprecated* and we're migrating all of it's features to the **Mobile Class**. Once complete, this class will be completely removed from Ensta.
+
 <details>
 
 <br>
@@ -574,15 +577,15 @@ print(profile.profile_pic_url)
 
 <br>
 
-<summary><b>Web Class</b> (Authenticated)</summary>
+<summary><b>Guest Class</b> (Non-Authenticated)</summary>
 
-**Deprecated!** We're migrating all it's features to the **Mobile** class. Once complete, this class will completely be removed.
+Doesn't require login, but has limited features.
 
 ```python
-from ensta import Web
+from ensta import Guest
 
-host = Web(username, password)
-profile = host.profile("leomessi")
+guest = Guest()
+profile = guest.profile("leomessi")
 
 print(profile.biography)
 ```
@@ -593,15 +596,13 @@ print(profile.biography)
 
 <br>
 
-<summary><b>Guest Class</b> (Non-Authenticated)</summary>
-
-Doesn't require login, but has limited features.
+<summary><b>Web Class</b> (Authenticated) <i>(Deprecated)</i></summary>
 
 ```python
-from ensta import Guest
+from ensta import Web
 
-guest = Guest()
-profile = guest.profile("leomessi")
+host = Web(username, password)
+profile = host.profile("leomessi")
 
 print(profile.biography)
 ```
