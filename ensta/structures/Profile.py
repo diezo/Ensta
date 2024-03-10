@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from .BiographyLink import BiographyLink
+from .ReturnedBioLink import ReturnedBioLink
 
 
 @dataclass
@@ -18,7 +18,7 @@ class Profile:
     is_verified: bool
     profile_pic_url: str
     biography: str
-    bio_links: tuple[BiographyLink, ...]
+    bio_links: tuple[ReturnedBioLink, ...]
     account_type: int
     is_business: bool
     media_count: int

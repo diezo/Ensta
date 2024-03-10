@@ -120,8 +120,8 @@ class Credentials:
                 # Other Than 2FA?
                 if response_dict.get("error_type", "") != "two_factor_required":
                     raise AuthenticationError(
-                        f"Login failed with given credentials.\nError: \"{response_dict.get('error_title', 'unknown')}\"\n"
-                        f"Message: \"{response_dict.get('message', 'unknown')}\""
+                        f"Login failed with given credentials.\n"
+                        f"Response: {response_dict}"
                     )
 
                 # 2FA Required

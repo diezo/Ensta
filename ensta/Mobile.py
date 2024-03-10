@@ -15,7 +15,8 @@ from .parser.AddedCommentParser import parse_added_comment
 from .parser.UploadedPhotoParser import parse_uploaded_photo
 from .parser.UploadedSidecarParser import parse_uploaded_sidecar
 from .structures import (
-    Profile, StoryLink, Followers, Followings, AddedComment, UploadedPhoto, SidecarChild, UploadedSidecar
+    Profile, StoryLink, Followers, Followings, AddedComment, UploadedPhoto, SidecarChild, UploadedSidecar,
+    BioLink
 )
 from .Direct import Direct
 from ensta.Utils import time_id, fb_uploader
@@ -927,12 +928,11 @@ class Mobile:
                 "to a different network, or use reputed proxies."
             )
 
-    def add_bio_link(self, url: str, title: str = "") -> int:
+    def add_bio_links(self, bio_links: list[BioLink]) -> list[int]:
         """
-        Adds a new external link to your bio.
-        :param url: Link's URL
-        :param title: Optional Title for Url
-        :return: Link ID (Integer)
+        Adds new external links to your bio.
+        :param bio_links: List of InputBioLink Objects
+        :return: List of Link IDs (Integers)
         """
 
         response: Response = self.session.post(
@@ -944,10 +944,10 @@ class Mobile:
                         "_uuid": str(uuid4()),
                         "updated_links": [
                             {
-                                "url": url,
-                                "title": title,
+                                "url": link.url,
+                                "title": link.title,
                                 "link_type": "external"
-                            }
+                            } for link in bio_links
                         ]
                     }
                 )
@@ -963,15 +963,27 @@ class Mobile:
                     f"Response: {response_dict}"
                 )
 
-            try: return response_dict.get("user", {}).get("bio_links", [])[-1].get("link_id", 0)
-            except IndexError: return 0
+            try: return [
+                link.get("link_id", 0) for link in response_dict.get("user", {}).get("bio_links", [])[len(bio_links):]
+            ]
+            except IndexError: return []
 
         except JSONDecodeError:
             raise NetworkError(
-                "Unable to add bio link. Maybe you're not allowed to add "
+                "Unable to add bio link(s). Maybe you're not allowed to add "
                 "bio links to your profile. Try using another account, switch "
                 "to a different network, or use reputed proxies."
             )
+
+    def add_bio_link(self, url: str, title: str = "") -> int:
+        """
+        Adds a single external link to your bio.
+        :param url: Link URL
+        :param title: Optional Link Title
+        :return: Link ID (Integer)
+        """
+
+        return self.add_bio_links([BioLink(url=url, title=title)])[0]
 
     def remove_bio_links(self, link_ids: list[int]) -> bool:
         """
@@ -1019,3 +1031,11 @@ class Mobile:
         """
 
         return self.remove_bio_links([link_id])
+
+    def clear_bio_links(self) -> bool:
+        """
+        Removes all external links from your bio.
+        :return: Boolean
+        """
+
+        return self.remove_bio_links([link.link_id for link in self.profile(self.username).bio_links])

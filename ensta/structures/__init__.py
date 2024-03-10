@@ -1,5 +1,5 @@
 from .Profile import Profile
-from .BiographyLink import BiographyLink
+from .ReturnedBioLink import ReturnedBioLink
 from .StoryLink import StoryLink
 from .Followers import Followers
 from .Followings import Followings
@@ -13,3 +13,4 @@ from .ImageVersion import ImageVersion
 from .SidecarChild import SidecarChild
 from .UploadedSidecar import UploadedSidecar
 from .CarouselMedia import CarouselMedia
+from .BioLink import BioLink
