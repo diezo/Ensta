@@ -964,7 +964,7 @@ class Mobile:
                 )
 
             try: return [
-                link.get("link_id", 0) for link in response_dict.get("user", {}).get("bio_links", [])[len(bio_links):]
+                link.get("link_id", 0) for link in response_dict.get("user", {}).get("bio_links", [])[-len(bio_links):]
             ]
             except IndexError: return []
 
