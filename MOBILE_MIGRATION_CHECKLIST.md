@@ -1,9 +1,11 @@
-### Remaining features:
+### Features:
+Features yet to be migrated to [**Mobile.py**]():
 
-- fetch posts
-- individual post data (by share url)
+- Fetch Posts (By *username*)
+- Fetch Individual Post Data (By *share_url*)
 
-- fb upload video
-- upload single reel
+- Upload Reel
+  - FB Video Uploader
+  - Configure Reel
 
-- fetch likers
+- Fetch Likers
