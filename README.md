@@ -552,7 +552,7 @@ They'll be migrated to the **Mobile API** soon.
 ## Supported Classes
 
 > [!IMPORTANT]
-> **Web Class** is *deprecated* and we're migrating all of it's features to the **Mobile Class**. Once complete, this class will be completely removed from Ensta.
+> The **Web Class** is deprecated and it's features are being migrated to the **Mobile Class**. It'll be removed from Ensta upon completion.
 
 <details>
 
