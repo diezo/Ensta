@@ -617,7 +617,7 @@ Ask questions, discuss upcoming features and meet other developers.
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
 ## Buy Me A Coffee
-Donations will help me continue working on open-source projects.
+Support me in the development of this project.
 
 [<img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="170"/>](https://buymeacoffee.com/sonii)
 
