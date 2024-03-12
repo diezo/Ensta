@@ -2,7 +2,7 @@ from distutils.core import setup
 from pathlib import Path
 
 version = "5.2.8"
-long_description = (Path(__file__).parent / "README_OLD.md").read_text(encoding="utf-8").replace(
+long_description = (Path(__file__).parent / "README.md").read_text(encoding="utf-8").replace(
     "<!--github-line-break--><br>",
     ""
 )
