@@ -10,7 +10,6 @@ Ensta is a simple, reliable and up-to-date python package for Instagram API.
 Both **authenticated** and **anonymous** requests are supported.
 
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="180"/>](https://buymeacoffee.com/sonii)
-
 <!--
 ## <img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/colorful-instagram-icon-vintage-style-art-vector-illustration_836950-30.jpg" width="23"> Account Creator
 Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-creator/EARLY20) written in Python.
@@ -30,7 +29,6 @@ Read the [**Pre-Requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90re
 
 ## Example
 Fetching profile info by username:
-
 ```python
 from ensta import Web
 
@@ -48,7 +46,7 @@ These features use the **Mobile API**.
 
 <details>
 
-<summary>Using Proxies</summary><br>
+<summary>Using Proxies</summary><!--github-line-break--><br>
 
 When to use a proxy:
 - You're being rate limited.
@@ -74,7 +72,7 @@ Ensta uses the same proxy settings as the **requests** module.
 
 <details>
 
-<summary>Username-Password Login</summary><br>
+<summary>Username-Password Login</summary><!--github-line-break--><br>
 
 Username is recommended to sign in. However, email can also be used.
 
@@ -92,7 +90,7 @@ mobile = Mobile(email, password)
 
 <details>
 
-<summary>Change Profile Picture</summary><br>
+<summary>Change Profile Picture</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -106,7 +104,7 @@ mobile.change_profile_picture("image.jpg")
 
 <details>
 
-<summary>Fetch Profile Information</summary><br>
+<summary>Fetch Profile Information</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -124,7 +122,7 @@ print(profile.follower_count)
 
 <details>
 
-<summary>Follow/Unfollow Account</summary><br>
+<summary>Follow/Unfollow Account</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -139,7 +137,7 @@ mobile.unfollow("leomessi")
 
 <details>
 
-<summary>Change Biography</summary><br>
+<summary>Change Biography</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -153,7 +151,7 @@ mobile.change_biography("New bio here.")
 
 <details>
 
-<summary>Switch to Private/Public Account</summary><br>
+<summary>Switch to Private/Public Account</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -168,7 +166,7 @@ mobile.switch_to_public_account()
 
 <details>
 
-<summary>Username to UserID / UserID to Username</summary><br>
+<summary>Username to UserID / UserID to Username</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -183,7 +181,7 @@ mobile.userid_to_username("12345678")
 
 <details>
 
-<summary>Like/Unlike Post</summary><br>
+<summary>Like/Unlike Post</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -198,7 +196,7 @@ mobile.unlike(media_id)
 
 <details>
 
-<summary>Fetch Followers/Followings</summary><br>
+<summary>Fetch Followers/Followings</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -225,7 +223,7 @@ followers = mobile.followers(
 
 <details>
 
-<summary>Add Comment to Post</summary><br>
+<summary>Add Comment to Post</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -239,7 +237,7 @@ mobile.comment("Hello", media_id)
 
 <details>
 
-<summary>Upload Photo</summary><br>
+<summary>Upload Photo</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -256,7 +254,7 @@ mobile.upload_photo(
 
 <details>
 
-<summary>Upload Sidecar (Multiple Photos)</summary><br>
+<summary>Upload Sidecar (Multiple Photos)</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -278,7 +276,7 @@ mobile.upload_sidecar(
 
 <details>
 
-<summary>Fetch Private Information (Yours)</summary><br>
+<summary>Fetch Private Information (Yours)</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -296,7 +294,7 @@ print(account.phone_number)
 
 <details>
 
-<summary>Update Display Name</summary><br>
+<summary>Update Display Name</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -310,7 +308,7 @@ mobile.update_display_name("Lionel Messi")
 
 <details>
 
-<summary>Block/Unblock User</summary><br>
+<summary>Block/Unblock User</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Mobile
@@ -476,7 +474,7 @@ mobile.clear_bio_links()
 
 <details>
 
-<summary>Upload Reel</summary><br>
+<summary>Upload Reel</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Web
@@ -495,7 +493,7 @@ host.pub_reel(
 
 <details>
 
-<summary>Fetch Web Profile Data</summary><br>
+<summary>Fetch Web Profile Data</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Web
@@ -512,7 +510,7 @@ print(profile.follower_count)
 
 <details>
 
-<summary>Fetch Someone's Feed</summary><br>
+<summary>Fetch Someone's Feed</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Web
@@ -529,7 +527,7 @@ for post in posts:
 
 <details>
 
-<summary>Fetch Post's Likers</summary><br>
+<summary>Fetch Post's Likers</summary><!--github-line-break--><br>
 
 ```python
 from ensta import Web
