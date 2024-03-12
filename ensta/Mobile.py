@@ -50,9 +50,20 @@ class Mobile:
         save_folder: str = "ensta-sessions",
         skip_auth_check: bool = False,
         logging: bool = False,
-        totp_token : str = None,
+        totp_token: str = None,
         session_data: str = None
     ) -> None:
+        """
+        This classes uses Instagram's Mobile API. Authentication is required using username and password.
+        :param identifier: Account's Username or Email (For Login)
+        :param password: Account's Password (For Login)
+        :param proxy: (Optional) 'Requests' library compatible proxy dictionary.
+        :param save_folder: Directory where login sessions should be stored. Pass "" to disable storing sessions.
+        :param skip_auth_check: When 'True', checks whether the stored session is still valid. If no session is stored, it doesn't skip login.
+        :param logging: Enables logging for debugging.
+        :param totp_token: (Optional) Secret Token if TOTP-based 2FA is enabled on your account. Secret token looks like "823JAJID992JKD9JKJ", it's not the temporary code generated every 30 seconds by your Authenticator app.
+        :param session_data: (Optional) Session Data string to be used instead of the saved session inside 'ensta-sessions' directory. Useful when persistent storage isn't allowed on your device.
+        """
 
         self.session = Session()
 

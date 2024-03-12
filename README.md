@@ -19,26 +19,26 @@ Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-
 - Auto-updates Profile Picture to an **AI-Generated Human Face**.
 - Sets a random **AI-Generated Biography** on account creation.
 
-Creator should only be used for legitimate purposes. It's strictly not for spam.
+Creator should only be used for legitimate purposes. [**Discord**](https://discordapp.com/users/1183040947035062382)
 -->
 
 ## Installation
-Read the [**Pre-Requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90requisites) here.
+Read the [**pre-requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90requisites) here.
 
     pip install ensta
 
 ## Example
 Fetching profile info by username:
 ```python
-from ensta import Web
+from ensta import Mobile
 
-host = Web(username, password)
+mobile = Mobile(username, password)
 
-profile = host.profile("leomessi")
+profile = mobile.profile("leomessi")
 
+print(profile.full_name)
 print(profile.biography)
-print(profile.is_private)
-print(profile.profile_picture_url_hd)
+print(profile.profile_pic_url)
 ```
 
 ## Features
@@ -471,6 +471,7 @@ mobile.clear_bio_links()
 </details>
 
 ### Deprecated Features (Web API)
+Features still using the **Web API**:
 
 <details>
 
@@ -544,23 +545,30 @@ for user in likers.users:
 
 </details>
 
+They'll be migrated to the **Mobile API** soon.
+
 ## Supported Classes
+
+> [!IMPORTANT]
+> The **Web Class** is deprecated and it's features are being migrated to the **Mobile Class**. It'll be removed from Ensta upon completion.
 
 <details>
 
 <br>
 
-<summary><b>Host Class</b> (Authenticated)</summary>
+<summary><b>Mobile Class</b> (Authenticated)</summary>
 
-Requires login, and has many features.
+Requires login, and has the most features.
 
 ```python
-from ensta import Web
+from ensta import Mobile
 
-host = Web(username, password)
-profile = host.profile("leomessi")
+mobile = Mobile(username, password)
+profile = mobile.profile("leomessi")
 
+print(profile.full_name)
 print(profile.biography)
+print(profile.profile_pic_url)
 ```
 
 </details>
@@ -584,13 +592,30 @@ print(profile.biography)
 
 </details>
 
+<details>
+
+<br>
+
+<summary><b>Web Class</b> (Authenticated) <i>(Deprecated)</i></summary>
+
+```python
+from ensta import Web
+
+host = Web(username, password)
+profile = host.profile("leomessi")
+
+print(profile.biography)
+```
+
+</details>
+
 ## Discord Community
 Ask questions, discuss upcoming features and meet other developers.
 
 [<img src="https://i.ibb.co/qdX7F1b/IMG-20240105-115646-modified-modified.png" width="150"/>](https://discord.com/invite/pU4knSwmQe)
 
-## Support Me
-Wish to support this project? Please consider buying me a coffee here:
+## Buy Me A Coffee
+Support me in the development of this project.
 
 [<img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="170"/>](https://buymeacoffee.com/sonii)
 
