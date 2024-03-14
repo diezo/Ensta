@@ -22,6 +22,9 @@ Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-
 Creator should only be used for legitimate purposes. [**Discord**](https://discordapp.com/users/1183040947035062382)
 -->
 
+## 🌟 Just a minute!
+If you found this repo useful, please do give it a **star**. Thanks.
+
 ## Installation
 Read the [**pre-requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90requisites) here.
 
