@@ -360,7 +360,7 @@ class Guest:
                 http_response = session.post(
                     "https://www.instagram.com/api/v1/clips/user/",
                     data={
-                        "target_user_id": user_id,
+                        "target_user_id": uid,
                         "page_size": "50",
                         "include_feed_video": "true",
                         "max_id": max_id,
