@@ -41,3 +41,4 @@ class Post:
     has_delayed_metadata: bool = False
     location_latitude: float = 0
     location_longitude: float = 0
+    coauthors: list[dict] = field(default_factory=list)
