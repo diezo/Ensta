@@ -443,6 +443,16 @@ class Guest:
                 latest_reel_media=user_data.get("latest_reel_media", 0)
             )
 
+        coauthors = []
+        for coauthor in data.get("coauthor_producers", []):
+            coauthors.append(
+                {
+                    "uid": coauthor.get("pk", ""),
+                    "username": coauthor.get("username", ""),
+                    "full_name": coauthor.get("full_name", ""),
+                }
+            )
+
         return Post(
             share_url=f"https://www.instagram.com/reel/{data.get('code', '')}"
             if reel
@@ -482,5 +492,6 @@ class Guest:
             explore_hide_comments=data.get("explore_hide_comments", False),
             has_delayed_metadata=data.get("has_delayed_metadata", False),
             location_latitude=data.get("lat", 0),
-            location_longitude=data.get("lng", 0)
+            location_longitude=data.get("lng", 0),
+            coauthors=coauthors,
         )
