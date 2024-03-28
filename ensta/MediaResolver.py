@@ -6,10 +6,10 @@ from urllib.parse import urlparse
 
 class MediaResolver:
     
-    def resolve_url(self, url: str):
-        parsed_url = urlparse(url)
+    def resolve_url(self, url: str) -> Path:
+        parsed_url = urlparse(str(url))
         if not parsed_url.scheme:
-            return url
+            return Path(url)
         filename = Path(parsed_url.path).name
         _, file = tempfile.mkstemp(filename)
         response = requests.get(url)
@@ -17,4 +17,4 @@ class MediaResolver:
         with open(file, 'wb') as output_stream:
             for content in response.iter_content():
                 output_stream.write(content)
-        return file
+        return Path(file)

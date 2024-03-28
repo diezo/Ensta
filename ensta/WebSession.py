@@ -1,4 +1,5 @@
 import mimetypes
+from ensta.MediaResolver import MediaResolver
 import tempfile
 from functools import partial, partialmethod
 import json
@@ -72,12 +73,14 @@ class WebSession:
                       "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
     private_user_agent: str = "Instagram 269.0.0.18.75 Android (26/8.0.0; 480dpi; 1080x1920; " \
                               "OnePlus; 6T Dev; devitron; qcom; en_US; 314665256)"
+    media_resolver: MediaResolver = None
 
     def __init__(
         self,
         session_data: str,
         proxy: dict[str, str] = None,
-        skip_auth_verification: bool = False
+        skip_auth_verification: bool = False,
+        media_resolver: MediaResolver = None,
     ) -> None:
 
         self.session_data = session_data
@@ -107,6 +110,8 @@ class WebSession:
             raise SessionError(
                 "SessionID expired. If you used a saved session, delete ensta-session.txt file and try again"
             )
+        
+        self.media_resolver = media_resolver if media_resolver is not None else MediaResolver()
 
     def authenticated(self) -> bool:
         """
@@ -883,7 +888,7 @@ class WebSession:
         https://i.instagram.com/rupload_igphoto/
         """
         rupload_params = dict(kwargs)
-        media_path: Path = Path(media)
+        media_path: Path = self.media_resolver.resolve_url(media)
         mimetype, _ = mimetypes.guess_type(media_path)
         upload_id = upload_id or time_id()
         waterfall_id = str(uuid4())
@@ -937,7 +942,7 @@ class WebSession:
         """
         assert thumbnail != None
         rupload_params = dict(kwargs)
-        media_path: Path = Path(media)
+        media_path: Path = self.media_resolver.resolve_url(media)
         mimetype, _ = mimetypes.guess_type(media_path)
         video_editor = moviepy.editor.VideoFileClip(media)
         waterfall_id = str(uuid4())
