@@ -58,8 +58,8 @@ class DownloadTest(HttpServerTestCase):
     def test_local(self):
         local = './test.txt'
         result = self.media_resolver.resolve_url(local)
-        self.assertEqual(result, local)
-        
+        self.assertEqual(result, Path(local))
+                
     def test_http(self):
         url = self.get_url('with-content.txt')
         result = self.media_resolver.resolve_url(url)
