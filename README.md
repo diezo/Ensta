@@ -22,8 +22,8 @@ Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-
 Creator should only be used for legitimate purposes. [**Discord**](https://discordapp.com/users/1183040947035062382)
 -->
 
-## 🌟 Just a minute
-If this repo added value to your projects, please do give it a star. Thanks!
+### Python & Instagram Automation Services
+I'm available for freelance work in Python development with a focus on Instagram automation. If you have a project that requires expertise in automating tasks on Instagram, feel free to contact me at **sonniiii@outlook.com** or message me on discord [**@gitdiezo**](https://discordapp.com/users/1183040947035062382).
 
 ## Installation
 Read the [**pre-requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90requisites) here.
