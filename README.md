@@ -11,16 +11,6 @@ Both **authenticated** and **anonymous** requests are supported.
 
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="180"/>](https://buymeacoffee.com/sonii)
 
-## <img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/colorful-instagram-icon-vintage-style-art-vector-illustration_836950-30.jpg" width="23"> Account Creator
-Download an Instagram [**Account Creator**](https://diezo.github.io/creator/) written in Python.
-
-- Auto-generates **DuckDuckGo Private Email Addresses**.
-- Auto-fetches OTP from **ProtonMail Inbox**.
-- Auto-updates Profile Picture to an **AI-Generated Human Face**.
-- Sets a random **AI-Generated Biography** on account creation.
-
-Creator should only be used for legitimate purposes.
-
 <!-- ### Python & Instagram Automation Services
 I'm available for freelance work in Python development with a focus on Instagram automation. If you have a project that requires expertise in automating tasks on Instagram, feel free to contact me at **sonniiii@outlook.com** or message me on discord [**@gitdiezo**](https://discordapp.com/users/1183040947035062382). -->
 
