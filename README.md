@@ -12,7 +12,7 @@ Both **authenticated** and **anonymous** requests are supported.
 [<img style="margin-top: 10px" src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="180"/>](https://buymeacoffee.com/sonii)
 
 ## <img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/colorful-instagram-icon-vintage-style-art-vector-illustration_836950-30.jpg" width="23"> Account Creator
-Download an Instagram [**Account Creator**](https://sonii.gumroad.com/l/account-creator/EARLY20) written in Python.
+Download an Instagram [**Account Creator**](https://diezo.github.io/creator/) written in Python.
 
 - Auto-generates **DuckDuckGo Private Email Addresses**.
 - Auto-fetches OTP from **ProtonMail Inbox**.
