@@ -6,7 +6,7 @@ import json
 import random
 import string
 import requests
-import moviepy.editor
+from moviepy import *
 from uuid import uuid4
 from .Guest import Guest
 from pathlib import Path
@@ -944,7 +944,7 @@ class WebSession:
         rupload_params = dict(kwargs)
         media_path: Path = self.media_resolver.resolve_url(media)
         mimetype, _ = mimetypes.guess_type(media_path)
-        video_editor = moviepy.editor.VideoFileClip(media)
+        video_editor = VideoFileClip(media)
         waterfall_id = str(uuid4())
         upload_id = upload_id or time_id()
         upload_name = fb_uploader(upload_id)
