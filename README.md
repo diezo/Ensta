@@ -3,8 +3,6 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 
-[<img src="https://api.gitsponsors.com/api/badge/img?id=650503528" height="20">](https://api.gitsponsors.com/api/badge/link?p=znjkQUBL93/UftOiAK4Vc3AItMjjKRJqB1i2bVMXZIFi25E8ZpE2RrluKo+oQzc/eQhuZBFD2eROfY+h+xUXnw==)
-
 ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)
 
 Ensta is a simple, reliable and up-to-date python package for Instagram API.
