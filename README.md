@@ -14,8 +14,10 @@ Both **authenticated** and **anonymous** requests are supported.
 <!-- ### Python & Instagram Automation Services
 I'm available for freelance work in Python development with a focus on Instagram automation. If you have a project that requires expertise in automating tasks on Instagram, feel free to contact me at **sonniiii@outlook.com** or message me on discord [**@gitdiezo**](https://discordapp.com/users/1183040947035062382). -->
 
-## Show Your Support! 🌟
-If Ensta could add value to your projects, please do give this repo a star. Thanks!
+## Revive the Project! 🌟
+Contribute to ensta and help revive the project for future updates and maintainance.
+
+[<img src="https://raw.githubusercontent.com/diezo/Ensta/master/assets/coffee.svg" width="170"/>](https://buymeacoffee.com/sonii)
 
 ## Installation
 Read the [**pre-requisites**](https://github.com/diezo/Ensta/wiki/Pre%E2%80%90requisites) here.
