@@ -57,6 +57,11 @@ setup(
         "ntplib",
         "pyquery"
     ],
+    extras_require={
+        "dev": [
+            "pytest",
+        ],
+    },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
