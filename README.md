@@ -2,6 +2,7 @@
 [![PyPI](https://img.shields.io/pypi/v/ensta)](https://pypi.org/project/ensta)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ensta)]()
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
+[![Tests](https://github.com/Daffenass/Ensta/actions/workflows/python-tests.yml/badge.svg)](https://github.com/Daffenass/Ensta/actions/workflows/python-tests.yml)
 
 ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)
 
