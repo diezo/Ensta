@@ -8,9 +8,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-      strategy:
+    runs-on: ${{ matrix.os }}
+    strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.10, 3.11, 3.12, 3.14]
 
     steps:
@@ -25,7 +26,10 @@ jobs:
       - name: Cache pip
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
+          path: |
+            ~/.cache/pip
+            %USERPROFILE%\\AppData\\Local\\pip\\Cache
+            $HOME/Library/Caches/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile','**/pyproject.toml','**/setup.py') }}
           restore-keys: |
             ${{ runner.os }}-pip-
