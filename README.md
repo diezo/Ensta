@@ -4,6 +4,8 @@
 [![Downloads](https://static.pepy.tech/badge/ensta)](https://pepy.tech/project/ensta)
 [![Tests](https://github.com/Daffenass/Ensta/actions/workflows/python-tests.yml/badge.svg)](https://github.com/Daffenass/Ensta/actions/workflows/python-tests.yml)
 
+- **CI matrix:** Runs on Ubuntu, Windows and macOS across selected Python versions (3.10, 3.11, 3.12, 3.14).
+
 ![Logo](https://raw.githubusercontent.com/diezo/Ensta/master/assets/image.jpg)
 
 Ensta is a simple, reliable and up-to-date python package for Instagram API.
