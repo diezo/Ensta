@@ -6,7 +6,7 @@ import json
 import random
 import string
 import requests
-import moviepy
+from moviepy import VideoFileClip
 from uuid import uuid4
 from .Guest import Guest
 from pathlib import Path
