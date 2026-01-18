@@ -1,9 +1,9 @@
 *.py[cod]
-/ensta-session.txt
-/test.py
+/ensta-session.*
 /sensitive
-/test.[*]
+/test*
 /test.json
 /build
 **.egg-info
 /ensta-sessions
+.idea
