@@ -1,7 +1,7 @@
 from distutils.core import setup
 from pathlib import Path
 
-version = "5.2.9"
+version = "5.2.10"
 long_description = (Path(__file__).parent / "README.md").read_text(encoding="utf-8").replace(
     "[!IMPORTANT]",
     "**Important:**"
@@ -19,7 +19,7 @@ setup(
     ],
     version=version,
     license="MIT",
-    description="🔥 Fastest & Simplest Python Package For Instagram Automation",
+    description="🔥 Python Library for Instagram Web & Mobile API Integration",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Deepak Soni",
