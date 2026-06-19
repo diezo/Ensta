@@ -8,7 +8,7 @@ long_description = (Path(__file__).parent / "README.md").read_text(encoding="utf
 )
 
 setup(
-    name="ensta",
+    name="Ensta",
     python_requires=">=3.10",
     packages=[
         "ensta",
