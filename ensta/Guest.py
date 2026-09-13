@@ -6,6 +6,7 @@ from json import JSONDecodeError
 from .containers.Profile import Profile
 from .containers.ProfileHost import ProfileHost
 from .lib.Exceptions import APIError, NetworkError, RateLimitedError
+from .lib.WebHeaders import USER_AGENT, IG_APP_ID, ASBD_ID, api_headers, client_hints, csrf_token_from, describe_response
 from collections.abc import Generator
 from .containers.Post import Post
 from .containers.PostUser import PostUser
@@ -14,18 +15,19 @@ from .containers.PostUser import PostUser
 class Guest:
     request_session: requests.Session = None
     homepage_source: str = None
-    insta_app_id: str = "936619743392459"
+    insta_app_id: str = IG_APP_ID
     preferred_color_scheme: str = "dark"
-    x_ig_www_claim: str
+    # Instagram issues the real claim via the "x-ig-set-www-claim" response
+    # header. Until we have seen one, "0" is what a fresh browser sends.
+    x_ig_www_claim: str = "0"
     csrf_token: str = None
-    user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
-                      "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+    user_agent: str = USER_AGENT
 
     def __init__(self, proxy: dict[str, str] | None = None) -> None:
         self.request_session = requests.Session()
-        self.x_ig_www_claim = "hmac." + "".join(random.choices(string.ascii_letters + string.digits + "_-", k=48))
+        self.request_session.headers["user-agent"] = self.user_agent
         self.csrf_token = "".join(random.choices(string.ascii_letters + string.digits, k=32))
-        self.request_session.cookies.set("csrftoken", self.csrf_token)
+        self.request_session.cookies.set("csrftoken", self.csrf_token, domain=".instagram.com", path="/")
 
         if proxy is not None: self.request_session.proxies.update(proxy)
 
@@ -43,16 +45,12 @@ class Guest:
             "accept-language": "en-US,en;q=0.9",
             "content-type": "application/x-www-form-urlencoded",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": self.user_agent,
-            "sec-ch-ua-full-version-list": self.user_agent,
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            **client_hints(),
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "viewport-width": "1475",
-            "x-asbd-id": "198387",
+            "x-asbd-id": ASBD_ID,
             "x-csrftoken": self.csrf_token,
             "x-ig-app-id": self.insta_app_id,
             "x-ig-www-claim": "0",
@@ -78,30 +76,26 @@ class Guest:
     def profile(self, username: str, __session__: requests.Session | None = None) -> Profile | ProfileHost | None:
         username: str = username.replace(" ", "").lower()
 
+        session: requests.Session = __session__
+        if __session__ is None: session: requests.Session = self.request_session
+
         request_headers: dict = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": self.user_agent,
-            "sec-ch-ua-full-version-list": self.user_agent,
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            **client_hints(),
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "viewport-width": "1475",
-            "x-asbd-id": "198387",
-            "x-csrftoken": self.csrf_token,
+            "x-asbd-id": ASBD_ID,
+            "x-csrftoken": csrf_token_from(session, self.csrf_token),
             "x-ig-app-id": self.insta_app_id,
-            "x-ig-www-claim": "0",
+            "x-ig-www-claim": self.x_ig_www_claim,
             "x-requested-with": "XMLHttpRequest",
             "Referer": f"https://www.instagram.com/{username}/",
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
-
-        session: requests.Session = __session__
-        if __session__ is None: session: requests.Session = self.request_session
 
         http_response: requests.Response = session.get(
             f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
@@ -188,7 +182,7 @@ class Guest:
                         except KeyError:
                             raise APIError()
         except JSONDecodeError:
-            raise NetworkError("HTTP Response is not a valid JSON.")
+            raise NetworkError("HTTP Response is not a valid JSON. " + describe_response(http_response))
 
     def get_uid(self, username: str, __session__: requests.Session | None = None) -> str | None:
         username: str = username.strip().lower().replace(" ", "")
@@ -222,38 +216,32 @@ class Guest:
         except JSONDecodeError:
             raise NetworkError("HTTP Response is not a valid JSON.")
 
-    def posts(self, username: str, count: int = 0, __session__: requests.Session | None = None) -> Generator[Post, None, None]:
+    def posts(
+        self,
+        username: str,
+        count: int = 0,
+        __session__: requests.Session | None = None,
+        user_id: str | int | None = None,
+    ) -> Generator[Post, None, None]:
         """
         Generates a list of target's posts of specified size.
         :param username: Target's Username
         :param count: Amount of posts to fetch
         :param __session__: (Optional) Custom request session object
+        :param user_id: (Optional) Target's UserID. When given, the numeric feed endpoint is used
+                        instead of the username one, which is what the Instagram web app itself calls.
         :return: Generator which yields each post's data
         """
 
         username = username.replace(" ", "").lower()
 
-        request_headers = {
-            "accept": "*/*",
-            "accept-language": "en-US,en;q=0.9",
-            "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": self.user_agent,
-            "sec-ch-ua-full-version-list": self.user_agent,
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-ch-ua-platform-version": "\"15.0.0\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
-            "viewport-width": "1475",
-            "x-asbd-id": "129477",
-            "x-csrftoken": self.csrf_token,
-            "x-ig-app-id": self.insta_app_id,
-            "x-ig-www-claim": self.x_ig_www_claim,
-            "x-requested-with": "XMLHttpRequest",
-            "Referer": f"https://www.instagram.com/{username}/",
-            "Referrer-Policy": "strict-origin-when-cross-origin"
-        }
+        session: requests.Session = __session__
+        if __session__ is None: session: requests.Session = self.request_session
+
+        if user_id is not None:
+            feed_url = f"https://www.instagram.com/api/v1/feed/user/{str(user_id).strip()}/"
+        else:
+            feed_url = f"https://www.instagram.com/api/v1/feed/user/{username}/username/"
 
         current_max_id = ""
         generated_count = 0
@@ -270,20 +258,46 @@ class Guest:
                 if count < 35:
                     count_text = count
 
-                session: requests.Session = __session__
-                if __session__ is None: session: requests.Session = self.request_session
+                request_headers = api_headers(
+                    csrf_token=csrf_token_from(session, self.csrf_token),
+                    www_claim=self.x_ig_www_claim,
+                    referer=f"https://www.instagram.com/{username}/",
+                )
 
                 http_response = session.get(
-                    f"https://www.instagram.com/api/v1/feed/user/{username}/username/?count={count_text}"
-                    f"{current_max_id_text}",
-                    headers=request_headers
+                    f"{feed_url}?count={count_text}{current_max_id_text}",
+                    headers=request_headers,
+                    allow_redirects=False,
                 )
-                
-                response_json = http_response.json()
+
+                claim = http_response.headers.get("x-ig-set-www-claim")
+                if claim: self.x_ig_www_claim = claim
+
+                if http_response.status_code in (301, 302, 303, 307, 308):
+                    yield None
+                    raise RateLimitedError(
+                        "Instagram redirected the feed request to "
+                        f"{http_response.headers.get('location', '?')} — the session or IP is being "
+                        "login-walled. " + describe_response(http_response)
+                    )
+
+                try:
+                    response_json = http_response.json()
+                except JSONDecodeError:
+                    yield None
+                    raise NetworkError("HTTP Response is not a valid JSON. " + describe_response(http_response))
+
+                if response_json.get("require_login") or http_response.status_code in (401, 403):
+                    yield None
+                    raise RateLimitedError(
+                        "Instagram requires a logged-in session for this feed. " + describe_response(http_response)
+                    )
 
                 if "status" not in response_json or "items" not in response_json:
                     yield None
-                    raise NetworkError("HTTP response doesn't include 'status' or 'items' node.")
+                    raise NetworkError(
+                        "HTTP response doesn't include 'status' or 'items' node. " + describe_response(http_response)
+                    )
 
                 if response_json["status"] != "ok":
                     yield None
@@ -294,7 +308,7 @@ class Guest:
                             "to a different WiFi Network, or use proxies."
                         )
 
-                    raise NetworkError("Request failed.")
+                    raise NetworkError("Request failed. " + describe_response(http_response))
 
                 for each_item in response_json["items"]:
                     if generated_count < count or count == 0:
@@ -330,16 +344,12 @@ class Guest:
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "sec-ch-prefers-color-scheme": self.preferred_color_scheme,
-            "sec-ch-ua": self.user_agent,
-            "sec-ch-ua-full-version-list": self.user_agent,
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"',
-            "sec-ch-ua-platform-version": '"15.0.0"',
+            **client_hints(),
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "viewport-width": "1475",
-            "x-asbd-id": "129477",
+            "x-asbd-id": ASBD_ID,
             "x-csrftoken": self.csrf_token,
             "x-ig-app-id": self.insta_app_id,
             "x-ig-www-claim": self.x_ig_www_claim,

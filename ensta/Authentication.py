@@ -10,6 +10,7 @@ from json import JSONDecodeError
 from .PasswordEncryption import PasswordEncryption
 from .lib.Exceptions import (AuthenticationError, NetworkError)
 from .WebSession import WebSession
+from .lib.WebHeaders import USER_AGENT, client_hints
 
 
 def new_session_id(
@@ -20,8 +21,7 @@ def new_session_id(
 ) -> str:
     
     request_session: Session = requests.Session()
-    request_session.headers["user-agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
-                                            "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+    request_session.headers["user-agent"] = USER_AGENT
 
     if proxy is not None: request_session.proxies.update(proxy)
 
@@ -44,14 +44,7 @@ def new_session_id(
         "content-type": "application/x-www-form-urlencoded",
         "dpr": "1.30208",
         "sec-ch-prefers-color-scheme": "dark",
-        "sec-ch-ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                     "Chrome/119.0.0.0 Safari/537.36",
-        "sec-ch-ua-full-version-list": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                                       "(KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-model": "\"\"",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-ch-ua-platform-version": "\"15.0.0\"",
+        **client_hints(),
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
